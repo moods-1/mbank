@@ -2,32 +2,178 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 222.2 84% 4.9%;
+
+		--card: 0 0% 100%;
+		--card-foreground: 222.2 84% 4.9%;
+
+		--popover: 0 0% 100%;
+		--popover-foreground: 222.2 84% 4.9%;
+
+		--primary: 222.2 47.4% 11.2%;
+		--primary-foreground: 210 40% 98%;
+
+		--secondary: 210 40% 96.1%;
+		--secondary-foreground: 222.2 47.4% 11.2%;
+
+		--muted: 210 40% 96.1%;
+		--muted-foreground: 215.4 16.3% 46.9%;
+
+		--accent: 210 40% 96.1%;
+		--accent-foreground: 222.2 47.4% 11.2%;
+
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 210 40% 98%;
+
+		--border: 214.3 31.8% 91.4%;
+		--input: 214.3 31.8% 91.4%;
+		--ring: 222.2 84% 4.9%;
+
+		--radius: 0.5rem;
+		--moods: #1d4ed8;
+		--bank-green: #27c522;
+	}
+
+	.dark {
+		--background: 222.2 84% 4.9%;
+		--foreground: 210 40% 98%;
+
+		--card: 222.2 84% 4.9%;
+		--card-foreground: 210 40% 98%;
+
+		--popover: 222.2 84% 4.9%;
+		--popover-foreground: 210 40% 98%;
+
+		--primary: 210 40% 98%;
+		--primary-foreground: 222.2 47.4% 11.2%;
+
+		--secondary: 217.2 32.6% 17.5%;
+		--secondary-foreground: 210 40% 98%;
+
+		--muted: 217.2 32.6% 17.5%;
+		--muted-foreground: 215 20.2% 65.1%;
+
+		--accent: 217.2 32.6% 17.5%;
+		--accent-foreground: 210 40% 98%;
+
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 210 40% 98%;
+
+		--border: 217.2 32.6% 17.5%;
+		--input: 217.2 32.6% 17.5%;
+		--ring: 212.7 26.8% 83.9%;
+	}
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+::-webkit-scrollbar {
+	width: 12px;
+}
+::-webkit-scrollbar-track {
+	@apply bg-black;
+}
+::-webkit-scrollbar-thumb {
+	@apply bg-bank-green;
+	border: 1px solid white;
+	border-radius: 3px;
+}
+/* Header */
+header {
+	@apply w-full h-auto min-h-[60px] bg-black text-white px-6 sm:px-10 py-6 md:py-0 flex items-center justify-between gap-5 flex-wrap;
+}
+/* Header nav  */
+.header-nav-ul {
+	@apply flex gap-5 items-center;
+}
+.header-nav-ul li {
+	@apply relative;
+}
+.header-sub-menu {
+	@apply hover:text-bank-green relative flex items-center h-full;
+}
+.header-sub-menu.active .header-sub-menu-ul {
+	@apply block;
+}
+.header-sub-menu.active svg{
+	@apply rotate-180 transition-all duration-300;
+}
+.header-sub-menu-ul {
+	@apply hidden absolute top-full right-0 bg-black min-w-72 px-6 pb-2 text-white rounded-bl-lg rounded-br-lg;
+}
+.header-sub-menu-item {
+	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Mobile menu */
+.mobile-menu-trigger,
+.mobile-menu-item {
+	@apply hover:text-bank-green hover:pl-1 transition-all duration-500;
+}
+.mobile-header-sub-menu-item {
+	@apply hover:text-bank-green hover:pl-5 transition-all duration-300 cursor-pointer;
+}
+
+/* Footer */
+footer {
+	@apply w-full min-h-24 bg-black text-white p-6 sm:p-10;
+}
+.footer-content {
+	@apply flex flex-wrap justify-between gap-10 mb-10;
+}
+.footer-content-box {
+	@apply min-w-56 max-w-72;
+}
+
+main {
+	@apply w-full min-h-[calc(100vh-60px)];
+}
+section {
+	@apply px-6 sm:px-10 py-6 sm:py-20;
+}
+.section-title {
+	@apply text-lg  sm:text-3xl font-semibold;
+}
+.page-title {
+	@apply text-2xl sm:text-4xl font-bold mb-10;
+}
+.red {
+	@apply opacity-0;
+}
+.hero {
+	@apply w-full min-h-[calc(100vh-60px)] flex flex-wrap items-stretch;
+}
+.hero-segment {
+	@apply w-full flex-1;
+}
+.my-hero {
+	background-color: #00c518;
+	background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 20c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 10 10 7zm-43-7c1' fill='%2324ea0d' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+.glass {
+	background: rgba(0, 0, 0, 0.3);
+	backdrop-filter: saturate(90%) blur(5px);
+	box-shadow: 0px 0px 7px #ddd;
+}
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+	.glass {
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+	}
+}
+.card-numbers span {
+	letter-spacing: 2px;
+}
+.text-shadow {
+	text-shadow: 0px 0px 2px #fff;
 }
