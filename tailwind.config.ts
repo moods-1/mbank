@@ -24,8 +24,8 @@ const config = {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
-        moods: 'var(--moods)',
-        'bank-green': 'var(--bank-green)',
+				moods: 'var(--moods)',
+				'bank-green': 'var(--bank-green)',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
@@ -56,18 +56,20 @@ const config = {
 				},
 			},
 			backgroundColor: {
-        moods: 'var(--moods)',
-        'bank-green': 'var(--bank-green)',
+				moods: 'var(--moods)',
+				'bank-green': 'var(--bank-green)',
 			},
 			backgroundImage: {
-				// hero: "url('/images/money-jar.jpg')",
-        // hero: "url('/images/growing-money.jpg')",
-        hero: "url('/images/hero-balls-hd.png')",
+				hero: "url('/images/hero-balls-hd.png')",
+				auth: "url('/images/auth-bg.png')",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)',
+			},
+			borderColor: {
+				'bank-green': 'var(--bank-green)',
 			},
 			keyframes: {
 				'accordion-down': {
@@ -78,10 +80,20 @@ const config = {
 					from: { height: 'var(--radix-accordion-content-height)' },
 					to: { height: '0' },
 				},
+				'slide-load': {
+					from: {
+						transform: 'translateX(-100%)',
+						opacity: '0',
+					},
+					to: {
+						transform: 'translateX(100%)',
+					},
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'slide-right': 'slide-load 1.2s ease infinite',
 			},
 		},
 	},

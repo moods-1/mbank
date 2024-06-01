@@ -17,8 +17,19 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='en'>
-			<body className={inter.className}>
-				<ReduxProvider>{children}</ReduxProvider>
+			<body>
+				<main className={`${inter.className} bg-auth bg-no-repeat`}>
+					<ReduxProvider>
+						<div className='px-6 sm:px-10 text-center py-8'>
+							<p className='text-3xl sm:text-5xl mb-2 font-semibold text-bank-green'>
+								MBank
+							</p>
+							<p className='text-xl text-white'>Online banking of the future.</p>
+						</div>
+
+						{children}
+					</ReduxProvider>
+				</main>
 			</body>
 		</html>
 	);

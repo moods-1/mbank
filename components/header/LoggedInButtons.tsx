@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { logoutClient } from '@/lib/store/userSlice';
+import { logoutClient } from '@/lib/store/clientSlice';
 import { useAppDispatch } from '@/lib/store/store';
 
 type Props = {
@@ -20,7 +20,7 @@ export default function LoggedInButtons({ changeFunction }: Props) {
 		if (changeFunction) {
 			changeFunction();
 		}
-		router.push('/');
+		// router.push('/');
 	};
 
 	const handleMobile = () => {
@@ -44,7 +44,6 @@ export default function LoggedInButtons({ changeFunction }: Props) {
 					size='sm'
 					className='bg-white h-8 text-bank-green rounded-sm flex-1 border border-green-700 w-auto'
 					onClick={handleMobile}
-					
 				>
 					My Accounts
 				</Button>

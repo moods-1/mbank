@@ -7,13 +7,13 @@ export default function HeaderButtons() {
 	return (
 		<div className='flex gap-5'>
 			<Button size={'sm'} className='bg-bank-green font-semibold flex-1'>
-				<Link href='/auth'>Log In</Link>
+				<Link href='/auth/login'>Log In</Link>
 			</Button>
 			<Button
 				size={'sm'}
 				className='bg-white text-bank-green font-semibold flex-1 border border-green-700'
 			>
-				Sign Up
+				<Link href='/auth/sign-up'>Sign Up</Link>
 			</Button>
 		</div>
 	);

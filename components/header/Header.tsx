@@ -21,7 +21,7 @@ import LoggedInButtons from './LoggedInButtons';
 export default function Header() {
 	const [openMobileMenu, setOpenMobileMenu] = useState(false);
 	const [userLoggedIn, setUserLoggedIn] = useState(false);
-	const { loggedIn } = useAppSelector((state) => state.user);
+	const { loggedIn } = useAppSelector((state) => state.client);
 	const router = useRouter();
 
 	const toggleMobileMenu = () => {
@@ -33,31 +33,6 @@ export default function Header() {
 			toggleMobileMenu();
 		}
 		router.push(link);
-	};
-
-	const handleNavButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-		console.log(e);
-		if (e.currentTarget) {
-			const target = e.currentTarget;
-			console.log(target);
-			let x = target.getAttribute('aria-expanded');
-			x = x === 'false' ? 'true' : 'false';
-			console.log({ x });
-			target.setAttribute('aria-expanded', x);
-		}
-	};
-	const handleNavClick = (e: React.MouseEvent<HTMLLIElement>) => {
-		if (e.currentTarget) {
-			e.currentTarget.blur();
-			console.log(e.currentTarget);
-		 }
-
-	}
-	const handleCloseDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
-		if (e.currentTarget) {
-			const target = e.currentTarget;
-			target.setAttribute('aria-expanded', 'false');
-		}
 	};
 
 	useEffect(() => {
@@ -89,16 +64,18 @@ export default function Header() {
 								<li
 									key={title}
 									className='header-sub-menu'
-										onClick={(e) => e.currentTarget.classList.toggle('active')}
-										onMouseEnter={(e) => e.currentTarget.classList.add('active')}
-										onMouseLeave={(e) => e.currentTarget.classList.remove('active')}
+									onClick={(e) => e.currentTarget.classList.toggle('active')}
+									onMouseEnter={(e) => e.currentTarget.classList.add('active')}
+									onMouseLeave={(e) =>
+										e.currentTarget.classList.remove('active')
+									}
 								>
 									<span className='flex items-center gap-2'>
 										{title} <FaChevronDown />
 									</span>
 									<ul className='header-sub-menu-ul'>
 										{subsection.map(({ label, link, icon }) => (
-											<li key={label} className='my-2'>
+											<li key={label} className=''>
 												<Link href={link} className='header-sub-menu-item'>
 													{label}
 												</Link>

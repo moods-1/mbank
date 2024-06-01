@@ -39,9 +39,9 @@ export default function WhyUs() {
 							initial='hidden'
 							animate={mainControls}
 							key={title}
-							className='w-80 min-h-72 bg-black text-white rounded-lg shadow-md shadow-green-700 text-center overflow-hidden'
+							className='w-80 min-h-72 text-black rounded-lg text-center overflow-hidden'
 						>
-							<Image src={image} width={400} height={300} alt={title} />
+							<Image src={image} width={400} height={300} alt={title} className='rounded-lg' />
 							<div className='p-6 min-h-44'>
 								<p className='text-2xl font-semibold mb-5'>{title}</p>
 								<p className='font-light'>{body}</p>

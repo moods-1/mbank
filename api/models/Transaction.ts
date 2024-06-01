@@ -5,6 +5,10 @@ const TransactionSchema = new Schema(
 		client: {
 			type: Schema.Types.ObjectId,
 		},
+		counterParty: {
+			type: String,
+			minLength: 2,
+		},
 		account: {
 			type: Schema.Types.ObjectId,
 		},
@@ -15,10 +19,11 @@ const TransactionSchema = new Schema(
 		amount: {
 			type: Number,
 			default: 0,
-		}
+		},
 	},
 	{ timestamps: true, collection: 'Transaction' }
 );
 
-const Transaction = models.Transaction || model('Transaction', TransactionSchema);
+const Transaction =
+	models.Transaction || model('Transaction', TransactionSchema);
 export default Transaction;

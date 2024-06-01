@@ -1,17 +1,19 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import userReducer from './userSlice';
+// The following import is done to prevent this error:
+// redux-persist failed to create sync storage. falling back to noop storage.
+import storage from './customStorage';
+import clientReducer from './clientSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
-const userPersistConfig = {
-	key: 'user',
+const clientPersistConfig = {
+	key: 'client',
 	storage: storage,
-	whitelist: ['user', 'loggedIn'],
+	whitelist: ['client', 'loggedIn', 'token'],
 };
 
 const rootReducer = combineReducers({
-	user: persistReducer(userPersistConfig, userReducer),
+	client: persistReducer(clientPersistConfig, clientReducer),
 });
 
 export const store = configureStore({

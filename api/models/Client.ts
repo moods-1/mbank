@@ -2,6 +2,12 @@ import { Schema, models, model } from 'mongoose';
 
 const ClientSchema = new Schema(
 	{
+		clientNumber: {
+			type: Number,
+			required: true,
+			unique: true,
+			maxLength: 9,
+		},
 		firstName: {
 			type: String,
 			required: true,
@@ -23,12 +29,36 @@ const ClientSchema = new Schema(
 			required: true,
 			minlength: 6,
 			unique: true,
-		},	
+		},
 		phoneNumber: {
 			type: Number,
 			minLength: 10,
 			maxLength: 10,
 			required: true,
+		},
+		city: {
+			type: String,
+			required: true,
+			minLength: 2,
+			maxLength: 30,
+		},
+		country: {
+			type: String,
+			required: true,
+			minLength: 3,
+			maxLength: 30,
+		},
+		address: {
+			type: String,
+			required: true,
+			minLength: 6,
+			maxLength: 50,
+		},
+		postalCode: {
+			type: String,
+			required: true,
+			minLength: 6,
+			maxLength: 6,
 		},
 		password: {
 			type: String,

@@ -2,8 +2,9 @@ import { Schema, models, model } from 'mongoose';
 
 const AccountSchema = new Schema(
 	{
-		client: {
-			type: Schema.Types.ObjectId,
+		clientNumber: {
+			type: Number,
+			ref: 'Client',
 		},
 		accountName: {
 			type: String,
@@ -13,7 +14,6 @@ const AccountSchema = new Schema(
 		accountType: {
 			type: String,
 			required: true,
-			minlength: 2,
 		},
 		accountBalance: {
 			type: Number,
@@ -25,7 +25,7 @@ const AccountSchema = new Schema(
 			},
 		],
 	},
-	{ timestamps:true, collection: 'Account' }
+	{ timestamps: true, collection: 'Account' }
 );
 
 const Account = models.Account || model('Account', AccountSchema);

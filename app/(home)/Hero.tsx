@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import CreditCard from '@/components/CreditCard';
 
@@ -12,9 +14,11 @@ export default function Hero() {
 					<p className='text-lg font-medium text-white'>
 						Join millions who trust us with their financial journey.
 					</p>
-					<Button className='bg-black text-white rounded-full mt-8'>
-						Open an Account
-					</Button>
+					<Link href='/auth/sign-up'>
+						<Button className='bg-black text-white rounded-full mt-8'>
+							Open an Account
+						</Button>
+					</Link>
 				</div>
 			</div>
 			<div className='hero-segment hidden md:flex items-center justify-center'>

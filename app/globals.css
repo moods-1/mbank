@@ -105,14 +105,14 @@ header {
 .header-sub-menu.active .header-sub-menu-ul {
 	@apply block;
 }
-.header-sub-menu.active svg{
-	@apply rotate-180 transition-all duration-300;
+.header-sub-menu.active svg {
+	@apply rotate-180 transition-all duration-500;
 }
 .header-sub-menu-ul {
 	@apply hidden absolute top-full right-0 bg-black min-w-72 px-6 pb-2 text-white rounded-bl-lg rounded-br-lg;
 }
 .header-sub-menu-item {
-	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full;
+	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full py-1;
 }
 
 /* Mobile menu */
@@ -123,16 +123,19 @@ header {
 .mobile-header-sub-menu-item {
 	@apply hover:text-bank-green hover:pl-5 transition-all duration-300 cursor-pointer;
 }
-
+/* Client header */
+.active-tab {
+	@apply border-bank-green font-medium;
+}
 /* Footer */
 footer {
 	@apply w-full min-h-24 bg-black text-white p-6 sm:p-10;
 }
 .footer-content {
-	@apply flex flex-wrap justify-between gap-10 mb-10;
+	@apply flex flex-wrap justify-center sm:justify-between gap-10 mb-10;
 }
 .footer-content-box {
-	@apply min-w-56 max-w-72;
+	@apply min-w-56 max-w-72 w-full;
 }
 
 main {
@@ -141,11 +144,17 @@ main {
 section {
 	@apply px-6 sm:px-10 py-6 sm:py-20;
 }
+.client-section {
+	@apply px-5 sm:px-10 py-6;
+}
 .section-title {
-	@apply text-lg  sm:text-3xl font-semibold;
+	@apply text-lg sm:text-3xl font-semibold;
 }
 .page-title {
 	@apply text-2xl sm:text-4xl font-bold mb-10;
+}
+.flex-center {
+	@apply flex items-center justify-center;
 }
 .red {
 	@apply opacity-0;
@@ -176,4 +185,81 @@ section {
 }
 .text-shadow {
 	text-shadow: 0px 0px 2px #fff;
+}
+.auth-section {
+	@apply w-full min-h-[80vh] flex items-center justify-center px-6 sm:px-10 py-6 sm:py-10;
+}
+.auth-form {
+	@apply w-full p-6 rounded-lg shadow-md min-h-80 bg-white mb-6;
+}
+.auth-form-button {
+	@apply w-full bg-bank-green sm:text-lg;
+}
+.checkbox:checked input {
+	@apply !bg-bank-green;
+}
+
+/* Client Accounts */
+
+.account-item {
+	@apply bg-white hover:bg-slate-100 flex justify-between items-center gap-2 flex-wrap min-h-10 border-l-4 border-bank-green hover:border-black px-2 text-[15px] py-3;
+}
+.transaction-item {
+	@apply bg-white hover:bg-slate-100 min-h-10 border-l-4 border-bank-green hover:border-black px-2 text-sm py-1;
+}
+.transaction-item p {
+	@apply flex flex-wrap justify-between;
+}
+.transaction-item p span:nth-child(1) {
+	@apply font-semibold;
+}
+/* Loaders and Spinners */
+.spinner {
+	animation: Spin 1s linear infinite;
+}
+
+@keyframes Spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+.side-loader {
+	@apply relative w-full bg-white overflow-hidden;
+}
+.side-loader::before {
+	@apply absolute bg-gradient-to-r from-transparent to-gray-300 h-full w-full animate-slide-right;
+	content: '';
+}
+.card {
+	@apply p-6 rounded-lg shadow-md;
+}
+/* Filter Section */
+.filter-box {
+	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm font-medium;
+}
+.filter-box .input-box {
+	@apply relative flex items-center;
+}
+.filter-box .input-box span {
+	@apply absolute left-3;
+}
+.filter-box input {
+	@apply pl-6 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
+}
+/* Form  */
+.form-section {
+	@apply flex flex-wrap gap-5;
+}
+.form-section div {
+	@apply flex-1 min-w-44;
+}
+/* Custom shadcn ui styling */
+.no-focus {
+	@apply focus-visible:!ring-0 focus-visible:!ring-offset-0 focus-visible:!outline-none;
+}
+.notification-dialog {
+	@apply max-w-[calc(100vw-40px)] sm:max-w-lg text-center p-10 rounded-lg;
 }

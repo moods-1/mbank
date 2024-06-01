@@ -1,3 +1,25 @@
+export const CLIENT_HEADER_LINKS = [
+	{
+		title: 'Accounts',
+		link: '/client',
+	},
+	{
+		title: 'Pay & Transfer',
+		link: '/client/pay-transfer',
+	},
+];
+
+export const CLIENT_SLUG_ROUTES: Record<string, string> = {
+	'Savings Account': 'sa',
+	'Tax-Free Savings Account': 'tfsa',
+	'Retirement Savings Account': 'rsa',
+	'No-Fee Chequing Account': 'nfca',
+	'Global Mastercard': 'gm',
+	'Mortgage': 'mortgage',
+	'Home Equity Line of Credit': 'heloc',
+	'Line of Credit': 'loc',
+};
+
 export const HEADER_LINKS = [
 	{
 		title: 'Save',
@@ -97,4 +119,34 @@ export const ACCOUNT_TYPES = {
 	SAVINGS: 'Savings',
 	CHEQUING: 'Chequing',
 	CREDIT: 'Credit',
-}
+};
+
+export const ACCOUNT_TYPE_NUMBER: Record<string, string> = {
+	'001': 'Savings Account',
+	'002': 'Tax-Free Savings Account',
+	'003': 'Retirement Savings Account',
+	'004': 'No-Fee Chequing Account',
+	'005': 'Global Mastercard',
+	'006': 'Mortgage',
+	'007': 'Home Equity Line of Credit',
+	'008': 'Line of Credit',
+};
+
+// Footer protection section
+
+export const PROTECTION_DATA = [
+	{
+		alt: 'cidc',
+		image1: '/images/cdic-1.svg',
+		image2: '/images/cdic-badge.svg',
+		link: 'https://www.cdic.ca',
+		text: 'Your deposits may be insurable by the Canada Deposit Insurance Corporation.',
+	},
+	{
+		alt: 'ciro',
+		image1: '/images/ciro-white.png',
+		image2: '',
+		link: 'https://www.ciro.ca',
+		text: 'CIRO regulation applies to MBank Investment Services Inc., a separate company from and a wholly-owned subsidiary of MBank.',
+	},
+];

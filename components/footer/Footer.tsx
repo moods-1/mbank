@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Socials from './Socials';
+import Protection from './Protection';
 
 export default function Footer() {
 	return (
 		<footer>
-			<div className='footer-content'>
+			<div className='w-full flex flex-wrap gap-10 justify-evenly my-10'>
+				<Protection />
+			</div>
+			<div className='footer-content mt-20'>
 				<div className='footer-content-box'>
 					<p className='text-2xl font-semibold text-bank-green'>
 						<Link href='/'> MBank</Link>
@@ -15,29 +19,35 @@ export default function Footer() {
 						<p>1 MBank Avenue, ON, Canada</p>
 					</div>
 				</div>
-				<div className='footer-content-box flex flex-col items-center text-center'>
-					<a href='https://www.cdic.ca/' target='_blank' rel='noopener noreferrer' className='h-24'>
-						<Image src='/images/cdic.svg' width={160} height={100} alt='cidc' />
-					</a>
-
-					<p>
-						Your deposits may be insurable by the Canada Deposit Insurance
-						Corporation.
-					</p>
-				</div>
-				<div className='footer-content-box flex flex-col items-center text-center'>
-					<a href='https://www.ciro.ca/' target='_blank' rel='noopener noreferrer' className='h-24'>
+				<div className='footer-content-box'>
+					<a
+						href='https://apps.apple.com/us'
+						target='_blank'
+						rel='noopener noreferrer'
+					>
 						<Image
-							src='/images/ciro-white.png'
-							width={160}
-							height={100}
-							alt='cidc'
+							src='/images/apple-app.svg'
+							alt='apple'
+							width={140}
+							height={50}
+							className='border border-slate-600 rounded-lg h-auto w-auto'
 						/>
 					</a>
-					<p>
-						CIRO regulation applies to MBank Investment Services Inc., a separate
-						company from and a wholly-owned subsidiary of MBank.
-					</p>
+				</div>
+				<div className='footer-content-box'>
+					<a
+						href='https://play.google.com/'
+						target='_blank'
+						rel='noopener noreferrer'
+					>
+						<Image
+							src='/images/google-app.svg'
+							alt='apple'
+							width={140}
+							height={50}
+							className='border border-slate-600 rounded-lg h-auto w-auto'
+						/>
+					</a>
 				</div>
 			</div>
 			<Socials />
