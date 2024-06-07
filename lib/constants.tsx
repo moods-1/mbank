@@ -7,6 +7,10 @@ export const CLIENT_HEADER_LINKS = [
 		title: 'Pay & Transfer',
 		link: '/client/pay-transfer',
 	},
+	{
+		title: 'Admin',
+		link: '/client/admin',
+	},
 ];
 
 export const CLIENT_SLUG_ROUTES: Record<string, string> = {
@@ -15,7 +19,7 @@ export const CLIENT_SLUG_ROUTES: Record<string, string> = {
 	'Retirement Savings Account': 'rsa',
 	'No-Fee Chequing Account': 'nfca',
 	'Global Mastercard': 'gm',
-	'Mortgage': 'mortgage',
+	Mortgage: 'mortgage',
 	'Home Equity Line of Credit': 'heloc',
 	'Line of Credit': 'loc',
 };
@@ -150,3 +154,124 @@ export const PROTECTION_DATA = [
 		text: 'CIRO regulation applies to MBank Investment Services Inc., a separate company from and a wholly-owned subsidiary of MBank.',
 	},
 ];
+// Rates //
+
+export const RATES = {
+	Savings: {
+		subtitle: 'Earn a great interest rate on your Savings Account.',
+		data: [
+			{
+				label: 'Savings Account',
+				rate: '0.70%',
+				link: '/save/savings-account',
+			},
+			{
+				label: 'Tax-Free Savings Account',
+				rate: '0.70%',
+				link: '/save/tfsa',
+			},
+			{
+				label: 'Retirement Savings Account',
+				rate: '0.70%',
+				link: '/save/rsa',
+			},
+		],
+	},
+	Mortgage: {
+		subtitle: 'Rates to help you own your home faster.',
+		data: [
+			{
+				label: '5 Year Variable',
+				rate: '6.80%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '1 Year Fixed Mortgage',
+				rate: '7.29%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '2 Year Fixed Mortgage',
+				rate: '6.39%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '3 Year Fixed Mortgage',
+				rate: '5.49%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '4 Year Fixed Mortgage',
+				rate: '5.55%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '5 Year Fixed Mortgage',
+				rate: '5.45%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '7 Year Fixed Mortgage',
+				rate: '5.85%',
+				link: '/borrow/mortgage',
+			},
+			{
+				label: '10 Year Fixed Mortgage',
+				rate: '6.30%',
+				link: '/borrow/mortgage',
+			},
+		],
+	},
+	'Line of Credit': {
+		subtitle: 'Friendship rates for you.',
+		data: [
+			{
+				label: 'Home Equity Line of Credit',
+				rate: '7.55%',
+				link: '/borrow/heloc',
+			},
+			{
+				label: 'Line of Credit',
+				rate: '7.85%',
+				link: '/borrow/loc',
+			},
+		],
+	},
+};
+
+export const PAYEE_BUSINESS_TYPES = {
+	COMMUNICATIONS: 'Communications',
+	FINANCIAL: 'Financial',
+	RETAIL: 'Retail',
+	FOOD_DINING: 'Food and Dining',
+	COMPUTERS_ELECTRONICS: 'Computers and Electronics',
+	HOME_GARDEN: 'Home and Garden',
+	TRAVEL_TRANSPORTATION: 'Travel and Transportation',
+	AUTOMOTIVE: 'Automotive',
+};
+
+export const PROVINCES_TERRITORIES = {
+	AB: 'Alberta',
+	BC: 'British Columbia',
+	MB: 'Manitoba',
+	NB: 'New Brunswick',
+	NL: 'Newfoundland and Labrador',
+	NS: 'Nova Scotia',
+	NT: 'Northwest Territories',
+	NU: 'Nunavut',
+	ON: 'Ontario',
+	PE: 'Prince Edward Island',
+	QC: 'Quebec',
+	SK: 'Saskatchewan',
+	YT: 'Yukon',
+};
+
+export const INITIAL_PAYMENT_FORM = {
+	transactionDate: new Date(),
+	destinationId: '',
+	destinationName: '',
+	amount: '',
+	clientId: '',
+	sourceAccount: '',
+	sourceAccountName:'',
+};

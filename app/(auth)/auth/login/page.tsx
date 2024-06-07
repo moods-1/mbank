@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { loadClient } from '@/lib/store/clientSlice';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
-import CustomInput from '@/components/CustomImput';
+import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
@@ -19,6 +19,7 @@ import {
 	storeClientNumber,
 } from '@/lib/clientFunctions';
 import Link from 'next/link';
+import FormErrorText from '@/components/FormErrorText';
 
 const intialFormError = { clientNumber: '', password: '' };
 
@@ -81,63 +82,60 @@ export default function LogIn() {
 	}, []);
 
 	return (
-		
-			<div className='auth-section'>
-				<form className='auth-form max-w-sm' onSubmit={handleSubmit}>
-					<p className='page-title text-center'>Login</p>
-					<CustomInput
-						name='clientNumber'
-						placeholder='Enter card number'
-						value={form.clientNumber}
-						changeFunction={handleChange}
-						className={`focus:border-bank-green`}
-						label='Client Number'
-						invalid={formError.clientNumber ? true : false}
-					/>
-					<p className='text-red-700 text-sm'>{formError.clientNumber || ''}</p>
+		<div className='auth-section'>
+			<form className='auth-form max-w-sm' onSubmit={handleSubmit}>
+				<p className='page-title text-center'>Login</p>
+				<CustomInput
+					name='clientNumber'
+					placeholder='Enter card number'
+					value={form.clientNumber}
+					changeFunction={handleChange}
+					className={`focus:border-bank-green`}
+					label='Client Number'
+					invalid={formError.clientNumber ? true : false}
+				/>
+				<FormErrorText text={formError.clientNumber} className='-mt-3 mb-2' />
+				<CustomInput
+					name='password'
+					type={showPassword ? 'text' : 'password'}
+					placeholder='Enter password'
+					value={form.password}
+					changeFunction={handleChange}
+					className='focus:border-bank-green'
+					label='Password(case sensitive)'
+					invalid={formError.password ? true : false}
+				/>
+				<FormErrorText text={formError.password} className='-mt-3 mb-2'/>
+				<div className='flex justify-between gap-5 flex-wrap'>
+					<span className='flex items-center mt-3'>
+						<Checkbox
+							id='loginShowPassword'
+							className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
+							onCheckedChange={(e) => setShowPassword(e)}
+						/>
+						<Label htmlFor='loginShowPassword'>Show password</Label>
+					</span>
+					<span className='flex items-center mt-3'>
+						<Checkbox
+							id='loginRememberMe'
+							className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
+							checked={rememberMe}
+							onCheckedChange={(e) => setRememberMe(e)}
+						/>
+						<Label htmlFor='loginRememberMe'>Remember me</Label>
+					</span>
+				</div>
 
-					<CustomInput
-						name='password'
-						type={showPassword ? 'text' : 'password'}
-						placeholder='Enter password'
-						value={form.password}
-						changeFunction={handleChange}
-						className='focus:border-bank-green'
-						label='Password(case sensitive)'
-						invalid={formError.password ? true : false}
-					/>
-					<p className='text-red-700 text-sm'>{formError.password || ''}</p>
-					<div className='flex justify-between gap-5 flex-wrap'>
-						<span className='flex items-center mt-3'>
-							<Checkbox
-								id='loginShowPassword'
-								className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
-								onCheckedChange={(e) => setShowPassword(e)}
-							/>
-							<Label htmlFor='loginShowPassword'>Show password</Label>
-						</span>
-						<span className='flex items-center mt-3'>
-							<Checkbox
-								id='loginRememberMe'
-								className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
-								checked={rememberMe}
-								onCheckedChange={(e) => setRememberMe(e)}
-							/>
-							<Label htmlFor='loginRememberMe'>Remember me</Label>
-						</span>
-					</div>
-
-					<div className='mt-6'>
-						<Button className='w-full bg-bank-green'>Login</Button>
-					</div>
-					<p className='mt-3'>
-						{"Don't have an account?"}
-						<Link href='/auth/sign-up' className='ml-2 text-green-700'>
-							Sign-up
-						</Link>
-					</p>
-				</form>
-			</div>
-	
+				<div className='mt-6'>
+					<Button className='w-full bg-bank-green'>Login</Button>
+				</div>
+				<p className='mt-3'>
+					{"Don't have an account?"}
+					<Link href='/auth/sign-up' className='ml-2 text-green-700'>
+						Sign-up
+					</Link>
+				</p>
+			</form>
+		</div>
 	);
 }

@@ -9,7 +9,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 const clientPersistConfig = {
 	key: 'client',
 	storage: storage,
-	whitelist: ['client', 'loggedIn', 'token'],
+	whitelist: ['client', 'loggedIn', 'token', 'accounts'],
 };
 
 const rootReducer = combineReducers({

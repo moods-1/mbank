@@ -6,30 +6,35 @@ import { NewTransactionType } from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
 import Account from '../models/Account';
-import { handleError } from '@/lib/serverFunctions';
+import Client from '../models/Client';
+import { handleError, verifyToken } from '@/lib/serverFunctions';
 
-export async function addTransaction(data: NewTransactionType) {
+export async function addTransaction(token:string, data: NewTransactionType) {
+	Account.syncIndexes();
+	Transaction.syncIndexes();
 	try {
+		await verifyToken(token);
 		await connectToDatabase();
-		const { amount, account: targetAccount, credit } = data;
-		const targetAcc = await Account.findOne({ _id: targetAccount });
+		const { amount, sourceAccount, credit, clientId } = data;
+		const targetAcc = await Account.findOne({ _id: sourceAccount });
 		if (targetAcc) {
 			let newBalance: number;
 			const { accountBalance } = targetAcc;
 			if (credit) {
-				newBalance = accountBalance + amount;
+				newBalance = accountBalance + Number(amount);
 			} else {
-				newBalance = accountBalance - amount;
+				newBalance = accountBalance - Number(amount);
 			}
 			if (newBalance >= 0) {
 				data.amount = credit ? amount : -parseFloat(amount.toString());
 				const transaction = await Transaction.create(data);
 				const { _id, account } = transaction;
 				await Account.updateOne(
-					{ _id: account },
+					{ _id: sourceAccount },
 					{ accountBalance: newBalance, $push: { transactions: _id } }
 				);
-				return JSON.parse(JSON.stringify(transaction));
+				const result = await Client.findOne({ _id: clientId }); 
+				return JSON.parse(JSON.stringify(result));
 			} else {
 				throw new Error('Insufficient funds in this account.');
 			}

@@ -8,6 +8,7 @@ import {
 	AddAccountType,
 	GetAccountDetailsProps,
 	GetAccountsReturn,
+	PaymentFormProps,
 	TransactionType,
 } from '@/lib/types';
 import { connectToDatabase } from '../db';
@@ -37,7 +38,7 @@ export async function getAccountsById(
 		await connectToDatabase();
 		const accounts: AccountType[] | null = await Account.find({
 			_id: { $in: data },
-		});
+		}).sort({ accountName: 1 });
 		const response: GetAccountsReturn = {
 			status: 200,
 			msg: 'OK',
@@ -78,11 +79,11 @@ export async function getAccountDetails(
 		);
 
 		const transactionsResult: TransactionType[] = await Transaction.find({
-			account: id,
+			sourceAccount: id,
 			transactionDate: { $gte: startDate, $lte: endDate },
 			amount: { $gte: min, $lte: max },
 		}).sort({ createdAt: -1 });
-		
+
 		const transactions: TransactionType[] = JSON.parse(
 			JSON.stringify(transactionsResult)
 		);
@@ -94,6 +95,16 @@ export async function getAccountDetails(
 			transactions,
 		};
 		return response;
+	} catch (error) {
+		return handleError(error);
+	}
+}
+
+export async function makePayment(token: string, data: PaymentFormProps) {
+	try {
+		await verifyToken(token);
+		await connectToDatabase();
+		const { } = data;
 	} catch (error) {
 		return handleError(error);
 	}

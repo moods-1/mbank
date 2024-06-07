@@ -1,80 +1,52 @@
 'use client';
 
-import { addAccount } from '@/api/actions/accountActions';
+import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
-import React from 'react';
-import {
-	addTransaction,
-	moveTransctions,
-} from '@/api/actions/transactionActions';
-import { useAppSelector } from '@/lib/store/store';
-import { useAppDispatch } from '@/lib/store/store';
+import { transactionAdd } from '@/api/client/transaction';
+import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
-import { getToken } from '@/lib/clientFunctions';
+import { Types } from 'mongoose';
+
+const accounts = {
+	chequing: '6657782e79dc3ac7662cbd2c',
+	tfsa: '6655db86ba65082ea6587e88',
+	savings: '6654e56d63a5d8dbadb3d264',
+};
+
+const mongoId = new Types.ObjectId('6000000aac0fc18695d23aa0');
 
 export default function SavingsAccount() {
 	const { client } = useAppSelector((state) => state.client);
 	const dispatch = useAppDispatch();
 
-	const data = {
-		clientNumber: 800000001,
-		accountName: 'No-Fee Chequing Account',
-		accountType: '004',
-		accountBalance: 75000,
-		transactions: [],
-	};
-	const transactionData = {
-		clientNumber: 800000001,
-		account: '6655db86ba65082ea6587e88',
+	const TransactionData = {
 		transactionDate: new Date(),
-		amount: 88000,
-		counterParty: 'Savings Account d264',
-		credit: true,
-	};
-
-	const handleAddAccount = async () => {
-		try {
-			const result = await addAccount(data);
-			const localClient = { ...client };
-			const { _id } = result;
-			localClient.accounts.push(_id);
-			dispatch(updateClient(localClient));
-		} catch (error) {
-			console.log(error);
-		}
+		destinationId: mongoId,
+		destinationName: 'Ambrosia Natural Foods',
+		amount: 45.35,
+		clientId: client._id,
+		sourceAccount: Object.values(accounts)[0],
+		credit: false,
 	};
 
 	const handleAddTransaction = async () => {
 		try {
-			const result = await addTransaction(transactionData);
-			console.log({ result });
+			const result = await transactionAdd(TransactionData);
+			if (result && 'firstName' in result) {
+				dispatch(updateClient(result));
+			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
-	const handleMoveTransactions = async () => {
-		try {
-			const result = await moveTransctions();
-			console.log({ result });
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
 	return (
 		<main>
+			<PageHeader
+				title='Savings'
+				subtitle='Earn a great interest rate on your Savings Account.'
+			/>
 			<section>
-				<p className='page-title'>General Savings</p>
-				<Button onClick={handleAddAccount}>Add Account</Button> <br />
-				<br />
 				<Button onClick={handleAddTransaction}>Add Transaction</Button>
-				<br />
-				<br />
-				{/* <Button onClick={handleMoveTransactions}>Move Transactions</Button>
-				<br />
-				<br /> */}
-				<Button onClick={() => console.log(getToken())}>Get Client</Button>
 			</section>
 		</main>
 	);

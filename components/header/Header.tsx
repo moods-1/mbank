@@ -8,12 +8,6 @@ import { FaChevronDown } from 'react-icons/fa6';
 
 import { HEADER_LINKS } from '@/lib/constants';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTriggerMenu,
-} from '@/components/ui/select';
 import LoggedOutButtons from './LoggedOutButtons';
 import { useAppSelector } from '@/lib/store/store';
 import LoggedInButtons from './LoggedInButtons';
@@ -95,37 +89,36 @@ export default function Header() {
 					</SheetTrigger>
 					<SheetContent className='pt-8 min-w-60 max-w-sm flex flex-col justify-between'>
 						<div>
-							<p className='text-2xl font-semibold mb-4 text-bank-green'>
+							<p className='text-2xl font-semibold mb-8 text-bank-green'>
 								Moods Bank
 							</p>
 							{HEADER_LINKS.map(({ title, subsection, link }) => (
-								<div key={title}>
+								<div key={title} className='mb-8'>
 									{link ? (
-										<p
-											className='h-10 flex items-center cursor-pointer mobile-menu-item'
+										<span
+											className='cursor-pointer sidemenu-item !-mt-2'
 											onClick={() => handleMenuLink(link, 'mobile')}
 										>
 											{title}
-										</p>
+										</span>
 									) : (
-										<Select
-											onValueChange={(value) => handleMenuLink(value, 'mobile')}
-										>
-											<SelectTriggerMenu className='mobile-menu-trigger mb-4'>
-												{title}
-											</SelectTriggerMenu>
-											<SelectContent>
+										<div className='sidemenu-div'>
+											<div className='sidemenu-trigger'>
+												<span>{title}</span>
+												<FaChevronDown className='trigger-arrow' />
+											</div>
+											<div className='sidemenu-drop'>
 												{subsection.map(({ label, link, icon }) => (
-													<SelectItem
+													<span
 														key={label}
-														value={link}
-														className=' mobile-header-sub-menu-item'
+														onClick={() => handleMenuLink(link, 'mobile')}
+														className='sidemenu-item'
 													>
 														{label}
-													</SelectItem>
+													</span>
 												))}
-											</SelectContent>
-										</Select>
+											</div>
+										</div>
 									)}
 								</div>
 							))}

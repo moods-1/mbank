@@ -112,16 +112,29 @@ header {
 	@apply hidden absolute top-full right-0 bg-black min-w-72 px-6 pb-2 text-white rounded-bl-lg rounded-br-lg;
 }
 .header-sub-menu-item {
-	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full py-1;
+	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full py-2;
 }
-
 /* Mobile menu */
-.mobile-menu-trigger,
-.mobile-menu-item {
-	@apply hover:text-bank-green hover:pl-1 transition-all duration-500;
+.sidemenu-div {
+	@apply relative mb-10 mr-5;
 }
-.mobile-header-sub-menu-item {
-	@apply hover:text-bank-green hover:pl-5 transition-all duration-300 cursor-pointer;
+.sidemenu-div:hover .sidemenu-drop {
+	@apply block;
+}
+.sidemenu-div:hover .trigger-arrow {
+	@apply rotate-180 duration-300 transition-all;
+}
+.sidemenu-div:hover .sidemenu-trigger {
+	@apply text-bank-green;
+}
+.sidemenu-trigger {
+	@apply flex items-center justify-between;
+}
+.sidemenu-drop {
+	@apply hidden p-4 pb-0 absolute z-10 bg-white shadow-md transition-all duration-500;
+}
+.sidemenu-item {
+	@apply hover:text-bank-green hover:pl-1 transition-all duration-300 cursor-pointer mb-5 inline-block w-full;
 }
 /* Client header */
 .active-tab {
@@ -153,8 +166,17 @@ section {
 .page-title {
 	@apply text-2xl sm:text-4xl font-bold mb-10;
 }
-.flex-center {
-	@apply flex items-center justify-center;
+.flex-center-row {
+	@apply flex items-center justify-center flex-wrap flex-row;
+}
+.flex-center-col {
+	@apply flex items-center justify-center flex-wrap flex-col;
+}
+.flex-between-row {
+	@apply flex items-center justify-between flex-wrap flex-row;
+}
+.flex-between-col {
+	@apply flex items-center justify-between flex-wrap flex-col;
 }
 .red {
 	@apply opacity-0;
@@ -234,7 +256,7 @@ section {
 	content: '';
 }
 .card {
-	@apply p-6 rounded-lg shadow-md;
+	@apply p-3 sm:p-6 rounded-lg shadow-md;
 }
 /* Filter Section */
 .filter-box {
@@ -251,10 +273,16 @@ section {
 }
 /* Form  */
 .form-section {
-	@apply flex flex-wrap gap-5;
+	@apply flex items-start flex-wrap gap-5;
 }
 .form-section div {
 	@apply flex-1 min-w-44;
+}
+.form-title-sm {
+	@apply text-lg font-semibold mb-3;
+}
+.form-input-label {
+	@apply text-sm font-medium inline-block;
 }
 /* Custom shadcn ui styling */
 .no-focus {
@@ -263,3 +291,45 @@ section {
 .notification-dialog {
 	@apply max-w-[calc(100vw-40px)] sm:max-w-lg text-center p-10 rounded-lg;
 }
+.rate-control svg[aria-expanded='true'] {
+	@apply rotate-180 transition-all duration-300;
+}
+.rate-control:hover button {
+	@apply bg-bank-green !text-white;
+}
+.rate-control:hover svg {
+	@apply text-white;
+}
+.hover-slide {
+	@apply transition-all duration-300;
+}
+/* Input  */
+.number-input-div {
+	@apply mb-4 text-sm font-medium;
+}
+.number-input-div .input-box {
+	@apply relative flex items-center;
+}
+.number-input-div .input-box .left-span {
+	@apply absolute left-3;
+}
+.number-input-div .input-box .right-span {
+	@apply absolute right-1;
+}
+.number-input-div input {
+	@apply pl-6 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
+}
+/*  */
+.select-item span:nth-child(1) {
+	@apply w-full flex justify-between items-center gap-5;
+}
+.payee-item {
+	@apply hover:bg-gray-100 hover:cursor-pointer flex gap-2 p-2 border-b text-sm;
+}
+.calendar-wrapper svg{
+	@apply fill-slate-500 mt-[2px];
+}
+.calendar-input {
+	@apply text-sm border h-9 rounded-md outline-none focus:border-bank-green !pl-8;
+}
+

@@ -10,21 +10,23 @@ export default function ClientHeader() {
 	const [tabIndex, setTabIndex] = useState(0);
 	const currentPath = usePathname();
 
-  useEffect(() => {
-    let idx: number = 0;
-    if (currentPath.includes('pay-transfer')) {
-      idx = 1;
-    }
-    setTabIndex(idx);
-  }, [currentPath])
-  
+	useEffect(() => {
+		let idx: number = 0;
+		if (currentPath.includes('pay-transfer')) {
+			idx = 1;
+		} else if (currentPath.includes('admin')) {
+			idx = 2;
+		}
+		setTabIndex(idx);
+	}, [currentPath]);
+
 	return (
-		<nav className='flex px-0 sm:px-10 border-b-4'>
+		<nav className='flex px-0 sm:px-10 bg-black text-white gap-5 pb-1'>
 			{CLIENT_HEADER_LINKS.map(({ title, link }, idx) => (
 				<Link
 					key={title}
 					href={link}
-					className={`h-full -mb-1 border-b-4 border-transparent py-2 px-3 ${
+					className={`h-full border-b-4 border-transparent py-2 ${
 						idx === tabIndex ? 'active-tab' : ''
 					}`}
 				>

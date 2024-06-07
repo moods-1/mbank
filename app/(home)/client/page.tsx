@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { getToken, partOfDayGreeting } from '@/lib/clientFunctions';
+import { partOfDayGreeting } from '@/lib/clientFunctions';
 import { useAppSelector } from '@/lib/store/store';
-import { getAccountsById } from '@/api/actions/accountActions';
 import AccountItem from './AccountItem';
 import { AccountType } from '@/lib/types';
 import { SlideLoader } from '@/components/Loaders';
@@ -15,7 +14,7 @@ import DoubleSlider from '@/components/DoubleSlider';
 import { Button } from '@/components/ui/button';
 import { getAccounts } from '@/api/client/accounts';
 import { useAppDispatch } from '@/lib/store/store';
-import { logoutClient } from '@/lib/store/clientSlice';
+import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 
 export default function ClientHome() {
 	const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -35,12 +34,12 @@ export default function ClientHome() {
 		const fetchAccounts = async () => {
 			setIsLoading(true);
 			try {
-				const token = getToken();
 				const { accounts } = client;
 				const result = await getAccounts(accounts);
 				if (result && 'response' in result) {
 					const { response } = result;
 					setAccounts(response);
+					dispatch(loadAccounts(response));
 				} else if (result && 'msg' in result && 'status' in result) {
 					const { status, msg } = result;
 					if (status === 401) {

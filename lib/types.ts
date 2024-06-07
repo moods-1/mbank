@@ -6,16 +6,7 @@ export type TransactionType = {
 	account: Types.ObjectId;
 	transactionDate: Date;
 	amount: number;
-	counterParty: string;
-};
-
-export type NewTransactionType = {
-	clientNumber: number;
-	account: Types.ObjectId | string;
-	transactionDate: Date;
-	amount: number;
-	counterParty: string;
-	credit: boolean;
+	destinationName: string;
 };
 
 export type AccountType = {
@@ -42,6 +33,7 @@ export type AddClientType = {
 	email: string;
 	phoneNumber: number;
 	city: string;
+	province: string;
 	country: string;
 	address: string;
 	postalCode: string;
@@ -61,12 +53,27 @@ export type ClientType = {
 	country: string;
 	address: string;
 	postalCode: string;
+	province: string;
 	password: string;
 	token?: string;
 	image?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
 	accounts?: Types.ObjectId[];
+};
+export type PayeeType = {
+	_id?: Types.ObjectId | string;
+	payeeName: string;
+	nickname?: string;
+	email: string;
+	businessType: string;
+	phoneNumber: number;
+	city: string;
+	country: string;
+	address: string;
+	postalCode: string;
+	createdAt?: Date;
+	updatedAt?: Date;
 };
 
 export type PublicClientType = {
@@ -78,12 +85,14 @@ export type PublicClientType = {
 	email: string;
 	phoneNumber: number;
 	city: string;
+	province: string;
 	country: string;
 	address: string;
 	postalCode: string;
 	token: string;
 	image?: string;
 	accounts: Types.ObjectId[];
+	payees: PayeeProps[];
 };
 
 export type LoginProps = {
@@ -116,4 +125,48 @@ export type GetAccountsReturn = {
 	status: number;
 	msg: string;
 	response: AccountType[];
+};
+
+export type PayeeProps = {
+	_id?: Types.ObjectId | string | any;
+	payeeId: Types.ObjectId | string | any;
+	payeeName?: string;
+	clientNumber?: number;
+	accountNumber: string;
+	nickname?: string;
+};
+
+export type StatusMsgReturn = {
+	status: number;
+	msg: string;
+};
+
+export type PayeeReturnType = {
+	status: number;
+	msg: string;
+	response: PayeeType[];
+};
+export type AddPayeeReturnType = {
+	status: number;
+	msg: string;
+	response: PublicClientType;
+};
+
+export type PaymentFormProps = {
+	transactionDate: Date;
+	destinationId: Types.ObjectId | string;
+	destinationName: string| undefined;
+	amount: number | string;
+	clientId: Types.ObjectId | string | undefined;
+	sourceAccount: Types.ObjectId | string;
+};
+
+export type NewTransactionType = {
+	transactionDate: Date;
+	destinationId: Types.ObjectId | string;
+	destinationName: string| undefined;
+	amount: number | string;
+	clientId: Types.ObjectId | string | undefined;
+	sourceAccount: Types.ObjectId | string;
+	credit: boolean;
 };

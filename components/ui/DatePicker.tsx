@@ -6,6 +6,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import {
 	Popover,
@@ -18,16 +19,18 @@ type Props = {
 	className?: string | undefined;
 	label: string | undefined;
 	type: string | undefined;
-	comparisonDate: Date | undefined;
+	comparisonDate?: Date | undefined;
 	date: Date | undefined;
 	changeFunction: (data: Date) => void;
+	disableBeforeDate?: Date;
 };
-export function DatePickerDemo({
+export function DatePicker({
 	className,
 	label,
 	type,
 	date,
 	changeFunction,
+	disableBeforeDate,
 }: Props) {
 	const [calendarOpen, setCalendarOpen] = React.useState<boolean>(false);
 
@@ -48,15 +51,22 @@ export function DatePickerDemo({
 		}
 	};
 
+	const handleDisabled = (date: Date) => {
+		if (disableBeforeDate) {
+			return date < disableBeforeDate;
+		}
+		return false;
+	};
+
 	return (
-		<div className={`flex flex-col ${className} `}>
-			<label>{label || ''}</label>
+		<div className={`flex flex-col ${className}`}>
+			<Label className='mb-1'>{label || ''}</Label>
 			<Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
 				<PopoverTrigger asChild>
 					<Button
 						variant={'outline'}
 						className={cn(
-							'w-full min-w-56 max-w-[280px] justify-start text-left font-normal',
+							'w-full min-w-48 max-w-[280px] justify-start text-left font-normal',
 							!date && 'text-muted-foreground'
 						)}
 						onClick={() => setCalendarOpen((prev) => !prev)}
@@ -71,6 +81,7 @@ export function DatePickerDemo({
 						selected={date}
 						onSelect={handleSelect}
 						initialFocus
+						disabled={handleDisabled}
 					/>
 				</PopoverContent>
 			</Popover>

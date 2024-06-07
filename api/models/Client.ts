@@ -42,6 +42,12 @@ const ClientSchema = new Schema(
 			minLength: 2,
 			maxLength: 30,
 		},
+		province: {
+			type: String,
+			required: true,
+			minLength: 2,
+			maxLength: 30,
+		},
 		country: {
 			type: String,
 			required: true,
@@ -73,6 +79,14 @@ const ClientSchema = new Schema(
 			{
 				type: Schema.Types.ObjectId,
 				ref: 'Course',
+			},
+		],
+		payees: [
+			{
+				payeeId: { type: Schema.Types.ObjectId },
+				payeeName: { type: String },
+				nickname: {type:  String},
+				accountNumber: { type: String },
 			},
 		],
 		token: {

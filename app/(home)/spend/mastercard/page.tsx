@@ -1,11 +1,13 @@
+import PageHeader from '@/components/PageHeader';
 import React from 'react';
 
 export default function page() {
 	return (
 		<main>
-			<section>
-				<p className='page-title'>Global Mastercard</p>
-			</section>
+			<PageHeader
+				title='Global Mastercard'
+				subtitle='No annual fee and great rewards.'
+			/>
 		</main>
 	);
 }

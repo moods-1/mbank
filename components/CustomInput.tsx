@@ -1,4 +1,6 @@
 import React from 'react';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
 
 type Props = {
 	value: string | number;
@@ -32,16 +34,16 @@ const CustomInput = ({
 	readOnly,
 }: Props) => {
 	return (
-		<div className='mt-3'>
-			{label && (
+		<div className='mb-4'>
+			{label ? (
 				<div className='flex'>
-					<label className='text-sm inline-block font-semibold'>{label}</label>
+					<Label>{label}</Label>
 					{requiredStar && <span className='text-red-600'>*</span>}
 				</div>
-			)}
+			) : null}
 
-			<input
-				className={`w-full outline-none border rounded-sm px-3 py-1 ${className}`}
+			<Input
+				className={`w-full outline-none border rounded-sm px-3  ${className}`}
 				value={value}
 				placeholder={placeholder}
 				onChange={changeFunction}
@@ -52,6 +54,7 @@ const CustomInput = ({
 				style={{ borderColor: invalid ? 'red' : '' }}
 				required={required || false}
 				readOnly={readOnly}
+				autoComplete={type === 'password' ? 'on' : 'off'}
 			/>
 		</div>
 	);

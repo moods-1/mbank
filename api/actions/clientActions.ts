@@ -7,7 +7,13 @@ import {
 	hashPassword,
 	handleError,
 } from '@/lib/serverFunctions';
-import { AddClientType, ClientType, LoginProps } from '@/lib/types';
+import {
+	AddClientType,
+	ClientType,
+	LoginProps,
+	PayeeProps,
+	PublicClientType,
+} from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Client from '../models/Client';
 import ClientNumber from '../models/CurrentClientNumber';
@@ -25,7 +31,7 @@ export async function addClient(data: AddClientType) {
 		//
 		data.clientNumber = newClientNumber;
 		data.password = await hashPassword(data.password);
-		const client = await Client.create( data );
+		const client = await Client.create(data);
 		client.token = await generateToken(client._id);
 		client.save();
 		const returnClient = client.toObject();
@@ -61,5 +67,52 @@ export async function loginClient(data: LoginProps) {
 		}
 	} catch (error) {
 		return handleError(error);
+	}
+}
+
+export async function removePayee(token: string, data: PayeeProps) {
+	const { clientNumber, payeeId } = data;
+	try {
+		await verifyToken(token);
+		await connectToDatabase();
+		const result = await Client.findOneAndUpdate(
+			{ clientNumber },
+			{ $pull: { payees: payeeId } },
+			{
+				returnOriginal: false,
+			}
+		);
+		return {
+			status: 201,
+			msg: `Payee has been removed.`,
+			response: JSON.parse(JSON.stringify(result)),
+		};
+	} catch (error) {
+		return { status: 500, msg: `Sorry, we could not remove the payee.` };
+	}
+}
+
+export async function addPayee(token: string, data: PayeeProps) {
+	const { clientNumber } = data;
+	delete data.clientNumber;
+	try {
+		await verifyToken(token);
+		await connectToDatabase();
+		const result = await Client.findOneAndUpdate(
+			{ clientNumber },
+			{ $push: { payees: data } },
+			{ returnOriginal: false }
+		);
+		return {
+			status: 201,
+			msg: 'Payee has been added.',
+			response: JSON.parse(JSON.stringify(result)),
+		};
+	} catch (error) {
+		return {
+			status: 500,
+			msg: `Sorry, we could not add the payee.`,
+			response: {},
+		};
 	}
 }

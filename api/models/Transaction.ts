@@ -2,15 +2,22 @@ import { Schema, models, model } from 'mongoose';
 
 const TransactionSchema = new Schema(
 	{
-		client: {
+		clientId: {
 			type: Schema.Types.ObjectId,
 		},
-		counterParty: {
+		destinationId: {
+			type: Schema.Types.ObjectId,
+		},
+		destinationName: {
 			type: String,
 			minLength: 2,
 		},
-		account: {
+		sourceAccount: {
 			type: Schema.Types.ObjectId,
+		},
+		sourceAccountName: {
+			type: String,
+			minLength: 2,
 		},
 		transactionDate: {
 			type: Date,

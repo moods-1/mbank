@@ -1,5 +1,5 @@
-import { PublicClientType } from '@/lib/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AccountType, PublicClientType } from '@/lib/types';
+import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { clearPersist } from '../clientFunctions';
 import { Types } from 'mongoose';
 
@@ -8,12 +8,14 @@ const mongoId = new Types.ObjectId('6000000aac0fc18695d23aaa');
 export interface UserState {
 	token: string;
 	loggedIn: boolean;
+	accounts: AccountType[];
 	client: PublicClientType;
 }
 
 export const initialState: UserState = {
 	loggedIn: false,
 	token: '',
+	accounts: [],
 	client: {
 		_id: mongoId,
 		clientNumber: 0,
@@ -23,12 +25,14 @@ export const initialState: UserState = {
 		email: '',
 		phoneNumber: 0,
 		city: '',
+		province: '',
 		country: '',
 		address: '',
 		postalCode: '',
 		image: '',
 		token: '',
 		accounts: [],
+		payees: [],
 	},
 };
 
@@ -43,19 +47,20 @@ export const clientSlice = createSlice({
 			state.token = token;
 		},
 		updateClient: (state, action: PayloadAction<PublicClientType>) => {
-			const { loggedIn, token } = action.payload;
 			state.client = { ...state.client, ...action.payload };
-			state.loggedIn = loggedIn;
-			state.token = token;
+			return;
 		},
 		logoutClient: (state) => {
 			clearPersist();
 			return initialState;
 		},
+		loadAccounts: (state, action: PayloadAction<AccountType[]>) => {
+			state.accounts = [...action.payload];
+		}
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { loadClient, updateClient, logoutClient } = clientSlice.actions;
+export const { loadClient, updateClient, logoutClient, loadAccounts } = clientSlice.actions;
 
 export default clientSlice.reducer;

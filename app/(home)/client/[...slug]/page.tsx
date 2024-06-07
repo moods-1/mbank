@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { AccountType, TransactionType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
-import { DatePickerDemo } from '@/components/ui/DatePicker';
+import { DatePicker } from '@/components/ui/DatePicker';
 import { SlideLoader } from '@/components/Loaders';
 import DoubleSlider from '@/components/DoubleSlider';
 import { getAccDetails } from '@/api/client/accounts';
@@ -36,10 +36,11 @@ export default function AccountDetails() {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { target } = e;
 		const { name, value } = target;
+		let localValue: string = value.replace(/[^0-9]/g, '');
 		if (name === 'minAmount') {
-			setMinAmount(value);
+			setMinAmount(localValue);
 		} else {
-			setMaxAmount(value);
+			setMaxAmount(localValue);
 		}
 	};
 
@@ -118,98 +119,102 @@ export default function AccountDetails() {
 	});
 
 	return (
-		<div className='pb-10'>
-			<div>
-				<p className='text-lg sm:text-xl font-semibold'>
-					{account?.accountName || <SlideLoader className='h-6 max-w-96' />}
-				</p>
-				<p>
-					<span className='font-semibold'>Account number:</span> {id}
-				</p>
-				<p className='flex'>
-					<span className='font-semibold'>Balance: </span>
-					{balance ? `$ ${balance}` : <SlideLoader className='h-6 max-w-40' />}
-				</p>
-				<div className='mt-6'>
-					<p className='font-medium mb-2'>Transaction Custom Search</p>
-					<div className='filter-box'>
-						<DatePickerDemo
-							label='Start Date'
-							type='start'
-							comparisonDate={endDate}
-							date={startDate}
-							changeFunction={setStartDate}
-							className='mr-2'
-						/>
-						<DatePickerDemo
-							label='End Date'
-							type='end'
-							comparisonDate={startDate}
-							date={endDate}
-							changeFunction={setEndDate}
-						/>
-					</div>
-					<div className='filter-box'>
-						<div className='mr-2 w-full max-w-56'>
-							<label htmlFor='minAmount'>Lower $ limit</label>
-							<div className='input-box'>
-								<span>$</span>
-								<Input
-									type='number'
-									id='minAmount'
-									name='minAmount'
-									min='0'
-									step={1}
-									value={minAmount}
-									placeholder=''
-									onChange={handleChange}
-								/>
-							</div>
-						</div>
-						<div className='max-w-56 w-full'>
-							<label htmlFor='maxAmount'>Upper $ limit</label>
-							<div className='input-box'>
-								<span>$</span>
-								<Input
-									type='number'
-									id='maxAmount'
-									name='maxAmount'
-									min={minAmount}
-									step={1}
-									value={maxAmount}
-									placeholder=''
-									onChange={handleChange}
-								/>
-							</div>
-						</div>
-					</div>
-					<Button
-						className='bg-bank-green px-4'
-						size={'sm'}
-						onClick={handleFilter}
-					>
-						Search
-					</Button>
-				</div>
-			</div>
-			<div>
-				<div className='mt-6'>
-					<p className='font-semibold mb-4'>Transactions</p>
-					<>
-						{noTransactions ? (
-							<div>No transactions</div>
+		<div className='pb-10 flex gap-6'>
+			<div className='flex-1'>
+				<div>
+					<p className='text-lg sm:text-xl font-semibold'>
+						{account?.accountName || <SlideLoader className='h-6 max-w-96' />}
+					</p>
+					<p className='text-[15px]'>
+						<span className='font-semibold'>Account number:</span> {id}
+					</p>
+					<p className='flex text-[15px]'>
+						<span className='font-semibold'>Balance: </span>
+						{balance ? (
+							`$ ${balance}`
 						) : (
-							<div className='max-w-2xl border'>
-								{isLoading ? <DoubleSlider /> : null}
-								{transactions?.map((transaction, idx) => (
-									<TransactionItem key={idx} transaction={transaction} />
-								))}
-							</div>
+							<SlideLoader className='h-6 max-w-40' />
 						)}
-					</>
-					<div></div>
+					</p>
+					<div className='mt-6'>
+						<p className='font-medium mb-2'>Transaction Custom Search</p>
+						<div className='filter-box'>
+							<DatePicker
+								label='Start Date'
+								type='start'
+								comparisonDate={endDate}
+								date={startDate}
+								changeFunction={setStartDate}
+								className='mr-2'
+							/>
+							<DatePicker
+								label='End Date'
+								type='end'
+								comparisonDate={startDate}
+								date={endDate}
+								changeFunction={setEndDate}
+							/>
+						</div>
+						<div className='filter-box'>
+							<div className='mr-2 w-full max-w-56'>
+								<label htmlFor='minAmount'>Lower $ limit</label>
+								<div className='input-box'>
+									<span>$</span>
+									<Input
+										id='minAmount'
+										name='minAmount'
+										min='0'
+										step={1}
+										value={minAmount}
+										placeholder=''
+										onChange={handleChange}
+									/>
+								</div>
+							</div>
+							<div className='max-w-56 w-full'>
+								<label htmlFor='maxAmount'>Upper $ limit</label>
+								<div className='input-box'>
+									<span>$</span>
+									<Input
+										id='maxAmount'
+										name='maxAmount'
+										min={minAmount}
+										step={1}
+										value={maxAmount}
+										placeholder=''
+										onChange={handleChange}
+									/>
+								</div>
+							</div>
+						</div>
+						<Button
+							className='bg-bank-green px-4'
+							size={'sm'}
+							onClick={handleFilter}
+						>
+							Search
+						</Button>
+					</div>
+				</div>
+				<div>
+					<div className='mt-6 mb-10'>
+						<p className='font-semibold mb-4'>Transactions</p>
+						<>
+							{noTransactions ? (
+								<div>No transactions</div>
+							) : (
+								<div className='max-w-2xl border max-h-[70vh] overflow-y-auto'>
+									{isLoading ? <DoubleSlider /> : null}
+									{transactions?.map((transaction, idx) => (
+										<TransactionItem key={idx} transaction={transaction} />
+									))}
+								</div>
+							)}
+						</>
+					</div>
 				</div>
 			</div>
+			<div className='flex-1 bg-red-500 hidden md:block' />
 			<ToastContainer theme='dark' position='bottom-left' />
 		</div>
 	);

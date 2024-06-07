@@ -1,13 +1,13 @@
-import React from 'react'
+import PageHeader from '@/components/PageHeader';
+import React from 'react';
 
 export default function page() {
-  return (
-      <main>
-          <section>
-              <p className="page-title">
-                  Retirement Savings Account
-              </p>
-          </section>
-    </main>
-  )
+	return (
+		<main>
+			<PageHeader
+				title='Retirement Savings Account'
+				subtitle='Do a whole lot of nothing sooner!'
+			/>
+		</main>
+	);
 }

@@ -7,15 +7,12 @@ export default function TransactionItem({
 }: {
 	transaction: TransactionType;
 }) {
-	const { amount, transactionDate, _id, counterParty } = transaction;
+	const { amount, transactionDate, _id, destinationName } = transaction;
 	const displayId = _id.toString().slice(-8);
 	return (
 		<div className='border-b'>
 			<div className='transaction-item'>
-				<p>
-					<span>Source</span>
-					<span>{counterParty}</span>
-				</p>
+				<p className='font-semibold'>{destinationName}</p>
 				<p>
 					<span>Transaction#</span>
 					<span>{displayId}</span>
