@@ -108,7 +108,6 @@ export async function getAccountDetails(
 export async function quickTransaction(data: ServerNewTransactionType) {
 	const { amount, destinationId, sourceAccount, sourceAccountName, credit } =
 		data;
-	console.log({ destinationId, sourceAccount });
 	try {
 		//Update account being credited
 		if (credit) {
@@ -130,7 +129,6 @@ export async function quickTransaction(data: ServerNewTransactionType) {
 					{ accountBalance: newBalance, $push: { transactions: _id } },
 					{ returnOriginal: false }
 				);
-				console.log({ newCredit });
 			}
 		} else { // Update payment source account
 			const targetAcc = await Account.findOne({ _id: sourceAccount });

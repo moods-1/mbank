@@ -85,11 +85,9 @@ export default function QuickTransfer() {
 		let localErrObj: ErrorType = { ...initialError };
 		let errMsg: string = '';
 		const errorSet = new Set();
-		console.log({ form });
 		// Form validation.
 		Object.entries(form).forEach(([key, value]) => {
 			if (!value || Number(value) <= 1) {
-				console.log('Error =>', key, value);
 				errorSet.add(true);
 				if (key === 'amount') {
 					errMsg = `${firstCap(key)} is required.`;

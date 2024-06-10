@@ -21,8 +21,6 @@ function CustomDataTable({
 	emptyMessage,
 }: TablePropsType) {
 	const [filterableIndexes, setFilterableIndexes] = useState<any[]>([]);
-	console.log({ filterableIndexes })
-
 	const filteredData = rows?.filter((row) => {
 		let value;
 		let match = false;

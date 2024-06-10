@@ -28,7 +28,6 @@ export const verifyToken = async (token: string) => {
 };
 
 export const handleError = (error: unknown) => {
-	console.log({ error });
 	if (error instanceof JsonWebTokenError) {
 		return { status: 401, msg: 'Invalid or expired token.' };
 	}

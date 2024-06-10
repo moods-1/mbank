@@ -37,7 +37,6 @@ export default function SavingsAccount() {
 			if (result && 'firstName' in result) {
 				dispatch(updateClient(result));
 			}
-			console.log({ TransactionData });
 		} catch (error) {
 			console.log(error);
 		}
