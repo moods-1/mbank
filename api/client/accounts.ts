@@ -1,6 +1,17 @@
 import { getToken } from '@/lib/clientFunctions';
-import { getAccountsById ,  getAccountDetails} from '../actions/accountActions';
-import { GetAccountsReturn, AccountDetailsProps, GetAccountDetailsProps } from '@/lib/types';
+import {
+	getAccountsById,
+	getAccountDetails,
+	quickTransfer,
+} from '../actions/accountActions';
+import {
+	GetAccountsReturn,
+	AccountDetailsProps,
+	GetAccountDetailsProps,
+	ClientNewTransactionType,
+	PublicClientType,
+	PaymentFormProps,
+} from '@/lib/types';
 import { Types } from 'mongoose';
 
 export const token: string = getToken();
@@ -22,3 +33,12 @@ export const getAccDetails = async (
 	return result ? result : null;
 };
 
+export const transferQuick = async (
+	data: PaymentFormProps
+): Promise<PublicClientType | null | {}> => {
+	const result = await quickTransfer(token, data);
+	if (result && Object.keys(result)) {
+		return result;
+	}
+	return null;
+};

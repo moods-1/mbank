@@ -20,6 +20,7 @@ import {
 } from '@/lib/clientFunctions';
 import Link from 'next/link';
 import FormErrorText from '@/components/FormErrorText';
+import FormHeader from '@/components/FormHeader';
 
 const intialFormError = { clientNumber: '', password: '' };
 
@@ -84,7 +85,10 @@ export default function LogIn() {
 	return (
 		<div className='auth-section'>
 			<form className='auth-form max-w-sm' onSubmit={handleSubmit}>
-				<p className='page-title text-center'>Login</p>
+				<FormHeader className='!mb-8'>
+					<p className='form-title-lg text-center'>Login</p>
+				</FormHeader>
+
 				<CustomInput
 					name='clientNumber'
 					placeholder='Enter card number'
@@ -105,7 +109,7 @@ export default function LogIn() {
 					label='Password(case sensitive)'
 					invalid={formError.password ? true : false}
 				/>
-				<FormErrorText text={formError.password} className='-mt-3 mb-2'/>
+				<FormErrorText text={formError.password} className='-mt-3 mb-2' />
 				<div className='flex justify-between gap-5 flex-wrap'>
 					<span className='flex items-center mt-3'>
 						<Checkbox
@@ -127,7 +131,7 @@ export default function LogIn() {
 				</div>
 
 				<div className='mt-6'>
-					<Button className='w-full bg-bank-green'>Login</Button>
+					<Button className='auth-form-button no-focus'>Login</Button>
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}

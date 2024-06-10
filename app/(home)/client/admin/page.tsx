@@ -5,12 +5,13 @@ import { HiHandThumbUp } from 'react-icons/hi2';
 
 import { Button } from '@/components/ui/button';
 import CustomInput from '@/components/CustomInput';
-import { formValidator } from '@/lib/clientFunctions';
+import { formValidator, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
 import { adminAddPayee } from '@/api/actions/payeeActions';
 import { PAYEE_BUSINESS_TYPES, PROVINCES_TERRITORIES } from '@/lib/constants';
 import SingleValueSelect from '@/components/SingleValueSelect';
 import FormErrorText from '@/components/FormErrorText';
+import FormHeader from '@/components/FormHeader';
 
 const initialForm = {
 	payeeName: '',
@@ -26,6 +27,10 @@ const initialForm = {
 
 export default function AddPayee() {
 	const [form, setForm] = useState(initialForm);
+	const [selectKeys, setSelectKeys] = useState({
+		province: 'on',
+		business: 'bus',
+	});
 	const [formError, setFormError] = useState(initialForm);
 	const [openNotification, setOpenNotification] = useState(false);
 
@@ -83,6 +88,7 @@ export default function AddPayee() {
 			if (result && resultType === 'object' && Object.keys(result).length) {
 				setFormError(initialForm);
 				setOpenNotification(true);
+				setSelectKeys({ province: randomString(4), business: randomString(4) });
 			}
 		} catch (error) {
 			console.log(error);
@@ -92,7 +98,10 @@ export default function AddPayee() {
 	return (
 		<div className='auth-section'>
 			<form className='auth-form max-w-lg border' onSubmit={handleSubmit}>
-				<p className='page-title text-center'>Add Payee</p>
+				<FormHeader className='!mb-10'>
+					<p className='form-title-lg text-center'>Add Payee</p>
+				</FormHeader>
+
 				<div className='form-section'>
 					<div>
 						<CustomInput
@@ -108,6 +117,7 @@ export default function AddPayee() {
 					</div>
 					<div>
 						<SingleValueSelect
+							reset={selectKeys.business}
 							invalid={formError.businessType ? true : false}
 							label='Business Type'
 							name='businessType'
@@ -171,6 +181,7 @@ export default function AddPayee() {
 				<div className='form-section'>
 					<div>
 						<SingleValueSelect
+							reset={selectKeys.province}
 							invalid={formError.province ? true : false}
 							label='Province / Territory'
 							data={Object.values(PROVINCES_TERRITORIES)}

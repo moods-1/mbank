@@ -27,6 +27,14 @@ const TransactionSchema = new Schema(
 			type: Number,
 			default: 0,
 		},
+		credit: {
+			type: Boolean,
+			required: true,
+		},
+		accountBalance: {
+			type: Number,
+			default: 0,
+		}
 	},
 	{ timestamps: true, collection: 'Transaction' }
 );

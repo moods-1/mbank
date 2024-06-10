@@ -1,4 +1,3 @@
-import 'react-toastify/dist/ReactToastify.css';
 import type { Metadata } from 'next';
 
 import ClientHeader from './ClientHeader';

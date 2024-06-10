@@ -27,6 +27,7 @@ type Option = {
 };
 
 type Props = {
+	reset: string;
 	placeholder?: string;
 	name: string;
 	emptyMessage: string;
@@ -36,6 +37,7 @@ type Props = {
 };
 
 export function SearchableInput({
+	reset,
 	placeholder,
 	name,
 	emptyMessage,
@@ -55,13 +57,13 @@ export function SearchableInput({
 	return (
 		<div className='mb-4'>
 			{label ? <Label>{label}</Label> : null}
-			<Popover open={open} onOpenChange={setOpen}>
+			<Popover open={open} onOpenChange={setOpen} key={reset}>
 				<PopoverTrigger asChild>
 					<Button
 						variant='outline'
 						role='combobox'
 						aria-expanded={open}
-						className='w-full h-9 justify-between'
+						className='w-full h-9 justify-between no-focus focus:border-bank-green'
 					>
 						{value
 							? options.find((item) => item.value === value)?.label

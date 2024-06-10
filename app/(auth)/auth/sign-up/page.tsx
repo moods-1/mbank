@@ -12,11 +12,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
 import { addClient } from '@/api/actions/clientActions';
-import { formValidator } from '@/lib/clientFunctions';
+import { formValidator, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
 import SingleValueSelect from '@/components/SingleValueSelect';
 import { PROVINCES_TERRITORIES } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
+import FormHeader from '@/components/FormHeader';
 
 const initialForm = {
 	firstName: '',
@@ -40,6 +41,7 @@ export default function SignUp() {
 	const [showPassword, setShowPassword] = useState<boolean | CheckedState>(
 		false
 	);
+	const [selectKey, setSelectKey] = useState('province');
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 
@@ -104,6 +106,7 @@ export default function SignUp() {
 				setForm(initialForm);
 				setFormError(initialForm);
 				setOpenNotification(true);
+				setSelectKey(randomString(4));
 			}
 		} catch (error) {
 			console.log(error);
@@ -113,7 +116,9 @@ export default function SignUp() {
 	return (
 		<div className='auth-section'>
 			<form className='auth-form max-w-lg border' onSubmit={handleSubmit}>
-				<p className='page-title text-center'>Sign Up</p>
+				<FormHeader className='!mb-8'>
+					<p className='form-title-lg text-center'>Sign Up</p>
+				</FormHeader>
 				<div className='form-section'>
 					<div>
 						<CustomInput
@@ -125,7 +130,7 @@ export default function SignUp() {
 							label='First Name'
 							invalid={formError.firstName ? true : false}
 						/>
-						<FormErrorText text={formError.firstName} className='-mt-3 mb-2'/>
+						<FormErrorText text={formError.firstName} className='-mt-3 mb-2' />
 					</div>
 					<div>
 						<CustomInput
@@ -153,7 +158,7 @@ export default function SignUp() {
 							max={50}
 							invalid={formError.email ? true : false}
 						/>
-						<FormErrorText text={formError.email} className='-mt-3 mb-2'/>
+						<FormErrorText text={formError.email} className='-mt-3 mb-2' />
 					</div>
 					<div>
 						<CustomInput
@@ -166,7 +171,10 @@ export default function SignUp() {
 							max={10}
 							invalid={formError.phoneNumber ? true : false}
 						/>
-						<FormErrorText text={formError.phoneNumber} className='-mt-3 mb-2' />
+						<FormErrorText
+							text={formError.phoneNumber}
+							className='-mt-3 mb-2'
+						/>
 					</div>
 				</div>
 				<div className='form-section'>
@@ -199,6 +207,7 @@ export default function SignUp() {
 					</div>
 					<div>
 						<SingleValueSelect
+							reset={selectKey}
 							label='Province / Territory'
 							data={Object.values(PROVINCES_TERRITORIES)}
 							name='province'

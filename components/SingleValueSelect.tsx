@@ -8,6 +8,7 @@ import {
 import { Label } from '@/components/ui/label';
 
 type Props = {
+	reset: string;
 	invalid?: boolean;
 	label?: string;
 	data: string[];
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export default function SingleValueSelect({
+	reset,
 	invalid,
 	label,
 	data,
@@ -35,6 +37,7 @@ export default function SingleValueSelect({
 			<Select
 				onValueChange={(e: string) => changeFunction(e, `${name}`)}
 				name={name}
+				key={reset}
 			>
 				<SelectTrigger
 					className='w-full focus:border-bank-green'

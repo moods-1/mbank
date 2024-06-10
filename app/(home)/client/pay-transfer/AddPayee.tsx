@@ -7,13 +7,18 @@ import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
 import CustomInput from '@/components/CustomInput';
 import { Button } from '@/components/ui/button';
-import { formatPayeeOptions, formValidator } from '@/lib/clientFunctions';
+import {
+	formatPayeeOptions,
+	formValidator,
+	randomString,
+} from '@/lib/clientFunctions';
 import { payeeAdd } from '@/api/client/client';
 import { PayeeType, PublicClientType } from '@/lib/types';
 import { getPayees } from '@/api/client/payee';
 import { SearchableInput } from '@/components/SearchableInput';
 import { Types } from 'mongoose';
 import FormErrorText from '@/components/FormErrorText';
+import FormHeader from '@/components/FormHeader';
 
 type AddPayeeType = {
 	payeeId: Types.ObjectId | string | any;
@@ -31,6 +36,7 @@ const initialErrorObj: AddPayeeType = {
 
 export default function AddPayee({ client }: { client: PublicClientType }) {
 	const [form, setForm] = useState<AddPayeeType>(initialErrorObj);
+	const [selectKey, setSelectKey] = useState('payee');
 	const [payees, setPayees] = useState<PayeeType[]>([]);
 	const [formError, setFormError] = useState<AddPayeeType>(initialErrorObj);
 	const dispatch = useAppDispatch();
@@ -58,7 +64,8 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 	const reset = async () => {
 		setForm(initialErrorObj);
 		setFormError(initialErrorObj);
-	}
+		setSelectKey(randomString(3));
+	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -99,8 +106,11 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 	return (
 		<div>
 			<form className='card border max-w-72' onSubmit={handleSubmit}>
-				<p className='form-title-sm'>Add Payee</p>
+				<FormHeader>
+					<p className='form-title-sm'>Add Payee</p>
+				</FormHeader>
 				<SearchableInput
+					reset={selectKey}
 					placeholder='Select payee'
 					name='payeeId'
 					emptyMessage='No payee found.'
@@ -108,7 +118,10 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 					options={payeeOptions}
 					changeFunction={handleSelect}
 				/>
-				<FormErrorText text={formError.payeeName || ''} className='-mt-3 mb-2' />
+				<FormErrorText
+					text={formError.payeeName || ''}
+					className='-mt-3 mb-2'
+				/>
 				<CustomInput
 					name='accountNumber'
 					placeholder='Enter account number'
@@ -118,7 +131,10 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 					label='Payee Account Number'
 					invalid={formError.accountNumber ? true : false}
 				/>
-				 <FormErrorText text={formError.accountNumber || ''} className='-mt-3 mb-2' />
+				<FormErrorText
+					text={formError.accountNumber || ''}
+					className='-mt-3 mb-2'
+				/>
 				<CustomInput
 					name='nickname'
 					placeholder='Enter account nickname'
@@ -128,10 +144,14 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 					label='Payee Nickname'
 					invalid={formError.nickname ? true : false}
 				/>
-				<FormErrorText text= {formError.nickname || ''} className='-mt-3 mb-2' />
+				<FormErrorText text={formError.nickname || ''} className='-mt-3 mb-2' />
 				<Button className='w-full mt-2'>Add Payee</Button>
 			</form>
-			{/* <ToastContainer /> */}
+			<ToastContainer
+				theme='dark'
+				position='bottom-left'
+				containerId='AddPayee'
+			/>
 		</div>
 	);
 }

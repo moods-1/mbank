@@ -1,29 +1,37 @@
 import { formatCurrency, formatDate } from '@/lib/clientFunctions';
-import { AccountType, TransactionType } from '@/lib/types';
-import Link from 'next/link';
+import { TransactionReturnType } from '@/lib/types';
 
 export default function TransactionItem({
 	transaction,
 }: {
-	transaction: TransactionType;
+	transaction: TransactionReturnType;
 }) {
-	const { amount, transactionDate, _id, destinationName } = transaction;
-	const displayId = _id.toString().slice(-8);
+	const {
+		amount,
+		transactionDate,
+		destinationName,
+		credit,
+		accountBalance,
+	} = transaction;
+	const currency = `$${formatCurrency(amount)}`;
+	const formattedAmount = credit ? currency : `-${currency}`;
+	const formattedBalance = `$${formatCurrency(accountBalance)}`;
+
 	return (
 		<div className='border-b'>
 			<div className='transaction-item'>
 				<p className='font-semibold'>{destinationName}</p>
 				<p>
-					<span>Transaction#</span>
-					<span>{displayId}</span>
-				</p>
-				<p>
 					<span>Date</span>
-					<span>{formatDate(transactionDate)}</span>
+					<span>{formatDate(transactionDate, 'DD-MMM-YYYY')}</span>
 				</p>
 				<p>
 					<span className='font-medium'>Amount</span>{' '}
-					<span>${formatCurrency(amount)}</span>
+					<span>{formattedAmount}</span>
+				</p>
+				<p>
+					<span className='font-medium'>Balance</span>{' '}
+					<span>{formattedBalance}</span>
 				</p>
 			</div>
 		</div>

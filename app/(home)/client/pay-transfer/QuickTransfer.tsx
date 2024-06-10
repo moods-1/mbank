@@ -6,8 +6,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
-import { getAccounts } from '@/api/client/accounts';
-import { logoutClient } from '@/lib/store/clientSlice';
+import { getAccounts, transferQuick } from '@/api/client/accounts';
+import { logoutClient, updateClient } from '@/lib/store/clientSlice';
 import {
 	Select,
 	SelectContent,
@@ -15,24 +15,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { firstCap, formatCurrency } from '@/lib/clientFunctions';
+import { firstCap, formatCurrency, randomString } from '@/lib/clientFunctions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
+import FormHeader from '@/components/FormHeader';
+import CurrencyInput from '@/components/CurrencyInput';
 
 type ErrorType = {
 	destinationName: string;
 	amount: number | string;
 	sourceAccountName: string;
 };
-
-// const initialTransfer: TransferType = {
-// 	from: '',
-// 	to: '',
-// 	amount: '',
-// };
 
 const initialError = {
 	destinationName: '',
@@ -43,8 +39,9 @@ const initialError = {
 export default function QuickTransfer() {
 	const [accounts, setAccounts] = useState<AccountType[]>([]);
 	const [form, setForm] = useState<PaymentFormProps>(INITIAL_PAYMENT_FORM);
-	const [formError, setFormErrorText] = useState<ErrorType>(initialError);
+	const [formError, setFormError] = useState<ErrorType>(initialError);
 	const [isLoading, setIsLoading] = useState(true);
+	const [selectKeys, setSelectKeys] = useState({ from: 'from', to: 'to' });
 	const { client } = useAppSelector((state) => state.client);
 	const router = useRouter();
 	const dispatch = useAppDispatch();
@@ -64,11 +61,11 @@ export default function QuickTransfer() {
 				destinationName: accountName,
 			}));
 		}
-		setFormErrorText(initialError);
+		setFormError(initialError);
 	};
 
 	const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
-		// setFormErrorText(initialTransfer);
+		setFormError(initialError);
 		const { value } = e.target;
 		let localValue = value;
 		localValue = value.replace('-', '');
@@ -82,15 +79,17 @@ export default function QuickTransfer() {
 		setForm((prev) => ({ ...prev, amount: localValue }));
 	};
 
-	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { sourceAccount, amount } = form;
 		let localErrObj: ErrorType = { ...initialError };
 		let errMsg: string = '';
 		const errorSet = new Set();
-		// Make sure all fields are filled.
+		console.log({ form });
+		// Form validation.
 		Object.entries(form).forEach(([key, value]) => {
 			if (!value || Number(value) <= 1) {
+				console.log('Error =>', key, value);
 				errorSet.add(true);
 				if (key === 'amount') {
 					errMsg = `${firstCap(key)} is required.`;
@@ -102,7 +101,7 @@ export default function QuickTransfer() {
 				localErrObj[key as keyof typeof localErrObj] = errMsg;
 			}
 		});
-		setFormErrorText(localErrObj);
+		setFormError(localErrObj);
 		if (errorSet.has(true)) return;
 		// Check for sufficient funds
 		const fromBalance = accounts.find(
@@ -112,6 +111,14 @@ export default function QuickTransfer() {
 			return toast.info(
 				'There are insufficient funds to complete this transfer.'
 			);
+		}
+		const queryData = { ...form, amount: Number(form.amount), credit: false };
+		const result = await transferQuick(queryData);
+		if (result && 'firstName' in result) {
+			dispatch(updateClient(result));
+			setForm(INITIAL_PAYMENT_FORM);
+			setFormError(initialError);
+			setSelectKeys({ from: randomString(4), to: randomString(4) });
 		}
 	};
 
@@ -138,6 +145,7 @@ export default function QuickTransfer() {
 				console.log(error);
 			}
 			setIsLoading(false);
+			setForm((prev) => ({ ...prev, clientId: client._id }));
 		};
 		fetchAccounts();
 	}, [client, dispatch, router]);
@@ -145,14 +153,18 @@ export default function QuickTransfer() {
 	return (
 		<div className=''>
 			<form className='card border max-w-72' onSubmit={handleSubmit}>
-				<p className='form-title-sm'>Quick Transfer</p>
+				<FormHeader>
+					<p className='form-title-sm'>Quick Transfer</p>
+				</FormHeader>
 				<div className='mb-4 text-sm font-medium'>
 					<Label>From</Label>
 					<Select
 						onValueChange={(e: string) => handleAccount(e, 'from')}
+						defaultValue={form.destinationName}
+						key={selectKeys.from}
 						name='from'
 					>
-						<SelectTrigger className='w-full'>
+						<SelectTrigger className='w-full no-focus focus:border-bank-green'>
 							<SelectValue placeholder='Account' />
 						</SelectTrigger>
 						<SelectContent>
@@ -175,9 +187,10 @@ export default function QuickTransfer() {
 					<Label>To</Label>
 					<Select
 						onValueChange={(e: string) => handleAccount(e, 'to')}
+						key={selectKeys.to}
 						name='to'
 					>
-						<SelectTrigger className='w-full'>
+						<SelectTrigger className='w-full no-focus focus:border-bank-green'>
 							<SelectValue placeholder='Account' />
 						</SelectTrigger>
 						<SelectContent>
@@ -196,27 +209,26 @@ export default function QuickTransfer() {
 					</Select>
 					<FormErrorText text={formError.destinationName} className='-mb-2' />
 				</div>
-				<div className='w-full number-input-div'>
-					<label htmlFor='transferAmount'>Amount</label>
-					<div className='input-box'>
-						<span className='left-span'>$</span>
-						<span className='right-span bg-white h-6 w-6' />
-						<Input
-							id='transferAmount'
-							name='amount'
-							type='number'
-							min='1'
-							step='0.01'
-							value={form.amount}
-							placeholder=''
-							onChange={handleAmount}
-						/>
-					</div>
+				<div className='w-full'>
+					<CurrencyInput
+						label='Amount'
+						id='transferAmount'
+						name='amount'
+						min='1'
+						step={0.01}
+						value={form.amount}
+						placeholder=''
+						changeFunction={handleAmount}
+					/>
 					<FormErrorText text={formError.amount.toString()} className='-mb-2' />
 				</div>
 				<Button className='w-full mt-2'>Transfer</Button>
 			</form>
-			<ToastContainer theme='dark' position='bottom-left' />
+			<ToastContainer
+				theme='dark'
+				position='bottom-left'
+				containerId='QuickTransfer'
+			/>
 		</div>
 	);
 }

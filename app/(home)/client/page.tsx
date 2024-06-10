@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { partOfDayGreeting } from '@/lib/clientFunctions';
+import { partOfDayGreeting, randomString } from '@/lib/clientFunctions';
 import { useAppSelector } from '@/lib/store/store';
 import AccountItem from './AccountItem';
 import { AccountType } from '@/lib/types';
@@ -85,6 +85,7 @@ export default function ClientHome() {
 						}
 					</p>
 					<Image
+						priority
 						src='/images/easy.png'
 						width={300}
 						height={300}
@@ -97,7 +98,11 @@ export default function ClientHome() {
 					</Button>
 				</div>
 			</div>
-			<ToastContainer theme='dark' position='bottom-left' />
+			<ToastContainer
+				theme='dark'
+				position='bottom-left'
+				containerId='ClientHome'
+			/>
 		</div>
 	);
 }

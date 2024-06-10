@@ -344,3 +344,12 @@ export const formatPayeeOptions = (data: PayeeType[]) => {
 	});
 	return payeeOptions;
 };
+
+export const randomString = (length:number) => {
+	const alpha = ['a','B','c','D','e','1','2','3','4','5'];
+	let output: string = '';
+	for (let i = 0; i < length; i++){
+		output += alpha[Math.floor(Math.random() * 9)];
+	}
+	return output;
+}

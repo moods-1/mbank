@@ -21,12 +21,14 @@ export default function CreditCard({ background }: { background?: string }) {
 			<p className='uppercase'>James Jones</p>
 			<p className='flex items-center justify-between'>
 				<span>02/27</span>
-				<Image
-					src='/images/MasterCard-sm.png'
-					alt='mc'
-					width={50}
-					height={50}
-				/>
+				<span className='w-10'>
+					<Image
+						src='/images/MasterCard-sm.png'
+						alt='mc'
+						width={100}
+						height={100}
+					/>
+				</span>
 			</p>
 		</div>
 	);

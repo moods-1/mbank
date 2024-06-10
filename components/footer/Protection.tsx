@@ -16,23 +16,14 @@ export default function Protection() {
 						rel='noopener noreferrer'
 						className='h-auto min-h-24 pb-5 sm:pb-0'
 					>
-						<span className='flex justify-center min-h-[52px] gap-6 flex-wrap'>
+						<span className='flex justify-center w-28 h-10 sm:w-44 sm:h-14 gap-6 flex-wrap'>
 							<Image
 								src={image1}
-								width={alt === 'ciro' ? 160 : 120}
-								height={100}
+								width={1000}
+								height={1000}
 								alt={alt}
-								className='h-auto rounded-lg'
+								className='w-full rounded-lg'
 							/>
-							{image2 ? (
-								<Image
-									src={image2}
-									width={120}
-									height={100}
-									alt={alt}
-									className='h-auto'
-								/>
-							) : null}
 						</span>
 					</a>
 					<p className='text-sm'>{text}</p>

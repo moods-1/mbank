@@ -1,12 +1,12 @@
 import React from 'react';
 
-type Props = {
+type LoaderProps = {
 	borderSize: string;
 	size: string;
 	color: string;
 };
 
-export const Loader = (props: Props) => {
+export const Loader = (props: LoaderProps) => {
 	const { borderSize, size, color } = props;
 	const spinnerSize = size || '35px';
 	const spinnerColor = color || '#0275d8';
@@ -44,5 +44,31 @@ export function PlantLoader({ count }: { count: number }) {
 				</div>
 			))}
 		</>
+	);
+}
+
+type TableHeaderType = {
+	label: string;
+	field: string;
+	filterable: boolean;
+};
+
+type TableRowLoaderType = {
+	columns: TableHeaderType[];
+	className?: string;
+};
+
+export function TableRowLoader({ columns, className }: TableRowLoaderType) {
+	return (
+		<tr>
+			{columns.map(({ field }) => (
+				<td
+					key={field + Math.random() * 1000}
+					// className={`side-loader inline-block h-10`}
+				>
+					<span className={`side-loader inline-block ${className || 'h-10'}`} />
+				</td>
+			))}
+		</tr>
 	);
 }

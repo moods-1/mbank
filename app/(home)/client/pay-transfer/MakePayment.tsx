@@ -1,13 +1,12 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Types } from 'mongoose';
 import { ToastContainer, toast } from 'react-toastify';
 
 import {
 	AccountType,
+	ClientNewTransactionType,
 	PayeeProps,
-	PayeeType,
 	PaymentFormProps,
 	PublicClientType,
 } from '@/lib/types';
@@ -19,16 +18,22 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { formatCurrency, formValidator } from '@/lib/clientFunctions';
+import {
+	formatCurrency,
+	formValidator,
+	randomString,
+} from '@/lib/clientFunctions';
 import PayeeItems from './PayeeItems';
 import { Input } from '@/components/ui/input';
 import FormErrorText from '@/components/FormErrorText';
-import Calendar from '@/components/DatePicker';
+import CustomDatePicker from '@/components/CustomDatePicker';
 import { Button } from '@/components/ui/button';
 import { transactionAdd } from '@/api/client/transaction';
 import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
+import FormHeader from '@/components/FormHeader';
+import CurrencyInput from '@/components/CurrencyInput';
 
 type PaymentProps = {
 	client: PublicClientType;
@@ -36,8 +41,8 @@ type PaymentProps = {
 };
 
 type ErrorProps = {
-	sourceAccountName: string,
-	destinationName: string,
+	sourceAccountName: string;
+	destinationName: string;
 	amount: number | string;
 };
 
@@ -45,18 +50,13 @@ const initialFormError = {
 	sourceAccountName: '',
 	destinationName: '',
 	amount: '',
-	
 };
 
 export default function MakePayment({ client, accounts }: PaymentProps) {
 	const [form, setForm] = useState<PaymentFormProps>(INITIAL_PAYMENT_FORM);
 	const [formError, setFormError] = useState<ErrorProps>(initialFormError);
-	const [transactionDate, setPaymentDate] = useState<Date>(
-		new Date(new Date().setHours(0, 0, 1))
-	);
+	const [selectKey, setSelectKey] = useState('source');
 	const [paymentSource, setPaymentSource] = useState<AccountType>();
-	const [paymentDestination, setPaymentDestination] = useState<PayeeProps>();
-	const [clientSide, setClientSide] = useState(false);
 	const { payees, _id: clientId } = client;
 	const dispatch = useAppDispatch();
 
@@ -91,7 +91,9 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 
 	const handlePayee = (payee: PayeeProps) => {
 		const { payeeName: destinationName, _id: destinationId } = payee;
-		setForm((prev) => ({ ...prev, destinationName, destinationId }));
+		if (destinationId === form.destinationId) {
+			setForm((prev) => ({ ...prev, destinationId: '', destinationName: '' }));
+		} else setForm((prev) => ({ ...prev, destinationName, destinationId }));
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -118,37 +120,37 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 			dispatch(updateClient(result));
 			setForm(INITIAL_PAYMENT_FORM);
 			setFormError(initialFormError);
+			setSelectKey(randomString(3));
 		}
 	};
 
 	useEffect(() => {
 		setForm((prev) => ({ ...prev, clientId }));
-		setClientSide(true);
 	}, [clientId]);
 
 	return (
-		<div className='w-full max-w-md mt-8'>
+		<div className='w-full max-w-md mt-8' suppressHydrationWarning={true}>
 			<form className='card border' onSubmit={handleSubmit}>
-				<div className='flex justify-between items-center gap-5 mb-4'>
-					<p className='form-title-sm !mb-0'>Make Payment</p>
-					<Button size={'sm'} className='px-6'>
-						Pay
-					</Button>
-				</div>
-
+				<FormHeader className='!pb-4'>
+					<div className='flex justify-between items-center gap-5'>
+						<p className='form-title-sm !mb-0'>Make Payment</p>
+						<Button size={'sm'} className='px-6'>
+							Pay
+						</Button>
+					</div>
+				</FormHeader>
 				<div className='max-w-40'>
-					<Calendar
+					<CustomDatePicker
 						label='Payment Date'
 						minDate={new Date()}
 						changeFunction={handlePaymentDate}
 						date={form.transactionDate}
 					/>
 				</div>
-
 				<div className='my-4 text-sm font-medium'>
 					<Label>Payment Source</Label>
-					<Select onValueChange={handleAccount}>
-						<SelectTrigger className='w-full'>
+					<Select onValueChange={handleAccount} key={selectKey}>
+						<SelectTrigger className='w-full select-trigger'>
 							<SelectValue placeholder='Payment Source' />
 						</SelectTrigger>
 						<SelectContent>
@@ -165,23 +167,19 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 						</SelectContent>
 					</Select>
 				</div>
-				<FormErrorText text={formError.sourceAccountName || ''} className='-mt-3 mb-2' />
-				<div className='w-full number-input-div'>
-					<Label>Amount</Label>
-					<div className='input-box'>
-						<span className='left-span'>$</span>
-						<span className='right-span bg-white h-6 w-6' />
-						<Input
-							name='amount'
-							type='number'
-							min='1'
-							step='0.01'
-							value={form.amount}
-							placeholder=''
-							onChange={handleAmount}
-						/>
-					</div>
-				</div>
+				<FormErrorText
+					text={formError.sourceAccountName || ''}
+					className='-mt-3 mb-2'
+				/>
+				<CurrencyInput
+					label='Amount'
+					name='amount'
+					min='1'
+					step={0.01}
+					value={form.amount}
+					placeholder=''
+					changeFunction={handleAmount}
+				/>
 				<FormErrorText
 					text={formError.amount.toString() || ''}
 					className='-mt-3 mb-2'
@@ -199,7 +197,11 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 					/>
 				</div>
 			</form>
-			<ToastContainer position='bottom-left' />
+			<ToastContainer
+				theme='dark'
+				position='bottom-left'
+				containerId='MakePayment'
+			/>
 		</div>
 	);
 }

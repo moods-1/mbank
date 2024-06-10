@@ -1,16 +1,17 @@
 import { PayeeProps } from '@/lib/types';
-import { Check } from 'lucide-react';
 import { Types } from 'mongoose';
 import { FaCheck } from 'react-icons/fa6';
 
 type ItemProps = {
 	payee: PayeeProps;
 	selectedId: Types.ObjectId | string;
-	onSelect: (payee: PayeeProps)=> void;
+	onSelect: (payee: PayeeProps) => void;
 };
+
 export default function PayeeItem({ payee, selectedId, onSelect }: ItemProps) {
 	const { payeeName, accountNumber, _id } = payee;
 	const selected = selectedId === _id;
+
 	return (
 		<div
 			className={`payee-item ${selected ? 'bg-gray-100' : ''}`}

@@ -2,14 +2,20 @@
 
 import { Types } from 'mongoose';
 
-import { NewTransactionType } from '@/lib/types';
+import {
+	ClientNewTransactionType,
+	ServerNewTransactionType,
+} from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
 import Account from '../models/Account';
 import Client from '../models/Client';
 import { handleError, verifyToken } from '@/lib/serverFunctions';
 
-export async function addTransaction(token:string, data: NewTransactionType) {
+export async function addTransaction(
+	token: string,
+	data: ClientNewTransactionType
+) {
 	Account.syncIndexes();
 	Transaction.syncIndexes();
 	try {
@@ -26,14 +32,18 @@ export async function addTransaction(token:string, data: NewTransactionType) {
 				newBalance = accountBalance - Number(amount);
 			}
 			if (newBalance >= 0) {
-				data.amount = credit ? amount : -parseFloat(amount.toString());
-				const transaction = await Transaction.create(data);
-				const { _id, account } = transaction;
+				const newData: ServerNewTransactionType = {
+					...data,
+					amount: Number(data.amount),
+					accountBalance: newBalance,
+				};
+				const transaction = await Transaction.create(newData);
+				const { _id } = transaction;
 				await Account.updateOne(
 					{ _id: sourceAccount },
 					{ accountBalance: newBalance, $push: { transactions: _id } }
 				);
-				const result = await Client.findOne({ _id: clientId }); 
+				const result = await Client.findOne({ _id: clientId });
 				return JSON.parse(JSON.stringify(result));
 			} else {
 				throw new Error('Insufficient funds in this account.');

@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '~react-toastify/dist/ReactToastify.css';
 
 @layer base {
 	:root {
@@ -78,7 +79,7 @@
 }
 
 ::-webkit-scrollbar {
-	width: 12px;
+	width: 10px;
 }
 ::-webkit-scrollbar-track {
 	@apply bg-black;
@@ -259,17 +260,11 @@ section {
 	@apply p-3 sm:p-6 rounded-lg shadow-md;
 }
 /* Filter Section */
-.filter-box {
+.account-filter-box-date {
 	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm font-medium;
 }
-.filter-box .input-box {
-	@apply relative flex items-center;
-}
-.filter-box .input-box span {
-	@apply absolute left-3;
-}
-.filter-box input {
-	@apply pl-6 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
+.account-filter-box {
+	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm font-medium;
 }
 /* Form  */
 .form-section {
@@ -278,8 +273,14 @@ section {
 .form-section div {
 	@apply flex-1 min-w-44;
 }
+.form-header {
+	@apply border-b-2 pb-2 mb-4;
+}
+.form-title-lg {
+	@apply text-2xl sm:text-4xl font-bold mb-2;
+}
 .form-title-sm {
-	@apply text-lg font-semibold mb-3;
+	@apply text-lg font-semibold;
 }
 .form-input-label {
 	@apply text-sm font-medium inline-block;
@@ -326,10 +327,65 @@ section {
 .payee-item {
 	@apply hover:bg-gray-100 hover:cursor-pointer flex gap-2 p-2 border-b text-sm;
 }
-.calendar-wrapper svg{
+
+.calendar-wrapper svg {
 	@apply fill-slate-500 mt-[2px];
 }
 .calendar-input {
-	@apply text-sm border h-9 rounded-md outline-none focus:border-bank-green !pl-8;
+	@apply max-w-52 text-sm border h-9 rounded-md outline-none focus:border-bank-green !pl-8;
 }
-
+/*  Tables */
+.table-div {
+	@apply overflow-auto h-auto rounded-sm shadow-md p-0 min-w-96;
+}
+.table-div::-webkit-scrollbar {
+	@apply w-[8px];
+}
+.table-div::-webkit-scrollbar-track {
+	@apply bg-white;
+}
+.table-div::-webkit-scrollbar-thumb {
+	@apply rounded-none;
+}
+.table-div caption {
+	caption-side: bottom;
+}
+.empty-caption {
+	@apply text-black bg-white text-center w-full min-h-24 relative;
+}
+.caption-message {
+	@apply text-black px-0 py-12;
+}
+.table {
+	@apply w-full relative;
+}
+.table thead {
+	@apply sticky top-0 text-white bg-black text-[13px];
+}
+.table thead td {
+	@apply p-2  border-b;
+}
+.table tbody tr {
+	@apply border-b hover:bg-slate-100;
+}
+.table tbody tr:last-child {
+	@apply border-0;
+}
+.table tbody tr td {
+	@apply px-2 py-3 text-sm;
+}
+/* End Tables */
+/* Search Input */
+.search-input {
+	@apply flex justify-between items-center relative;
+}
+.search-input-icon {
+	@apply absolute right-[5px] bg-white text-[22px] font-thin;
+}
+.search-input-cancel {
+	@apply cursor-pointer text-red-600;
+}
+/* Select Drop */
+.select-trigger {
+	@apply focus:border-bank-green;
+}

@@ -9,20 +9,28 @@ type Props = {
 	className?: string | undefined;
 	label: string | undefined;
 	minDate?: Date;
+	maxDate?: Date;
 	comparisonDate?: Date | undefined;
 	date?: Date | undefined;
 	changeFunction: (data: Date) => void;
 };
 
-const Calendar = ({ label,date, minDate, changeFunction }: Props) => {
+const CustomDatePicker = ({
+	label,
+	date,
+	minDate,
+	maxDate,
+	changeFunction,
+}: Props) => {
 	return (
-		<div>
+		<div className='flex flex-col'>
 			<Label className='mb-1'>{label || ''}</Label>
 			<DatePicker
 				showIcon
 				selected={date}
 				minDate={minDate || new Date('1900-01-01')}
-				onChange={(date:Date)=> changeFunction(date)}
+				maxDate={maxDate || new Date('2100-01-01')}
+				onChange={(date: Date) => changeFunction(date)}
 				dateFormat='MMMM do, yyyy'
 				className='calendar-input'
 				wrapperClassName='calendar-wrapper'
@@ -30,4 +38,4 @@ const Calendar = ({ label,date, minDate, changeFunction }: Props) => {
 		</div>
 	);
 };
-export default Calendar;
+export default CustomDatePicker;

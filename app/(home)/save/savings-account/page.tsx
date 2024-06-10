@@ -8,24 +8,26 @@ import { updateClient } from '@/lib/store/clientSlice';
 import { Types } from 'mongoose';
 
 const accounts = {
-	chequing: '6657782e79dc3ac7662cbd2c',
-	tfsa: '6655db86ba65082ea6587e88',
-	savings: '6654e56d63a5d8dbadb3d264',
+	chequing: ['6657782e79dc3ac7662cbd2c', 'No-Fee Chequing Account'],
+	tfsa: ['6655db86ba65082ea6587e88', 'Tax-Free Savings Account'],
+	savings: ['6654e56d63a5d8dbadb3d264', 'Savings Account'],
 };
 
 const mongoId = new Types.ObjectId('6000000aac0fc18695d23aa0');
 
 export default function SavingsAccount() {
 	const { client } = useAppSelector((state) => state.client);
+	const accountKey = 0;
 	const dispatch = useAppDispatch();
 
 	const TransactionData = {
 		transactionDate: new Date(),
-		destinationId: mongoId,
-		destinationName: 'Ambrosia Natural Foods',
-		amount: 45.35,
+		destinationId: '6000000aac0fc18695d23aa0',
+		destinationName: 'Home Depot',
+		amount: 314.55,
 		clientId: client._id,
-		sourceAccount: Object.values(accounts)[0],
+		sourceAccount: Object.values(accounts)[accountKey][0],
+		sourceAccountName: Object.values(accounts)[accountKey][1],
 		credit: false,
 	};
 
@@ -35,6 +37,7 @@ export default function SavingsAccount() {
 			if (result && 'firstName' in result) {
 				dispatch(updateClient(result));
 			}
+			console.log({ TransactionData });
 		} catch (error) {
 			console.log(error);
 		}

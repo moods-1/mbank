@@ -141,8 +141,7 @@ export const ACCOUNT_TYPE_NUMBER: Record<string, string> = {
 export const PROTECTION_DATA = [
 	{
 		alt: 'cidc',
-		image1: '/images/cdic-1.svg',
-		image2: '/images/cdic-badge.svg',
+		image1: '/images/cdic.svg',
 		link: 'https://www.cdic.ca',
 		text: 'Your deposits may be insurable by the Canada Deposit Insurance Corporation.',
 	},
@@ -248,6 +247,7 @@ export const PAYEE_BUSINESS_TYPES = {
 	HOME_GARDEN: 'Home and Garden',
 	TRAVEL_TRANSPORTATION: 'Travel and Transportation',
 	AUTOMOTIVE: 'Automotive',
+	UTILITIES: 'Utilities',
 };
 
 export const PROVINCES_TERRITORIES = {
@@ -273,5 +273,34 @@ export const INITIAL_PAYMENT_FORM = {
 	amount: '',
 	clientId: '',
 	sourceAccount: '',
-	sourceAccountName:'',
+	sourceAccountName: '',
+	accountBalance: 2,
 };
+
+export const TRANSACTION_HEADERS = [
+	{
+		label: 'Date',
+		field: 'date',
+		filterable: false,
+	},
+	{
+		label: 'Entity',
+		field: 'destinationName',
+		filterable: true,
+	},
+	{
+		label: 'Funds In',
+		field: 'credit',
+		filterable: false,
+	},
+	{
+		label: 'Funds Out',
+		field: 'debit',
+		filterable: false,
+	},
+	{
+		label: 'Balance',
+		field: 'accountBalance',
+		filterable: false,
+	},
+];

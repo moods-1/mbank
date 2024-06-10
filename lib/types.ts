@@ -7,6 +7,7 @@ export type TransactionType = {
 	transactionDate: Date;
 	amount: number;
 	destinationName: string;
+	credit: boolean;
 };
 
 export type AccountType = {
@@ -114,7 +115,7 @@ export type AccountDetailsProps = {
 	msg?: string;
 	status?: number;
 	account?: AccountType;
-	transactions?: TransactionType[];
+	transactions?: TransactionReturnType[];
 };
 
 export type AccounyByIdProps = {
@@ -155,18 +156,53 @@ export type AddPayeeReturnType = {
 export type PaymentFormProps = {
 	transactionDate: Date;
 	destinationId: Types.ObjectId | string;
-	destinationName: string| undefined;
+	destinationName: string | undefined;
 	amount: number | string;
 	clientId: Types.ObjectId | string | undefined;
 	sourceAccount: Types.ObjectId | string;
+	sourceAccountName: string;
+	accountBalance: number;
+
 };
 
-export type NewTransactionType = {
+export type ClientNewTransactionType = {
 	transactionDate: Date;
 	destinationId: Types.ObjectId | string;
-	destinationName: string| undefined;
-	amount: number | string;
+	destinationName: string | undefined;
+	amount: number|string;
 	clientId: Types.ObjectId | string | undefined;
 	sourceAccount: Types.ObjectId | string;
+	sourceAccountName: string;
 	credit: boolean;
+};
+
+export type ServerNewTransactionType = {
+	transactionDate: Date;
+	destinationId: Types.ObjectId | string;
+	destinationName: string | undefined;
+	amount: number;
+	clientId: Types.ObjectId | string | undefined;
+	sourceAccount: Types.ObjectId | string;
+	sourceAccountName: string;
+	credit: boolean;
+	accountBalance: number;
+};
+
+export type TransactionReturnType = {
+	_id: Types.ObjectId | string;
+	transactionDate: Date;
+	destinationId: Types.ObjectId | string;
+	destinationName: string | undefined;
+	amount: number;
+	clientId: Types.ObjectId | string | undefined;
+	sourceAccount: Types.ObjectId | string;
+	sourceAccountName: string;
+	credit: boolean;
+	accountBalance: number;
+};
+
+export type TableHeaderType = {
+	label: string;
+	field: string;
+	filterable: boolean;
 };
