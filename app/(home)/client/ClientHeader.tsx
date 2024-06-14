@@ -26,7 +26,7 @@ export default function ClientHeader() {
 				<Link
 					key={title}
 					href={link}
-					className={`h-full border-b-4 border-transparent py-2 ${
+					className={`h-full border-b-[3px] border-transparent py-1 ${
 						idx === tabIndex ? 'active-tab' : ''
 					}`}
 				>

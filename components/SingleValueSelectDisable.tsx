@@ -6,16 +6,16 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { AccountSelectType } from '@/lib/types';
 
 type Props = {
 	reset: string;
 	invalid?: boolean;
 	label?: string;
-	data: string[];
+	data:AccountSelectType[];
 	name: string;
 	placeholder: string | undefined;
 	changeFunction: (e: string, field: string) => void;
-	defaultValue?: string;
 };
 
 export default function SingleValueSelect({
@@ -24,7 +24,6 @@ export default function SingleValueSelect({
 	label,
 	data,
 	name,
-	defaultValue,
 	placeholder,
 	changeFunction,
 }: Props) {
@@ -40,7 +39,6 @@ export default function SingleValueSelect({
 				onValueChange={(e: string) => changeFunction(e, `${name}`)}
 				name={name}
 				key={reset}
-				defaultValue={defaultValue}
 			>
 				<SelectTrigger
 					className='w-full focus:border-gray-400'
@@ -49,8 +47,13 @@ export default function SingleValueSelect({
 					<SelectValue placeholder={placeholder || 'Select'} />
 				</SelectTrigger>
 				<SelectContent>
-					{data.map((value) => (
-						<SelectItem key={value} value={value} className='select-item'>
+					{data.map(({ value, disabled }) => (
+						<SelectItem
+							key={value}
+							value={value}
+							className='select-item cursor-pointer'
+							disabled={disabled}
+						>
 							<span>{value}</span>
 						</SelectItem>
 					))}

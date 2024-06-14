@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '~react-toastify/dist/ReactToastify.css';
 
 @layer base {
 	:root {
@@ -117,7 +116,7 @@ header {
 }
 /* Mobile menu */
 .sidemenu-div {
-	@apply relative mb-10 mr-5;
+	@apply relative mb-10 mr-5 w-full;
 }
 .sidemenu-div:hover .sidemenu-drop {
 	@apply block;
@@ -135,7 +134,7 @@ header {
 	@apply hidden p-4 pb-0 absolute z-10 bg-white shadow-md transition-all duration-500;
 }
 .sidemenu-item {
-	@apply hover:text-bank-green hover:pl-1 transition-all duration-300 cursor-pointer mb-5 inline-block w-full;
+	@apply hover:text-bank-green hover:pl-[2px] transition-all duration-300 cursor-pointer mb-5 inline-block w-full;
 }
 /* Client header */
 .active-tab {
@@ -216,7 +215,7 @@ section {
 	@apply w-full p-6 rounded-lg shadow-md min-h-80 bg-white mb-6;
 }
 .auth-form-button {
-	@apply w-full bg-bank-green sm:text-lg;
+	@apply w-full sm:text-lg;
 }
 .checkbox:checked input {
 	@apply !bg-bank-green;
@@ -225,10 +224,10 @@ section {
 /* Client Accounts */
 
 .account-item {
-	@apply bg-white hover:bg-slate-100 flex justify-between items-center gap-2 flex-wrap min-h-10 border-l-4 border-bank-green hover:border-black px-2 text-[15px] py-3;
+	@apply bg-white hover:bg-slate-100 flex justify-between items-center gap-2 flex-wrap min-h-10 border-l-4 border-black hover:border-black px-2 text-[15px] py-3;
 }
 .transaction-item {
-	@apply bg-white hover:bg-slate-100 min-h-10 border-l-4 border-bank-green hover:border-black px-2 text-sm py-1;
+	@apply bg-white hover:bg-slate-100 min-h-10 border-l-4 border-black hover:border-black px-2 text-sm py-1;
 }
 .transaction-item p {
 	@apply flex flex-wrap justify-between;
@@ -260,11 +259,8 @@ section {
 	@apply p-3 sm:p-6 rounded-lg shadow-md;
 }
 /* Filter Section */
-.account-filter-box-date {
-	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm font-medium;
-}
 .account-filter-box {
-	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm font-medium;
+	@apply flex gap-2 sm:gap-4 flex-wrap mb-4 text-sm;
 }
 /* Form  */
 .form-section {
@@ -290,7 +286,7 @@ section {
 	@apply focus-visible:!ring-0 focus-visible:!ring-offset-0 focus-visible:!outline-none;
 }
 .notification-dialog {
-	@apply max-w-[calc(100vw-40px)] sm:max-w-lg text-center p-10 rounded-lg;
+	@apply max-w-[calc(100vw-40px)] sm:max-w-md text-center p-5 pt-10 rounded-lg;
 }
 .rate-control svg[aria-expanded='true'] {
 	@apply rotate-180 transition-all duration-300;
@@ -305,13 +301,15 @@ section {
 	@apply transition-all duration-300;
 }
 /* Input  */
-.number-input-div {
+.number-input-div,
+.currency-input-div {
 	@apply mb-4 text-sm font-medium;
 }
-.number-input-div .input-box {
+.number-input-div,
+.currency-input-div .input-box {
 	@apply relative flex items-center;
 }
-.number-input-div .input-box .left-span {
+.currencnumber-input-div .input-box .left-span {
 	@apply absolute left-3;
 }
 .number-input-div .input-box .right-span {
@@ -332,11 +330,11 @@ section {
 	@apply fill-slate-500 mt-[2px];
 }
 .calendar-input {
-	@apply max-w-52 text-sm border h-9 rounded-md outline-none focus:border-bank-green !pl-8;
+	@apply max-w-52 text-sm border h-9 rounded-sm outline-none focus:border-gray-400 !pl-8;
 }
 /*  Tables */
 .table-div {
-	@apply overflow-auto h-auto rounded-sm shadow-md p-0 min-w-96;
+	@apply overflow-auto h-auto p-0 min-w-96;
 }
 .table-div::-webkit-scrollbar {
 	@apply w-[8px];
@@ -387,5 +385,13 @@ section {
 }
 /* Select Drop */
 .select-trigger {
-	@apply focus:border-bank-green;
+	@apply focus:border-gray-400;
+}
+
+/* Profile Content */ 
+.profile-content {
+	@apply overflow-y-auto w-11/12 sm:max-w-2xl;
+}
+.profile-content::-webkit-scrollbar-track {
+	@apply bg-white;
 }

@@ -2,30 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
 
 import { AccountType, TransactionReturnType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
-import { DatePicker } from '@/components/ui/DatePicker';
 import { SlideLoader } from '@/components/Loaders';
 import DoubleSlider from '@/components/DoubleSlider';
 import { getAccDetails } from '@/api/client/accounts';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';
 import moment from 'moment';
 import CustomDataTable from '@/components/CustomDataTable';
 import { TRANSACTION_HEADERS } from '@/lib/constants';
-import { formatCurrency } from '@/lib/clientFunctions';
+import { formatCurrency, formatDate } from '@/lib/clientFunctions';
 import SearchInput from '@/components/SearchInput';
 import CustomDatePicker from '@/components/CustomDatePicker';
-import { Label } from '@/components/ui/label';
 import CurrencyInput from '@/components/CurrencyInput';
+import FormErrorText from '@/components/FormErrorText';
+import StaticDateRanges from './StaticDateRanges';
 
 const today = new Date();
 const end = new Date(today.setHours(23, 59, 59));
 const start = new Date(new Date().setDate(today.getDate() - 30));
+
+const initialError = {
+	startDate: '',
+	endDate: '',
+	minAmount: '',
+	maxAmount: '',
+};
 
 export default function AccountDetails() {
 	const [account, setAccount] = useState<AccountType>();
@@ -36,10 +41,16 @@ export default function AccountDetails() {
 	const [transactions, setTransactions] = useState<TransactionReturnType[]>();
 	const [isLoading, setIsLoading] = useState(true);
 	const [tableFilter, setTableFilter] = useState('');
+	const [filterError, setFilterError] = useState(initialError);
+	const [refetchData, setRefetchData] = useState(false);
+	const [resetDateButtons, setResetDateButtons] = useState(false);
+	const [customSearch, setCustomSearch] = useState(false);
+	const [hideCustomSearch, setHideCustomSearch] = useState(false);
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const { slug } = useParams();
 	const id = slug[2];
+	const noData = !isLoading && !transactions?.length;
 
 	const rows = transactions?.map((row: TransactionReturnType) => {
 		const { transactionDate, amount, credit, accountBalance } = row;
@@ -47,7 +58,7 @@ export default function AccountDetails() {
 		const formattedBalance = formatCurrency(accountBalance);
 		return {
 			...row,
-			date: moment(transactionDate).format('DD-MMM-YYYY'),
+			date: formatDate(transactionDate, 'DD-MMM-YYYY'),
 			credit: credit ? formattedAmount : '',
 			debit: credit ? '' : formattedAmount,
 			accountBalance: formattedBalance,
@@ -56,10 +67,17 @@ export default function AccountDetails() {
 
 	const emptyMessage = () => {
 		return (
-			<div className='caption-message'>
+			<div className='caption-message text-center'>
 				<p> No transactions.</p>
 			</div>
 		);
+	};
+
+	const timedError = (text: string, field: string) => {
+		setFilterError((prev) => ({ ...prev, [field]: text }));
+		setTimeout(() => {
+			setFilterError(initialError);
+		}, 4000);
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,18 +96,28 @@ export default function AccountDetails() {
 		setEndDate(end);
 		setMinAmount('');
 		setMaxAmount('');
+		setRefetchData((prev) => !prev);
+	};
+
+	const handleStaticDates = (start: Date, end: Date) => {
+		setStartDate(start);
+		setEndDate(end);
+		setRefetchData((prev) => !prev);
+		setCustomSearch(false);
+		setTransactions([]);
 	};
 
 	const handleFilter = async () => {
 		const min = Number(minAmount);
 		const max = Number(maxAmount);
 		if (min > max) {
-			return toast.info(
-				'Upper limit must be greater than or equal to the lower!'
+			return timedError(
+				'Upper limit must be greater than or equal to the lower!',
+				'maxAmount'
 			);
 		}
 		if (endDate < startDate) {
-			return toast.info('End date must greater than start date!');
+			return timedError('End date must greater than start date!', 'endDate');
 		}
 		try {
 			setIsLoading(true);
@@ -107,7 +135,6 @@ export default function AccountDetails() {
 				if (status === 401) {
 					dispatch(logoutClient());
 					router.push('/');
-					return toast.error(msg);
 				}
 			}
 		} catch (error) {
@@ -138,7 +165,6 @@ export default function AccountDetails() {
 					if (status === 401) {
 						dispatch(logoutClient());
 						router.push('/');
-						return toast.error(msg);
 					}
 				}
 			} catch (error) {
@@ -147,130 +173,174 @@ export default function AccountDetails() {
 			setIsLoading(false);
 		};
 		fetchAccount();
-	}, [dispatch, id, router]);
+	}, [dispatch, id, router, refetchData]);
 
 	const balance = account?.accountBalance.toLocaleString(undefined, {
 		maximumFractionDigits: 2,
 		minimumFractionDigits: 2,
 	});
 
+	const formattedDates = () => {
+		const formattedStart = formatDate(startDate, 'MMM DD, YYYY');
+		const formattedEnd = formatDate(endDate, 'MMM DD, YYYY');
+		return `${formattedStart} to ${formattedEnd}`;
+	};
+
 	return (
 		<div className='pb-10 flex gap-6'>
-			<div className='flex-1'>
+			<div className='flex-1 max-w-3xl'>
 				<div>
 					<p className='text-lg sm:text-xl font-semibold'>
 						{account?.accountName || <SlideLoader className='h-6 max-w-96' />}
 					</p>
-					<p className='text-[15px]'>
-						<span className='font-semibold'>Account number:</span> {id}
+					<p className='text-sm'>
+						<span className='font-semibold'>Account number:</span>{' '}
+						<span className='font-medium'>{id}</span>
 					</p>
-					<p className='flex text-[15px]'>
+					<p className='flex text-sm'>
 						<span className='font-semibold'>Balance: </span>
 						{balance ? (
-							`$ ${balance}`
+							<span className='font-medium'>{`$ ${balance}`}</span>
 						) : (
 							<SlideLoader className='h-6 max-w-40' />
 						)}
 					</p>
-					<div className='mt-6'>
-						<p className='font-medium mb-2'>Transaction Custom Search</p>
-						<div className='account-filter-box-date'>
-							<CustomDatePicker
-								label='Start Date'
-								date={startDate}
-								maxDate={endDate}
-								changeFunction={setStartDate}
-							/>
-							<CustomDatePicker
-								label='End Date'
-								date={endDate}
-								minDate={startDate}
-								changeFunction={setEndDate}
-							/>
-						</div>
-						<div className='account-filter-box'>
-							<div className='w-full max-w-52'>
-								<CurrencyInput
-									id='minAmount'
-									name='minAmount'
-									label='Lower $ limit'
-									min='0'
-									step={1}
-									value={minAmount}
-									placeholder=''
-									changeFunction={handleChange}
+					<div className='mt-6 '>
+						<p className='font-medium mb-1 text-sm xs:text-base'>{`Past Transactions (${formattedDates()})`}</p>
+						<div className='border p-4 pb-0 border-t-4 border-t-black'>
+							<div className='flex justify-between items-start flex-wrap gap-5'>
+								<div
+									className='py-1 cursor-pointer text-xs min-w-28 text-center font-medium'
+									onClick={() => setHideCustomSearch((prev) => !prev)}
+								>
+									{hideCustomSearch ? 'Show' : 'Hide'} Custom Search
+								</div>
+								<StaticDateRanges
+									handleButtons={handleStaticDates}
+									reset={resetDateButtons}
+									customSearch={customSearch}
 								/>
 							</div>
-							<div className='max-w-52 w-full'>
-								<CurrencyInput
-									id='maxAmount'
-									name='maxAmount'
-									label='Upper $ limit'
-									min={minAmount}
-									step={1}
-									value={maxAmount}
-									placeholder=''
-									changeFunction={handleChange}
-								/>
-							</div>
+							{hideCustomSearch ? null : (
+								<div className='py-4 border-t'>
+									<p className='font-medium mb-2'>Transaction Custom Search</p>
+									<div className='account-filter-box'>
+										<div>
+											<CustomDatePicker
+												label='Start Date'
+												date={startDate}
+												maxDate={endDate}
+												changeFunction={setStartDate}
+											/>
+											<FormErrorText text={filterError.startDate} />
+										</div>
+										<div>
+											<CustomDatePicker
+												label='End Date'
+												date={endDate}
+												minDate={startDate}
+												changeFunction={setEndDate}
+											/>
+											<FormErrorText text={filterError.endDate} />
+										</div>
+									</div>
+									<div className='account-filter-box'>
+										<div className='w-full max-w-52'>
+											<CurrencyInput
+												id='minAmount'
+												name='minAmount'
+												label='Lower Limit'
+												min='0'
+												step={1}
+												value={minAmount}
+												placeholder=''
+												changeFunction={handleChange}
+											/>
+											<FormErrorText
+												text={filterError.minAmount}
+												className='-mt-4 mb-2'
+											/>
+										</div>
+										<div className='max-w-52 w-full'>
+											<CurrencyInput
+												id='maxAmount'
+												name='maxAmount'
+												label='Upper Limit'
+												min={minAmount}
+												step={1}
+												value={maxAmount}
+												placeholder=''
+												changeFunction={handleChange}
+											/>
+											<FormErrorText
+												text={filterError.maxAmount}
+												className='-mt-4 mb-2'
+											/>
+										</div>
+									</div>
+									<div className='flex gap-5 -mt-3'>
+										<Button
+											className='bg-bank-green px-4 h-7'
+											size={'sm'}
+											onClick={() => {
+												handleFilter();
+												setCustomSearch(true);
+											}}
+											type='submit'
+										>
+											Search
+										</Button>
+										<Button
+											className='bg-black px-4 h-7'
+											size={'sm'}
+											onClick={() => {
+												resetFilter();
+												setResetDateButtons((prev) => !prev);
+											}}
+										>
+											Reset
+										</Button>
+									</div>
+								</div>
+							)}
 						</div>
-						<div className='flex gap-5'>
-							<Button
-								className='bg-bank-green px-4'
-								size={'sm'}
-								onClick={handleFilter}
-								type='submit'
-							>
-								Search
-							</Button>
-							<Button
-								className='bg-black px-4'
-								size={'sm'}
-								onClick={resetFilter}
-							>
-								Reset
-							</Button>
-						</div>
-					</div>
-				</div>
-				<div>
-					<div className='mt-6 mb-10'>
-						<div className='flex items-center justify-between mb-4 max-w-2xl'>
-							<p className='font-semibold'>Transactions</p>
-							<SearchInput
-								placeholder='Search entity'
-								className='max-w-60'
-								changeFunction={(value: string) => setTableFilter(value)}
-							/>
-						</div>
-						<>
-							<div className='hidden sm:block max-w-2xl border rounded-sm max-h-[70vh] pt-0'>
-								<CustomDataTable
-									rows={rows}
-									isLoading={isLoading}
-									columns={TRANSACTION_HEADERS}
-									tableHeight={400}
-									emptyMessage={emptyMessage()}
-									dataFilter={tableFilter}
-									filterable
-								/>
+						<div className='mb-10 border'>
+							<div className='flex items-center justify-between mb-4 w-full pt-5 px-4'>
+								<p className='font-semibold'>Transaction List</p>
+								<div className='hidden sm:block'>
+									<SearchInput
+										placeholder='Search entity'
+										className='max-w-60'
+										changeFunction={(value: string) => setTableFilter(value)}
+									/>
+								</div>
 							</div>
-							<div className='block sm:hidden max-w-2xl border max-h-[70vh] overflow-y-auto'>
-								{isLoading ? <DoubleSlider /> : null}
-								{transactions?.map((transaction, idx) => (
-									<TransactionItem key={idx} transaction={transaction} />
-								))}
-							</div>
-						</>
+							<>
+								<div className='hidden sm:block w-full max-h-[70vh] pt-0'>
+									<CustomDataTable
+										rows={rows}
+										isLoading={isLoading}
+										columns={TRANSACTION_HEADERS}
+										tableHeight={400}
+										emptyMessage={emptyMessage()}
+										dataFilter={tableFilter}
+										filterable
+									/>
+								</div>
+								<div className='block sm:hidden max-w-2xl border max-h-[70vh] overflow-y-auto'>
+									{isLoading ? <DoubleSlider /> : null}
+									{noData
+										? emptyMessage()
+										: transactions?.map((transaction, idx) => (
+												<TransactionItem key={idx} transaction={transaction} />
+										  ))}
+								</div>
+							</>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div className='flex-1 bg-red-500 hidden lg:block' />
-			<ToastContainer
-				theme='dark'
-				position='bottom-left'
-				containerId='AccountDetails'
-			/>
+			<div className='flex-1 max-w-xl bg-red-500 hidden xl:block' />
 		</div>
 	);
 }

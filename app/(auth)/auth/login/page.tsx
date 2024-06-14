@@ -94,8 +94,8 @@ export default function LogIn() {
 					placeholder='Enter card number'
 					value={form.clientNumber}
 					changeFunction={handleChange}
-					className={`focus:border-bank-green`}
 					label='Client Number'
+					max={9}
 					invalid={formError.clientNumber ? true : false}
 				/>
 				<FormErrorText text={formError.clientNumber} className='-mt-3 mb-2' />
@@ -105,7 +105,6 @@ export default function LogIn() {
 					placeholder='Enter password'
 					value={form.password}
 					changeFunction={handleChange}
-					className='focus:border-bank-green'
 					label='Password(case sensitive)'
 					invalid={formError.password ? true : false}
 				/>

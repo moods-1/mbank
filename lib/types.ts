@@ -19,6 +19,12 @@ export type AccountType = {
 	transactions: Types.ObjectId[];
 };
 
+export type AddAccountFormType = {
+	clientNumber: string|number;
+	accountName: string; 
+	accountType: string;
+}
+
 export type AddAccountType = {
 	clientNumber: number;
 	accountName: string;
@@ -39,6 +45,23 @@ export type AddClientType = {
 	address: string;
 	postalCode: string;
 	password: string;
+	image?: string;
+};
+
+export type UpdateClientType = {
+	_id: Types.ObjectId | string;
+	clientNumber?: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phoneNumber: number;
+	city: string;
+	province: string;
+	country: string;
+	address: string;
+	postalCode: string;
+	password?: string;
+	newPassword: boolean;
 	image?: string;
 };
 
@@ -205,4 +228,9 @@ export type TableHeaderType = {
 	label: string;
 	field: string;
 	filterable: boolean;
+};
+
+export type AccountSelectType = {
+	value: string;
+	disabled: boolean;
 };

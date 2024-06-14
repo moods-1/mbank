@@ -2,7 +2,6 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
@@ -16,13 +15,13 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { firstCap, formatCurrency, randomString } from '@/lib/clientFunctions';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
+import NoDataSpan from '@/components/NoDataSpan';
 
 type ErrorType = {
 	destinationName: string;
@@ -47,6 +46,8 @@ export default function QuickTransfer() {
 	const dispatch = useAppDispatch();
 
 	const handleAccount = (e: string, field: string) => {
+		console.log('In handle account');
+		setFormError(initialError);
 		const [id, accountName] = e.split(',');
 		if (field === 'from') {
 			setForm((prev) => ({
@@ -79,6 +80,15 @@ export default function QuickTransfer() {
 		setForm((prev) => ({ ...prev, amount: localValue }));
 	};
 
+	const handleInsufficientFunds = () => {
+		setFormError((prev) => ({
+			...prev,
+			sourceAccountName:
+				'There are insufficient funds to complete this transfer.',
+		}));
+		setTimeout(() => { setFormError(initialError) }, 4000);
+	};
+
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { sourceAccount, amount } = form;
@@ -87,7 +97,7 @@ export default function QuickTransfer() {
 		const errorSet = new Set();
 		// Form validation.
 		Object.entries(form).forEach(([key, value]) => {
-			if (!value || Number(value) <= 1) {
+			if (!value || Number(value) < 1) {
 				errorSet.add(true);
 				if (key === 'amount') {
 					errMsg = `${firstCap(key)} is required.`;
@@ -101,22 +111,34 @@ export default function QuickTransfer() {
 		});
 		setFormError(localErrObj);
 		if (errorSet.has(true)) return;
+
 		// Check for sufficient funds
 		const fromBalance = accounts.find(
 			(a) => a._id === sourceAccount
 		)?.accountBalance;
-		if (fromBalance && fromBalance - Number(amount) < 0) {
-			return toast.info(
-				'There are insufficient funds to complete this transfer.'
-			);
-		}
-		const queryData = { ...form, amount: Number(form.amount), credit: false };
-		const result = await transferQuick(queryData);
-		if (result && 'firstName' in result) {
-			dispatch(updateClient(result));
-			setForm(INITIAL_PAYMENT_FORM);
-			setFormError(initialError);
-			setSelectKeys({ from: randomString(4), to: randomString(4) });
+		
+		if (fromBalance) {
+			// Check for sufficient funds
+			if (fromBalance - Number(amount) < 0) {
+				handleInsufficientFunds();
+				return;
+			} else {
+				const queryData = {
+					...form,
+					amount: Number(form.amount),
+					credit: false,
+				};
+				const result = await transferQuick(queryData);
+				if (result && 'firstName' in result) {
+					dispatch(updateClient(result));
+					setForm(INITIAL_PAYMENT_FORM);
+					setFormError(initialError);
+					setSelectKeys({ from: randomString(4), to: randomString(4) });
+				}
+			}
+		} else {
+			handleInsufficientFunds();
+			return;
 		}
 	};
 
@@ -135,7 +157,7 @@ export default function QuickTransfer() {
 						dispatch(logoutClient());
 						router.push('/');
 						if (typeof msg === 'string') {
-							return toast.error(msg);
+							// return toast.error(msg);
 						}
 					}
 				}
@@ -153,6 +175,7 @@ export default function QuickTransfer() {
 			<form className='card border max-w-72' onSubmit={handleSubmit}>
 				<FormHeader>
 					<p className='form-title-sm'>Quick Transfer</p>
+					<p className='text-sm'>Transfer between your accounts</p>
 				</FormHeader>
 				<div className='mb-4 text-sm font-medium'>
 					<Label>From</Label>
@@ -162,21 +185,25 @@ export default function QuickTransfer() {
 						key={selectKeys.from}
 						name='from'
 					>
-						<SelectTrigger className='w-full no-focus focus:border-bank-green'>
+						<SelectTrigger className='w-full no-focus focus:border-gray-400'>
 							<SelectValue placeholder='Account' />
 						</SelectTrigger>
 						<SelectContent>
-							{accounts.map(({ _id, accountName, accountBalance }) => (
-								<SelectItem
-									key={accountName}
-									disabled={_id.toString() === form.destinationId}
-									value={`${_id},${accountName}`}
-									className='select-item'
-								>
-									<span>{accountName}</span>
-									<span> ${formatCurrency(accountBalance)}</span>
-								</SelectItem>
-							))}
+							{accounts.length ? (
+								accounts.map(({ _id, accountName, accountBalance }) => (
+									<SelectItem
+										key={accountName}
+										disabled={_id.toString() === form.destinationId}
+										value={`${_id},${accountName}`}
+										className='select-item'
+									>
+										<span>{accountName}</span>
+										<span> ${formatCurrency(accountBalance)}</span>
+									</SelectItem>
+								))
+							) : (
+								<NoDataSpan text='No accounts.' />
+							)}
 						</SelectContent>
 					</Select>
 					<FormErrorText text={formError.sourceAccountName} className='-mb-2' />
@@ -188,21 +215,25 @@ export default function QuickTransfer() {
 						key={selectKeys.to}
 						name='to'
 					>
-						<SelectTrigger className='w-full no-focus focus:border-bank-green'>
+						<SelectTrigger className='w-full no-focus focus:border-gray-400'>
 							<SelectValue placeholder='Account' />
 						</SelectTrigger>
 						<SelectContent>
-							{accounts.map(({ _id, accountName, accountBalance }) => (
-								<SelectItem
-									key={accountName}
-									disabled={_id.toString() === form.sourceAccount}
-									value={`${_id},${accountName}`}
-									className='select-item'
-								>
-									<span>{accountName}</span>
-									<span> ${formatCurrency(accountBalance)}</span>
-								</SelectItem>
-							))}
+							{accounts.length ? (
+								accounts.map(({ _id, accountName, accountBalance }) => (
+									<SelectItem
+										key={accountName}
+										disabled={_id.toString() === form.sourceAccount}
+										value={`${_id},${accountName}`}
+										className='select-item'
+									>
+										<span>{accountName}</span>
+										<span> ${formatCurrency(accountBalance)}</span>
+									</SelectItem>
+								))
+							) : (
+								<NoDataSpan text='No accounts.' />
+							)}
 						</SelectContent>
 					</Select>
 					<FormErrorText text={formError.destinationName} className='-mb-2' />
@@ -218,15 +249,10 @@ export default function QuickTransfer() {
 						placeholder=''
 						changeFunction={handleAmount}
 					/>
-					<FormErrorText text={formError.amount.toString()} className='-mb-2' />
+					<FormErrorText text={formError.amount.toString()} className='-mt-4' />
 				</div>
 				<Button className='w-full mt-2'>Transfer</Button>
 			</form>
-			<ToastContainer
-				theme='dark'
-				position='bottom-left'
-				containerId='QuickTransfer'
-			/>
 		</div>
 	);
 }

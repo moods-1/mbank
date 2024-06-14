@@ -13,6 +13,7 @@ import {
 	LoginProps,
 	PayeeProps,
 	PublicClientType,
+	UpdateClientType,
 } from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Client from '../models/Client';
@@ -21,6 +22,7 @@ import ClientNumber from '../models/CurrentClientNumber';
 export async function addClient(data: AddClientType) {
 	try {
 		await connectToDatabase();
+		// Get the current client number, and increment and apply it to new customer
 		const clientNumberArray = await ClientNumber.find();
 		const { _id: numberId, clientNumber } = clientNumberArray[0];
 		const newClientNumber = clientNumber + 1;
@@ -28,7 +30,6 @@ export async function addClient(data: AddClientType) {
 			{ _id: numberId },
 			{ clientNumber: newClientNumber }
 		);
-		//
 		data.clientNumber = newClientNumber;
 		data.password = await hashPassword(data.password);
 		const client = await Client.create(data);
@@ -37,6 +38,28 @@ export async function addClient(data: AddClientType) {
 		const returnClient = client.toObject();
 		delete returnClient.password;
 		return JSON.parse(JSON.stringify(returnClient));
+	} catch (error) {
+		handleError(error);
+	}
+}
+
+export async function updateClient(token: string, data: UpdateClientType) {
+	try {
+		await verifyToken(token);
+		await connectToDatabase();
+		const { _id, newPassword, password } = data;
+		if (newPassword && password) {
+			data.password = await hashPassword(password);
+		} else {
+			delete data.password;
+		}
+		const newToken = await generateToken(_id);
+		const client = await Client.findByIdAndUpdate(
+			{ _id },
+			{ ...data, token: newToken },
+			{ returnOriginal: false }
+		);
+		return JSON.parse(JSON.stringify(client));
 	} catch (error) {
 		handleError(error);
 	}

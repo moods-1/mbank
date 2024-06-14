@@ -6,7 +6,7 @@ import { getLoggedIn } from '@/lib/clientFunctions';
 export const metadata: Metadata = {
 	title: 'MBank - Accounts',
 	description: 'Client section.',
-	icons:{icon:[{url:'/images/logo.png'}]}
+	icons: { icon: [{ url: '/images/logo.png' }] },
 };
 
 export default function RootLayout({

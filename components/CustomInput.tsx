@@ -43,7 +43,7 @@ const CustomInput = ({
 			) : null}
 
 			<Input
-				className={`w-full outline-none border rounded-sm px-3  ${className}`}
+				className={`w-full outline-none ${className}`}
 				value={value}
 				placeholder={placeholder}
 				onChange={changeFunction}

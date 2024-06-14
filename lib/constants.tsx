@@ -4,7 +4,7 @@ export const CLIENT_HEADER_LINKS = [
 		link: '/client',
 	},
 	{
-		title: 'Pay & Transfer',
+		title: 'Pay and Transfer',
 		link: '/client/pay-transfer',
 	},
 	{
@@ -302,5 +302,28 @@ export const TRANSACTION_HEADERS = [
 		label: 'Balance',
 		field: 'accountBalance',
 		filterable: false,
+	},
+];
+
+export const STATIC_DATE_BUTTONS = [
+	{
+		label: 'Last 4 Weeks',
+		id: 0,
+		range: 30,
+	},
+	{
+		label: 'Last 3 Months',
+		id: 1,
+		range: 90,
+	},
+	{
+		label: 'Last 6 Months',
+		id: 2,
+		range: 182,
+	},
+	{
+		label: 'Last Year',
+		id: 3,
+		range: 365,
 	},
 ];

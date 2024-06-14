@@ -17,6 +17,19 @@ export const formatCurrency = (value: number) => {
 	});
 };
 
+export const postalCodeGood = (data: string) => {
+	const postalArr = data.split('');
+	const returnSet = new Set();
+	for (let x = 0; x < postalArr.length; x++) {
+		if (x % 2 === 0) {
+			returnSet.add(Number(postalArr[x]) ? false : true);
+		} else {
+			returnSet.add(Number(postalArr[x]) ? true : false);
+		}
+	}
+	return !returnSet.has(false);
+};
+
 export const partOfDayGreeting = () => {
 	let greeting: string;
 	const now = new Date().getHours();
@@ -104,6 +117,8 @@ export const FORM_FIELDS_DISPLAY: Record<string, string> = {
 	password: 'Password',
 	clientNumber: 'Client Number',
 	accountNumber: 'Account Number',
+	accountName: 'Account Name',
+	accountType: 'Account Type',
 	city: 'City',
 	province: 'Province',
 	postalCode: 'Postal Code',
@@ -141,8 +156,8 @@ export const VALIDATOR_OBJECT = {
 	password: {
 		min: 6,
 		max: 20,
-		pattern: '',
-		patternText: '',
+		pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*d)[a-zA-Zd]{6,}$',
+		patternText: 'The format is incorrect or too short. (e.g. pAssword8)',
 	},
 	clientNumber: { min: 9, max: 9, pattern: '', patternText: '' },
 	city: { min: 2, max: 30, pattern: '', patternText: '' },
@@ -157,11 +172,23 @@ export const VALIDATOR_OBJECT = {
 	country: { min: 2, max: 30, pattern: '', patternText: '' },
 	address: { min: 2, max: 60, pattern: '', patternText: '' },
 	accountNumber: { min: 6, max: 30, pattern: '', patternText: '' },
+	accountName: { min: 6, max: 30, pattern: '', patternText: '' },
+	accountType: { min: 3, max: 3, pattern: '', patternText: '' },
 	businessType: { min: 2, max: 30, pattern: '', patternText: '' },
 	payeeName: { min: 2, max: 30, pattern: '', patternText: '' },
 	payeeId: { min: 2, max: 30, pattern: '', patternText: '' },
-	sourceAccountName: { min: 2, max: 30, pattern: '', patternText: 'Source is required.' },
-	destinationName: { min: 2, max: 30, pattern: '', patternText: 'Destination is required.' },
+	sourceAccountName: {
+		min: 2,
+		max: 30,
+		pattern: '',
+		patternText: 'Source is required.',
+	},
+	destinationName: {
+		min: 2,
+		max: 30,
+		pattern: '',
+		patternText: 'Destination is required.',
+	},
 };
 
 export const requiredSet = new Set(['sourceAccountName', 'destinationName']);
@@ -170,7 +197,6 @@ export const validatorText = (target: string, min: number, max: number) => {
 	let message: string = '';
 	let mid: string = `between ${min} and ${max}`;
 	mid = min === max ? `${max}` : mid;
-
 	if (requiredSet.has(target)) {
 		message = `The ${FORM_FIELDS_DISPLAY[target]} field is required.`;
 	} else {
@@ -207,6 +233,8 @@ type FormObject = {
 	clientNumber?: string | number;
 	phoneNumber?: string;
 	accountNumber?: Types.ObjectId | string | undefined;
+	accountName?: string;
+	accountType?: string;
 	businessType?: string;
 	payeeName?: string;
 	payeeId?: Types.ObjectId | string | any;
@@ -234,12 +262,14 @@ export const formValidator = (formObject: FormObject) => {
 		clientNumber: '',
 		phoneNumber: '',
 		accountNumber: '',
+		accountName: '',
+		accountType: '',
 		businessType: '',
 		payeeName: '',
 		payeeId: '',
 		source: '',
 		sourceAccountName: '',
-		destinationName:'',
+		destinationName: '',
 	};
 
 	const errorSet = new Set();
@@ -304,6 +334,12 @@ export const formValidator = (formObject: FormObject) => {
 			case 'accountNumber':
 				error = value.length < min || value.length > max;
 				break;
+			case 'accountName':
+				error = value.length < min || value.length > max;
+				break;
+			case 'accountType':
+				error = value.length < min || value.length > max;
+				break;
 			case 'businessType':
 				error = value.length < min || value.length > max;
 				break;
@@ -330,6 +366,13 @@ export const formValidator = (formObject: FormObject) => {
 		errorObject[key as keyof typeof errorObject] = error ? message : '';
 		errorSet.add(error);
 	});
+	if (formObject.postalCode) {
+		const goodPostal = postalCodeGood(formObject.postalCode);
+		if (errorObject.postalCode || !goodPostal) {
+			errorSet.add(true);
+			errorObject.postalCode = 'The format is incorrect. (e.g. M1M2N2)';
+		}
+	}
 	return { error: errorSet.has(true), errorObject };
 };
 
@@ -345,11 +388,11 @@ export const formatPayeeOptions = (data: PayeeType[]) => {
 	return payeeOptions;
 };
 
-export const randomString = (length:number) => {
-	const alpha = ['a','B','c','D','e','1','2','3','4','5'];
+export const randomString = (length: number) => {
+	const alpha = ['a', 'B', 'c', 'D', 'e', '1', '2', '3', '4', '5'];
 	let output: string = '';
-	for (let i = 0; i < length; i++){
+	for (let i = 0; i < length; i++) {
 		output += alpha[Math.floor(Math.random() * 9)];
 	}
 	return output;
-}
+};

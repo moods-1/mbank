@@ -1,28 +1,20 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useState } from 'react';
 import { HiHandThumbUp } from 'react-icons/hi2';
 
 import { Button } from '@/components/ui/button';
-import { useAppDispatch } from '@/lib/store/store';
 import CustomInput from '@/components/CustomInput';
-import { Checkbox } from '@/components/ui/checkbox';
-import { CheckedState } from '@radix-ui/react-checkbox';
-import { Label } from '@/components/ui/label';
-import { addClient } from '@/api/actions/clientActions';
-import { formValidator, randomString } from '@/lib/clientFunctions';
+import { formValidator, postalCodeGood, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
+import { adminAddPayee } from '@/api/actions/payeeActions';
+import { PAYEE_BUSINESS_TYPES, PROVINCES_TERRITORIES } from '@/lib/constants';
 import SingleValueSelect from '@/components/SingleValueSelect';
-import { PROVINCES_TERRITORIES } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 
 const initialForm = {
-	firstName: '',
-	lastName: '',
-	password: '',
+	payeeName: '',
 	email: '',
 	city: '',
 	province: '',
@@ -30,59 +22,54 @@ const initialForm = {
 	address: '',
 	postalCode: '',
 	phoneNumber: '',
+	businessType: '',
 };
 
-export default function SignUp() {
+export default function AddPayee() {
 	const [form, setForm] = useState(initialForm);
+	const [selectKeys, setSelectKeys] = useState({
+		province: 'on',
+		business: 'bus',
+	});
 	const [formError, setFormError] = useState(initialForm);
 	const [openNotification, setOpenNotification] = useState(false);
-	const [clientNumber, setClientNumber] = useState<string | number>('');
-	const [clientName, setClientName] = useState<string>('');
-	const [showPassword, setShowPassword] = useState<boolean | CheckedState>(
-		false
-	);
-	const [selectKey, setSelectKey] = useState('province');
-	const dispatch = useAppDispatch();
-	const router = useRouter();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormError(initialForm);
 		const { value, name } = e.target;
 		let localValue: string;
-		if (name === 'password') {
-			localValue = value.replace(/[\W]/g, '');
-		} else if (name === 'postalCode') {
+		if (name === 'postalCode') {
 			localValue = value.replace(/[\W]/g, '').toUpperCase();
-		} else if (name === 'phoneNumber') {
-			localValue = value.replace(/[^0-9]/g, '');
 		} else if (name === 'email') {
 			localValue = value.replace(' ', '');
+		} else if (name === 'phoneNumber') {
+			localValue = value.replace(/[^0-9]/g, '');
 		} else {
 			localValue = value.replace(/\s{2,}/g, ' ').trimStart();
 		}
 		setForm((prev) => ({ ...prev, [name]: localValue }));
 	};
 
-	const handleProvince = (e: string, field: string) => {
+	const handleSelect = (e: string, field: string) => {
 		setFormError(initialForm);
 		setForm((prev) => ({ ...prev, [field]: e }));
 	};
 
 	const handleNotification = () => {
+		setForm(initialForm);
 		setOpenNotification(false);
-		router.push('/auth/login');
 	};
 
 	const notificationProps = {
 		title: 'Sign up successful!',
-		body: `${clientName}, use this client number ${clientNumber} and your password to log into your account.`,
-		buttonText: 'Login Page',
+		body: `${form.payeeName} has been added as a payee.`,
+		buttonText: 'Close',
 		buttonFunction: handleNotification,
 		buttonClass: 'bg-black text-bank-green',
 		open: openNotification,
 		openChange: setOpenNotification,
 		icon: (
-			<div className='w-14 h-14 rounded-full bg-bank-green flex-center mx-auto text-white'>
+			<div className='w-14 h-14 rounded-full bg-bank-green flex-center-row mx-auto text-white'>
 				<HiHandThumbUp className='text-4xl' />
 			</div>
 		),
@@ -90,7 +77,6 @@ export default function SignUp() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
 		const validatedData = formValidator(form);
 		const { error, errorObject } = validatedData;
 		setFormError(errorObject);
@@ -98,18 +84,13 @@ export default function SignUp() {
 			return null;
 		}
 		try {
-			// Store or clear the client number in local storage
 			const formObject = { ...form, phoneNumber: Number(form.phoneNumber) };
-			const result = await addClient(formObject);
+			const result = await adminAddPayee(formObject);
 			const resultType = typeof result;
-			if (resultType === 'object' && Object.keys(result).length) {
-				const { clientNumber } = result;
-				setClientNumber(clientNumber);
-				setClientName(form.firstName);
-				setForm(initialForm);
+			if (result && resultType === 'object' && Object.keys(result).length) {
 				setFormError(initialForm);
 				setOpenNotification(true);
-				setSelectKey(randomString(4));
+				setSelectKeys({ province: randomString(4), business: randomString(4) });
 			}
 		} catch (error) {
 			console.log(error);
@@ -119,31 +100,36 @@ export default function SignUp() {
 	return (
 		<div className='auth-section'>
 			<form className='auth-form max-w-lg border' onSubmit={handleSubmit}>
-				<FormHeader className='!mb-8'>
-					<p className='form-title-lg text-center'>Sign Up</p>
+				<FormHeader className='!mb-10'>
+					<p className='form-title-lg text-center'>Add Payee</p>
 				</FormHeader>
+
 				<div className='form-section'>
 					<div>
 						<CustomInput
-							name='firstName'
-							placeholder='Enter first name'
-							value={form.firstName}
+							name='payeeName'
+							placeholder='Enter payee name'
+							value={form.payeeName}
 							changeFunction={handleChange}
-							label='First Name'
-							invalid={formError.firstName ? true : false}
+							label='Payee Name'
+							invalid={formError.payeeName ? true : false}
 						/>
-						<FormErrorText text={formError.firstName} className='-mt-3 mb-2' />
+						<FormErrorText text={formError.payeeName} className='-mt-3 mb-2' />
 					</div>
 					<div>
-						<CustomInput
-							name='lastName'
-							placeholder='Enter last name'
-							value={form.lastName}
-							changeFunction={handleChange}
-							label='Last Name'
-							invalid={formError.lastName ? true : false}
+						<SingleValueSelect
+							reset={selectKeys.business}
+							invalid={formError.businessType ? true : false}
+							label='Business Type'
+							name='businessType'
+							placeholder='Select business type'
+							data={Object.values(PAYEE_BUSINESS_TYPES)}
+							changeFunction={handleSelect}
 						/>
-						<FormErrorText text={formError.lastName} className='-mt-3 mb-2' />
+						<FormErrorText
+							text={formError.businessType}
+							className='-mt-3 mb-2'
+						/>
 					</div>
 				</div>
 				<div className='form-section'>
@@ -192,6 +178,18 @@ export default function SignUp() {
 				</div>
 				<div className='form-section'>
 					<div>
+						<SingleValueSelect
+							reset={selectKeys.province}
+							invalid={formError.province ? true : false}
+							label='Province / Territory'
+							data={Object.values(PROVINCES_TERRITORIES)}
+							name='province'
+							placeholder='Select province'
+							changeFunction={handleSelect}
+						/>
+						<FormErrorText text={formError.province} className='-mt-3 mb-2' />
+					</div>
+					<div>
 						<CustomInput
 							name='city'
 							placeholder='Enter city'
@@ -201,17 +199,6 @@ export default function SignUp() {
 							invalid={formError.city ? true : false}
 						/>
 						<FormErrorText text={formError.city} className='-mt-3 mb-2' />
-					</div>
-					<div>
-						<SingleValueSelect
-							reset={selectKey}
-							label='Province / Territory'
-							data={Object.values(PROVINCES_TERRITORIES)}
-							name='province'
-							placeholder='Enter province'
-							changeFunction={handleProvince}
-						/>
-						<FormErrorText text={formError.province} className='-mt-3 mb-2' />
 					</div>
 				</div>
 				<div className='form-section'>
@@ -236,36 +223,9 @@ export default function SignUp() {
 						<FormErrorText text={formError.postalCode} className='-mt-3 mb-2' />
 					</div>
 				</div>
-				<div>
-					<CustomInput
-						name='password'
-						type={showPassword ? 'text' : 'password'}
-						placeholder='Enter password'
-						value={form.password}
-						changeFunction={handleChange}
-						className='focus:border-gray-400'
-						label='Password(case sensitive)'
-						invalid={formError.password ? true : false}
-					/>
-					<FormErrorText text={formError.password} className='-mt-3 mb-2' />
-					<span className='flex items-center mt-3'>
-						<Checkbox
-							id='loginShowPassword'
-							className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
-							onCheckedChange={(e) => setShowPassword(e)}
-						/>
-						<Label htmlFor='loginShowPassword'>Show password</Label>
-					</span>
-				</div>
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus'>Sign Up</Button>
+					<Button className='auth-form-button no-focus'>Add Payee</Button>
 				</div>
-				<p className='mt-3'>
-					{'Already have an account?'}
-					<Link href='/auth/login' className='ml-2 text-green-700'>
-						Login
-					</Link>
-				</p>
 			</form>
 			{openNotification ? <NotificationModal {...notificationProps} /> : null}
 		</div>

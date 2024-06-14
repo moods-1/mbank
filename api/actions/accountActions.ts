@@ -6,7 +6,6 @@ import {
 	AccountDetailsProps,
 	AccountType,
 	AddAccountType,
-	ClientNewTransactionType,
 	GetAccountDetailsProps,
 	GetAccountsReturn,
 	PaymentFormProps,
@@ -19,15 +18,18 @@ import Account from '../models/Account';
 import Client from '../models/Client';
 import Transaction from '../models/Transaction';
 import { handleError, verifyToken } from '@/lib/serverFunctions';
-import { addTransaction } from './transactionActions';
 
 export async function addAccount(data: AddAccountType) {
 	try {
 		await connectToDatabase();
 		const account = await Account.create(data);
 		const { clientNumber, _id } = account;
-		await Client.updateOne({ clientNumber }, { $push: { accounts: _id } });
-		return JSON.parse(JSON.stringify(account));
+		const result = await Client.findOneAndUpdate(
+			{ clientNumber },
+			{ $push: { accounts: _id } },
+			{ returnOriginal: false }
+		);
+		return JSON.parse(JSON.stringify(result));
 	} catch (error) {
 		handleError(error);
 	}
@@ -124,13 +126,14 @@ export async function quickTransaction(data: ServerNewTransactionType) {
 				};
 				const transaction = await Transaction.create(newData);
 				const { _id } = transaction;
-				const newCredit = await Account.findOneAndUpdate(
+				await Account.findOneAndUpdate(
 					{ _id: destinationId },
 					{ accountBalance: newBalance, $push: { transactions: _id } },
 					{ returnOriginal: false }
 				);
 			}
-		} else { // Update payment source account
+		} else {
+			// Update payment source account
 			const targetAcc = await Account.findOne({ _id: sourceAccount });
 			if (targetAcc) {
 				let newBalance: number;

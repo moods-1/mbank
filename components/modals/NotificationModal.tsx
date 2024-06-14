@@ -1,12 +1,8 @@
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
 } from '@/components/ui/dialog';
-import { ReactElement, SetStateAction } from 'react';
+import { ReactElement } from 'react';
 import { Button } from '../ui/button';
 
 type Props = {
@@ -16,6 +12,7 @@ type Props = {
 	buttonText: string;
 	buttonFunction: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	buttonClass?: string;
+	className?: string;
 	open: boolean;
 	openChange: (open: boolean) => void;
 };
@@ -27,12 +24,13 @@ export default function NotificationModal({
 	buttonText,
 	buttonFunction,
 	buttonClass,
+	className,
 	open,
 	openChange,
 }: Props) {
 	return (
 		<Dialog open={open} onOpenChange={openChange}>
-			<DialogContent className='notification-dialog'>
+			<DialogContent className={`notification-dialog ${className}`}>
 				{icon}
 				<p className='font-semibold text-lg sm:text-2xl'>{title}</p>
 				<p>{body}</p>

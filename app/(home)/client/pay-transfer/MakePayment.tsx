@@ -1,11 +1,9 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 
 import {
 	AccountType,
-	ClientNewTransactionType,
 	PayeeProps,
 	PaymentFormProps,
 	PublicClientType,
@@ -24,7 +22,6 @@ import {
 	randomString,
 } from '@/lib/clientFunctions';
 import PayeeItems from './PayeeItems';
-import { Input } from '@/components/ui/input';
 import FormErrorText from '@/components/FormErrorText';
 import CustomDatePicker from '@/components/CustomDatePicker';
 import { Button } from '@/components/ui/button';
@@ -34,6 +31,7 @@ import { updateClient } from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
+import NoDataSpan from '@/components/NoDataSpan';
 
 type PaymentProps = {
 	client: PublicClientType;
@@ -74,6 +72,13 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 		setForm((prev) => ({ ...prev, transactionDate: value }));
 	};
 
+	const timedError = (text: string, field: string) => {
+		setFormError((prev) => ({ ...prev, [field]: text }));
+		setTimeout(() => {
+			setFormError(initialFormError);
+		}, 4000);
+	};
+
 	const handleAmount = (e: ChangeEvent<HTMLInputElement>) => {
 		setFormError(initialFormError);
 		const { value } = e.target;
@@ -104,23 +109,29 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 		if (error) return null;
 		// Check for sufficient funds
 		form.amount = Number(form.amount);
-		if (paymentSource?.accountBalance && form.amount && form.transactionDate) {
-			const { amount, transactionDate } = form;
-			const insufficientFunds: boolean =
-				paymentSource?.accountBalance - amount < 0;
-			const today = new Date().getDay();
-			const payToday = today === transactionDate.getDay();
-			if (payToday && insufficientFunds) {
-				return toast.info('Insufficient funds for this transaction.');
+		if (paymentSource) {
+			if (form.amount && form.transactionDate) {
+				const { amount, transactionDate } = form;
+				const insufficientFunds: boolean =
+					paymentSource.accountBalance - amount < 0;
+				const today = new Date().getDay();
+				const payToday = today === transactionDate.getDay();
+				if (payToday && insufficientFunds) {
+					timedError(
+						'Insufficient funds for this transaction.',
+						'sourceAccountName'
+					);
+					return;
+				}
+				const queryData = { ...form, credit: false };
+				const result = await transactionAdd(queryData);
+				if (result && 'firstName' in result) {
+					dispatch(updateClient(result));
+					setForm(INITIAL_PAYMENT_FORM);
+					setFormError(initialFormError);
+					setSelectKey(randomString(3));
+				}
 			}
-		}
-		const queryData = { ...form, credit: false };
-		const result = await transactionAdd(queryData);
-		if (result && 'firstName' in result) {
-			dispatch(updateClient(result));
-			setForm(INITIAL_PAYMENT_FORM);
-			setFormError(initialFormError);
-			setSelectKey(randomString(3));
 		}
 	};
 
@@ -129,7 +140,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 	}, [clientId]);
 
 	return (
-		<div className='w-full max-w-md mt-8' suppressHydrationWarning={true}>
+		<div className='w-full max-w-md' suppressHydrationWarning={true}>
 			<form className='card border' onSubmit={handleSubmit}>
 				<FormHeader className='!pb-4'>
 					<div className='flex justify-between items-center gap-5'>
@@ -154,16 +165,20 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 							<SelectValue placeholder='Payment Source' />
 						</SelectTrigger>
 						<SelectContent>
-							{accounts.map(({ _id, accountName, accountBalance }) => (
-								<SelectItem
-									key={accountName}
-									value={_id.toString()}
-									className='select-item'
-								>
-									<span>{accountName}</span>
-									<span> ${formatCurrency(accountBalance)}</span>
-								</SelectItem>
-							))}
+							{accounts.length ? (
+								accounts.map(({ _id, accountName, accountBalance }) => (
+									<SelectItem
+										key={accountName}
+										value={_id.toString()}
+										className='select-item'
+									>
+										<span>{accountName}</span>
+										<span> ${formatCurrency(accountBalance)}</span>
+									</SelectItem>
+								))
+							) : (
+								<NoDataSpan text='No payment sources.' />
+							)}
 						</SelectContent>
 					</Select>
 				</div>
@@ -197,11 +212,6 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 					/>
 				</div>
 			</form>
-			<ToastContainer
-				theme='dark'
-				position='bottom-left'
-				containerId='MakePayment'
-			/>
 		</div>
 	);
 }

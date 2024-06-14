@@ -93,7 +93,7 @@ export default function Header() {
 								Moods Bank
 							</p>
 							{HEADER_LINKS.map(({ title, subsection, link }) => (
-								<div key={title} className='mb-8'>
+								<div key={title} className='mb-8 text=[15px]'>
 									{link ? (
 										<span
 											className='cursor-pointer sidemenu-item !-mt-2'

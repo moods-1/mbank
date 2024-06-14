@@ -1,7 +1,6 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 
 import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
@@ -82,7 +81,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 				if (status < 300) {
 					dispatch(updateClient(response));
 					await reset();
-					return toast.success(msg);
+					// return toast.success(msg);
 				}
 			}
 		} catch (error) {
@@ -108,6 +107,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 			<form className='card border max-w-72' onSubmit={handleSubmit}>
 				<FormHeader>
 					<p className='form-title-sm'>Add Payee</p>
+					<p className='text-sm'>Add a billing entity</p>
 				</FormHeader>
 				<SearchableInput
 					reset={selectKey}
@@ -127,7 +127,6 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 					placeholder='Enter account number'
 					value={form.accountNumber}
 					changeFunction={handleChange}
-					className={`focus:border-bank-green`}
 					label='Payee Account Number'
 					invalid={formError.accountNumber ? true : false}
 				/>
@@ -140,18 +139,12 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 					placeholder='Enter account nickname'
 					value={form.nickname}
 					changeFunction={handleChange}
-					className={`focus:border-bank-green`}
 					label='Payee Nickname'
 					invalid={formError.nickname ? true : false}
 				/>
 				<FormErrorText text={formError.nickname || ''} className='-mt-3 mb-2' />
 				<Button className='w-full mt-2'>Add Payee</Button>
 			</form>
-			<ToastContainer
-				theme='dark'
-				position='bottom-left'
-				containerId='AddPayee'
-			/>
 		</div>
 	);
 }

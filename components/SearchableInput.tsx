@@ -63,7 +63,7 @@ export function SearchableInput({
 						variant='outline'
 						role='combobox'
 						aria-expanded={open}
-						className='w-full h-9 justify-between no-focus focus:border-bank-green'
+						className='w-full h-9 justify-between no-focus focus:border-gray-400'
 					>
 						{value
 							? options.find((item) => item.value === value)?.label

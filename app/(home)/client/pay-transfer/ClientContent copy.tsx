@@ -12,16 +12,11 @@ export default function ClientContent() {
 	return (
 		<div>
 			<PageHeader title='Pay and Transfer' className='pl-0 !py-0' />
-			<div className='flex'>
-				<div className='flex-1 w-full flex flex-col items-start flex-wrap justify-center gap-10 mt-10'>
-					<div className='flex flex-wrap justify-center gap-8'>
-						<QuickTransfer />
-						<AddPayee client={client} />
-					</div>
-					<MakePayment client={client} accounts={accounts} />
-				</div>
-				<div className="hidden flex-1 md:block border" />
+			<div className=' w-full flex items-center flex-col-reverse sm:flex-row justify-between flex-wrap gap-5 mt-10'>
+				<QuickTransfer />
+				<AddPayee client={client} />
 			</div>
+			<MakePayment client={client} accounts={accounts} />
 		</div>
 	);
 }

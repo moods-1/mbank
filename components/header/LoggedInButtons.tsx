@@ -20,7 +20,7 @@ export default function LoggedInButtons({ changeFunction }: Props) {
 		if (changeFunction) {
 			changeFunction();
 		}
-		// router.push('/');
+		router.push('/');
 	};
 
 	const handleMobile = () => {

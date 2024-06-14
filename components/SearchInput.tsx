@@ -27,7 +27,7 @@ export default function SearchInput({
 		<div className={`search-input w-full ${className}`}>
 			<Input
 				type='text'
-				className='no-focus focus:border-bank-green'
+				className='no-focus focus:border-gray-400'
 				placeholder={placeholder || 'Search'}
 				value={localSearch}
 				onChange={(e: ChangeEvent<HTMLInputElement>) => {

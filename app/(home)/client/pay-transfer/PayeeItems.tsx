@@ -17,11 +17,13 @@ export default function PayeeItems({ selectedId, payees, onSelect }: Props) {
 	const [localPayees, setLocalPayees] = useState<PayeeProps[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
+	const noData = !isLoading && !payees.length;
+
 	useEffect(() => {
 		if (payees.length) {
 			setLocalPayees(payees);
-			setIsLoading(false);
 		}
+		setIsLoading(false);
 	}, [payees]);
 
 	return (
@@ -31,16 +33,17 @@ export default function PayeeItems({ selectedId, payees, onSelect }: Props) {
 					<SlideLoader />
 					<SlideLoader />
 				</div>
-			) : (
-				localPayees.map((payee, idx) => (
-					<PayeeItem
-						key={idx}
-						payee={payee}
-						selectedId={selectedId}
-						onSelect={onSelect}
-					/>
-				))
-			)}
+			) : null}
+			{noData
+				? <p className='text-sm'>No payees to display.</p>
+				: localPayees.map((payee, idx) => (
+						<PayeeItem
+							key={idx}
+							payee={payee}
+							selectedId={selectedId}
+							onSelect={onSelect}
+						/>
+				  ))}
 		</div>
 	);
 }

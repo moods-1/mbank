@@ -7,6 +7,8 @@ type Props = {
 	id?: string;
 	name?: string;
 	min?: string;
+	max?: string;
+	maxLength?: number;
 	step?: number;
 	invalid?: boolean;
 	value: string | number;
@@ -14,17 +16,26 @@ type Props = {
 	placeholder?: string;
 };
 
-export default function CurrencyInput({
+export default function NumberInput({
 	label,
 	id,
 	name,
 	min,
+	maxLength,
 	step,
 	invalid,
 	value,
 	changeFunction,
 	placeholder,
 }: Props) {
+	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const { value } = e.target;
+		if (maxLength) {
+			e.target.value = value.slice(0, 9);
+		}
+		changeFunction(e);
+	};
+
 	return (
 		<div className='w-full flex flex-col mb-4'>
 			{label ? <Label>{label}</Label> : null}
@@ -32,18 +43,18 @@ export default function CurrencyInput({
 				className='h-9 border rounded-sm relative flex items-center focus-within:border-gray-400'
 				style={{ borderColor: invalid ? 'red' : '' }}
 			>
-				<span className='ml-2 text-sm'>$</span>
-				<span className='absolute right-1 bg-white h-6 w-6' />
+				<span className='absolute right-1 bg-white h-6 w-6 cursor-default' />
 				<Input
 					type='number'
 					id={id || ''}
 					name={name || ''}
 					min={min || '0'}
-					className='no-focus border-none pl-1 h-8'
+					maxLength={maxLength || 30}
+					className='no-focus border-none h-8'
 					step={step || 0.01}
 					value={value}
 					placeholder={placeholder || ''}
-					onChange={changeFunction}
+					onChange={handleChange}
 				/>
 			</div>
 		</div>
