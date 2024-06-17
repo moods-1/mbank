@@ -116,7 +116,9 @@ export default function LogIn() {
 							className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
 							onCheckedChange={(e) => setShowPassword(e)}
 						/>
-						<Label htmlFor='loginShowPassword'>Show password</Label>
+						<Label htmlFor='loginShowPassword' className='!mb-0'>
+							Show password
+						</Label>
 					</span>
 					<span className='flex items-center mt-3'>
 						<Checkbox
@@ -125,7 +127,9 @@ export default function LogIn() {
 							checked={rememberMe}
 							onCheckedChange={(e) => setRememberMe(e)}
 						/>
-						<Label htmlFor='loginRememberMe'>Remember me</Label>
+						<Label htmlFor='loginRememberMe' className='!mb-0'>
+							Remember me
+						</Label>
 					</span>
 				</div>
 
@@ -134,7 +138,7 @@ export default function LogIn() {
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}
-					<Link href='/auth/sign-up' className='ml-2 text-green-700'>
+					<Link href='/sign-up' className='ml-2 text-green-700'>
 						Sign-up
 					</Link>
 				</p>

@@ -70,7 +70,7 @@ export default function SignUp() {
 
 	const handleNotification = () => {
 		setOpenNotification(false);
-		router.push('/auth/login');
+		router.push('/login');
 	};
 
 	const notificationProps = {
@@ -254,7 +254,9 @@ export default function SignUp() {
 							className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
 							onCheckedChange={(e) => setShowPassword(e)}
 						/>
-						<Label htmlFor='loginShowPassword'>Show password</Label>
+						<Label htmlFor='loginShowPassword' className='!mb-0'>
+							Show password
+						</Label>
 					</span>
 				</div>
 				<div className='mt-6'>
@@ -262,7 +264,7 @@ export default function SignUp() {
 				</div>
 				<p className='mt-3'>
 					{'Already have an account?'}
-					<Link href='/auth/login' className='ml-2 text-green-700'>
+					<Link href='/login' className='ml-2 text-green-700'>
 						Login
 					</Link>
 				</p>

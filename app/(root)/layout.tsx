@@ -1,12 +1,7 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 
-import '../globals.css';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
-import StoreProvider from '../StoreProvider';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'MBank',
@@ -20,14 +15,10 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='en'>
-			<body className={inter.className}>
-				<StoreProvider>
-					<Header />
-					{children}
-					<Footer />
-				</StoreProvider>
-			</body>
-		</html>
+		<main>
+			<Header />
+			{children}
+			<Footer />
+		</main>
 	);
 }

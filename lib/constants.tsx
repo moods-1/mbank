@@ -136,6 +136,8 @@ export const ACCOUNT_TYPE_NUMBER: Record<string, string> = {
 	'008': 'Line of Credit',
 };
 
+export const DEBT_SET = new Set(['005', '006', '007', '008']);
+
 // Footer protection section
 
 export const PROTECTION_DATA = [

@@ -14,7 +14,7 @@ export default function Hero() {
 					<p className='text-lg font-medium text-white'>
 						Join millions who trust us with their financial journey.
 					</p>
-					<Link href='/auth/sign-up'>
+					<Link href='/sign-up'>
 						<Button className='bg-black text-white rounded-full mt-8'>
 							Open an Account
 						</Button>

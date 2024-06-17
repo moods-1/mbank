@@ -19,6 +19,11 @@ const AccountSchema = new Schema(
 			type: Number,
 			default: 0,
 		},
+		debt: {
+			type: Boolean,
+			required: true,
+			default: false,
+		},
 		transactions: [
 			{
 				type: Schema.Types.ObjectId,

@@ -18,11 +18,14 @@ import Account from '../models/Account';
 import Client from '../models/Client';
 import Transaction from '../models/Transaction';
 import { handleError, verifyToken } from '@/lib/serverFunctions';
+import { DEBT_SET } from '@/lib/constants';
 
 export async function addAccount(data: AddAccountType) {
 	try {
+		const { accountType } = data;
+		const debt: boolean = DEBT_SET.has(accountType);
 		await connectToDatabase();
-		const account = await Account.create(data);
+		const account = await Account.create({ ...data, debt });
 		const { clientNumber, _id } = account;
 		const result = await Client.findOneAndUpdate(
 			{ clientNumber },

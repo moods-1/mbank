@@ -146,17 +146,21 @@ export default function Profile({ open, openChange }: Props) {
 			}));
 		}
 	}, [client]);
-	
+
 	return (
 		<Sheet open={open} onOpenChange={openChange}>
 			<SheetContent className='profile-content'>
 				<form onSubmit={handleSubmit} className='pt-6 sm:w-[500px]'>
-					<FormHeader className='!mb-8 flex gap-2 items-center flex-wrap'>
+					<FormHeader className='flex gap-2 items-center flex-wrap'>
 						<FaUserEdit size={30} />
 						<span className='flex-1 flex justify-center items-center'>
-							<span className='form-title-sm'>{clientName}</span>
+							<span className='form-title-md'>{clientName}</span>
 						</span>
 					</FormHeader>
+					<FormErrorText
+						text='* Updates take effect immediately.'
+						className='mb-3 !text-black'
+					/>
 					<div className='form-section !gap-y-0'>
 						<div>
 							<CustomInput
@@ -295,7 +299,9 @@ export default function Profile({ open, openChange }: Props) {
 									className='mr-2 border-gray-400 data-[state=checked]:bg-bank-green data-[state=checked]:border-none'
 									onCheckedChange={(e) => setShowPassword(e)}
 								/>
-								<Label htmlFor='loginShowPassword'>Show password</Label>
+								<Label htmlFor='loginShowPassword' className='!mb-0'>
+									Show password
+								</Label>
 							</span>
 						</div>
 					</div>

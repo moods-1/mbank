@@ -275,6 +275,9 @@ section {
 .form-title-lg {
 	@apply text-2xl sm:text-4xl font-bold mb-2;
 }
+.form-title-md {
+	@apply text-lg sm:text-2xl font-bold;
+}
 .form-title-sm {
 	@apply text-lg font-semibold;
 }
@@ -388,10 +391,14 @@ section {
 	@apply focus:border-gray-400;
 }
 
-/* Profile Content */ 
+/* Profile Content */
 .profile-content {
 	@apply overflow-y-auto w-11/12 sm:max-w-2xl;
 }
 .profile-content::-webkit-scrollbar-track {
 	@apply bg-white;
+}
+
+.progress-bar {
+	@apply rounded-full relative flex items-center justify-center border-8;
 }
