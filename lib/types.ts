@@ -10,6 +10,7 @@ export type TransactionType = {
 	credit: boolean;
 };
 
+// Accounts 
 export type AccountType = {
 	_id: Types.ObjectId | string;
 	clientNumber: number;
@@ -17,12 +18,14 @@ export type AccountType = {
 	accountType: string;
 	accountBalance: number;
 	transactions: Types.ObjectId[];
+	debt: boolean;
 };
 
 export type AddAccountFormType = {
 	clientNumber: string|number;
 	accountName: string; 
 	accountType: string;
+	debt: boolean;
 }
 
 export type AddAccountType = {
@@ -31,6 +34,7 @@ export type AddAccountType = {
 	accountType: string;
 	accountBalance: number;
 	transactions: Types.ObjectId[];
+	debt: boolean;
 };
 
 export type AddClientType = {

@@ -150,12 +150,10 @@ export default function Profile({ open, openChange }: Props) {
 	return (
 		<Sheet open={open} onOpenChange={openChange}>
 			<SheetContent className='profile-content'>
-				<form onSubmit={handleSubmit} className='pt-6 sm:w-[500px]'>
-					<FormHeader className='flex gap-2 items-center flex-wrap'>
-						<FaUserEdit size={30} />
-						<span className='flex-1 flex justify-center items-center'>
-							<span className='form-title-md'>{clientName}</span>
-						</span>
+				<form onSubmit={handleSubmit} className='pt-4 sm:w-[500px]'>
+					<FormHeader className='flex flex-col gap-1 items-center flex-wrap'>
+						<FaUserEdit size={30} className='text-green-600'/>
+						<span className='form-title-md'>{clientName}</span>
 					</FormHeader>
 					<FormErrorText
 						text='* Updates take effect immediately.'

@@ -224,7 +224,7 @@ section {
 /* Client Accounts */
 
 .account-item {
-	@apply bg-white hover:bg-slate-100 flex justify-between items-center gap-2 flex-wrap min-h-10 border-l-4 border-black hover:border-black px-2 text-[15px] py-3;
+	@apply bg-white hover:bg-bank-green hover:text-white flex justify-between items-center gap-2 flex-wrap min-h-10 border-l-4 border-black px-2 text-[15px] py-3;
 }
 .transaction-item {
 	@apply bg-white hover:bg-slate-100 min-h-10 border-l-4 border-black hover:border-black px-2 text-sm py-1;

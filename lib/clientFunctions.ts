@@ -1,6 +1,7 @@
 import moment from 'moment-timezone';
-import { PayeeType } from './types';
+import { AccountType, PayeeType } from './types';
 import { Types } from 'mongoose';
+import { DEBT_SET } from './constants';
 
 export const firstCap = (value: string) => {
 	return value.charAt(0).toUpperCase() + value.slice(1);
@@ -15,6 +16,51 @@ export const formatCurrency = (value: number) => {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
 	});
+};
+
+export const balanceCalculator = (accounts: AccountType[], type: string) => {
+	let debtBalance: number = 0;
+	let creditBalance: number = 0;
+	accounts.forEach(({ accountBalance, debt }) => {
+		if (type === 'debt' && debt) {
+			debtBalance += accountBalance;
+		} else if (type === 'credit' && !debt) {
+			creditBalance += accountBalance;
+		}
+	});
+	return type === 'credit' ? creditBalance : debtBalance;
+};
+
+export const accountsDonutChartData = (accounts: AccountType[]) => {
+	const data: number[] = [];
+	const labels: string[] = [];
+	accounts.forEach(({ accountBalance, accountName }) => {
+		data.push(accountBalance);
+		labels.push(accountName);
+	});
+	return {
+		datasets: [
+			{
+				data,
+				backgroundColor: [
+					'#87CEFA',
+					'#4682B4',
+					'#A9A9A9',
+					'#B0C4DE',
+
+					// '#808080',
+					// '#A9A9A9',
+					// '#C0C0C0',
+					// '#DCDCDC',
+				],
+			},
+		],
+		labels,
+	};
+};
+
+export const isDebt = (accountType: string) => {
+	return DEBT_SET.has(accountType);
 };
 
 export const postalCodeGood = (data: string) => {
@@ -38,7 +84,7 @@ export const partOfDayGreeting = () => {
 	} else if (now >= 18 && now < 21) {
 		greeting = 'Good evening, ';
 	} else if (now >= 21 && now < 24) {
-		greeting = 'Good night';
+		greeting = 'Good night, ';
 	} else {
 		greeting = 'Good morning, ';
 	}

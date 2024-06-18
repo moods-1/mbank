@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { HiHandThumbUp } from 'react-icons/hi2';
 
 import { Button } from '@/components/ui/button';
-import { formValidator, randomString } from '@/lib/clientFunctions';
+import { formValidator, isDebt, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
 import { ACCOUNT_TYPE_NUMBER } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
@@ -24,14 +24,21 @@ const initialForm = {
 	clientNumber: '',
 	accountName: '',
 	accountType: '',
+	debt: false,
+};
+
+const initialFormError = {
+	clientNumber: '',
+	accountName: '',
+	accountType: '',
 };
 
 export default function AddAccount({ clientNumber }: Props) {
 	const [form, setForm] = useState<AddAccountFormType>(initialForm);
 	const [selectKey, setSelectKey] = useState<string>('accountName');
-	const [formError, setFormError] = useState(initialForm);
+	const [formError, setFormError] = useState(initialFormError);
 	const [openNotification, setOpenNotification] = useState(false);
-	const [selectOptions, setSelectOptions] =useState<AccountSelectType[]>([]);
+	const [selectOptions, setSelectOptions] = useState<AccountSelectType[]>([]);
 	const { accounts } = useAppSelector((state) => state.client);
 	const dispatch = useAppDispatch();
 
@@ -91,7 +98,8 @@ export default function AddAccount({ clientNumber }: Props) {
 			return null;
 		}
 		try {
-			const result = await accountAdd(form);
+			const debt = isDebt(form.accountType);
+			const result = await accountAdd({ ...form, debt });
 			if (result && 'firstName' in result) {
 				setFormError(initialForm);
 				setOpenNotification(true);

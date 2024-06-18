@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { FaMoneyBillTransfer } from 'react-icons/fa6';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
@@ -86,7 +87,9 @@ export default function QuickTransfer() {
 			sourceAccountName:
 				'There are insufficient funds to complete this transfer.',
 		}));
-		setTimeout(() => { setFormError(initialError) }, 4000);
+		setTimeout(() => {
+			setFormError(initialError);
+		}, 4000);
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -116,7 +119,7 @@ export default function QuickTransfer() {
 		const fromBalance = accounts.find(
 			(a) => a._id === sourceAccount
 		)?.accountBalance;
-		
+
 		if (fromBalance) {
 			// Check for sufficient funds
 			if (fromBalance - Number(amount) < 0) {
@@ -174,7 +177,10 @@ export default function QuickTransfer() {
 		<div className=''>
 			<form className='card border max-w-72' onSubmit={handleSubmit}>
 				<FormHeader>
-					<p className='form-title-sm'>Quick Transfer</p>
+					<p className='form-title-sm flex items-center'>
+						{/* <FaMoneyBillTransfer className='text-2xl text-bank-green mr-2' /> */}
+						Quick Transfer
+					</p>
 					<p className='text-sm'>Transfer between your accounts</p>
 				</FormHeader>
 				<div className='mb-4 text-sm font-medium'>

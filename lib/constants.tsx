@@ -329,3 +329,21 @@ export const STATIC_DATE_BUTTONS = [
 		range: 365,
 	},
 ];
+
+export const donutChartOptions = {
+	cutout: 38,
+	plugins: { legend: { display: false },tooltip:{callbacks: {
+		label: function (context: any) {
+			console.log(context)
+			let label = context.dataset.label || '';
+
+			if (label) {
+				label += ': ';
+			}
+			if (context.parsed !== null) {
+				label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed);
+			}
+			return label;
+		}
+	}} },
+};

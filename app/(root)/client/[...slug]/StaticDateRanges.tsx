@@ -44,7 +44,7 @@ export default function StaticDateRanges({
 					<div
 						key={label}
 						className={`border border-gray-300 px-3 py-1 ${
-							active ? 'bg-black text-white ' : ''
+							active ? 'bg-bank-green text-white ' : ''
 						} cursor-pointer text-xs min-w-28 text-center font-medium w-full xs:w-auto`}
 						onClick={() => handleButton(id, range)}
 					>

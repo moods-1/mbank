@@ -11,7 +11,6 @@ import { getAccDetails } from '@/api/client/accounts';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';
-import moment from 'moment';
 import CustomDataTable from '@/components/CustomDataTable';
 import { TRANSACTION_HEADERS } from '@/lib/constants';
 import { formatCurrency, formatDate } from '@/lib/clientFunctions';
@@ -188,7 +187,7 @@ export default function AccountDetails() {
 
 	return (
 		<div className='pb-10 flex gap-6'>
-			<div className='flex-1 max-w-3xl'>
+			<div className='flex-1 max-w-4xl'>
 				<div>
 					<p className='text-lg sm:text-xl font-semibold'>
 						{account?.accountName || <SlideLoader className='h-6 max-w-96' />}
@@ -210,7 +209,7 @@ export default function AccountDetails() {
 						<div className='border p-4 pb-0 border-t-4 border-t-black'>
 							<div className='flex justify-between items-start flex-wrap gap-5'>
 								<div
-									className='py-1 cursor-pointer text-xs min-w-28 text-center font-medium'
+									className='py-1 cursor-pointer text-xs min-w-28 text-center font-semibold hover:text-bank-green'
 									onClick={() => setHideCustomSearch((prev) => !prev)}
 								>
 									{hideCustomSearch ? 'Show' : 'Hide'} Custom Search
