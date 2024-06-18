@@ -33,7 +33,7 @@ export default function LoggedInButtons({ changeFunction }: Props) {
 	return (
 		<div className='flex gap-5 w-auto'>
 			<Button
-				className='bg-bank-green h-8 flex-1 rounded-sm text-white'
+				className='bg-bank-green h-8 flex-1 rounded-sm text-white green-button'
 				onClick={handleLogout}
 				size='sm'
 			>
@@ -42,7 +42,7 @@ export default function LoggedInButtons({ changeFunction }: Props) {
 			{hideMyAccount ? null : (
 				<Button
 					size='sm'
-					className='bg-white h-8 text-bank-green rounded-sm flex-1 border border-green-700 w-auto'
+					className='bg-white h-8 text-bank-green rounded-sm flex-1 border border-green-700 w-auto '
 					onClick={handleMobile}
 				>
 					My Accounts

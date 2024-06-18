@@ -175,89 +175,100 @@ export default function QuickTransfer() {
 
 	return (
 		<div className=''>
-			<form className='card border max-w-72' onSubmit={handleSubmit}>
-				<FormHeader>
+			<form
+				className='pay-transfer-card max-w-72'
+				onSubmit={handleSubmit}
+			>
+				<FormHeader className='bg-black text-white p-3 sm:px-6'>
 					<p className='form-title-sm flex items-center'>
 						{/* <FaMoneyBillTransfer className='text-2xl text-bank-green mr-2' /> */}
 						Quick Transfer
 					</p>
 					<p className='text-sm'>Transfer between your accounts</p>
 				</FormHeader>
-				<div className='mb-4 text-sm font-medium'>
-					<Label>From</Label>
-					<Select
-						onValueChange={(e: string) => handleAccount(e, 'from')}
-						defaultValue={form.destinationName}
-						key={selectKeys.from}
-						name='from'
-					>
-						<SelectTrigger className='w-full no-focus focus:border-gray-400'>
-							<SelectValue placeholder='Account' />
-						</SelectTrigger>
-						<SelectContent>
-							{accounts.length ? (
-								accounts.map(({ _id, accountName, accountBalance }) => (
-									<SelectItem
-										key={accountName}
-										disabled={_id.toString() === form.destinationId}
-										value={`${_id},${accountName}`}
-										className='select-item'
-									>
-										<span>{accountName}</span>
-										<span> ${formatCurrency(accountBalance)}</span>
-									</SelectItem>
-								))
-							) : (
-								<NoDataSpan text='No accounts.' />
-							)}
-						</SelectContent>
-					</Select>
-					<FormErrorText text={formError.sourceAccountName} className='-mb-2' />
+				<div className='pay-transfer-card-content'>
+					<div className='mb-4 text-sm font-medium'>
+						<Label>From</Label>
+						<Select
+							onValueChange={(e: string) => handleAccount(e, 'from')}
+							defaultValue={form.destinationName}
+							key={selectKeys.from}
+							name='from'
+						>
+							<SelectTrigger className='w-full no-focus focus:border-gray-400'>
+								<SelectValue placeholder='Account' />
+							</SelectTrigger>
+							<SelectContent>
+								{accounts.length ? (
+									accounts.map(({ _id, accountName, accountBalance }) => (
+										<SelectItem
+											key={accountName}
+											disabled={_id.toString() === form.destinationId}
+											value={`${_id},${accountName}`}
+											className='select-item'
+										>
+											<span>{accountName}</span>
+											<span> ${formatCurrency(accountBalance)}</span>
+										</SelectItem>
+									))
+								) : (
+									<NoDataSpan text='No accounts.' />
+								)}
+							</SelectContent>
+						</Select>
+						<FormErrorText
+							text={formError.sourceAccountName}
+							className='-mb-2'
+						/>
+					</div>
+					<div className='mb-4 text-sm font-medium'>
+						<Label>To</Label>
+						<Select
+							onValueChange={(e: string) => handleAccount(e, 'to')}
+							key={selectKeys.to}
+							name='to'
+						>
+							<SelectTrigger className='w-full no-focus focus:border-gray-400'>
+								<SelectValue placeholder='Account' />
+							</SelectTrigger>
+							<SelectContent>
+								{accounts.length ? (
+									accounts.map(({ _id, accountName, accountBalance }) => (
+										<SelectItem
+											key={accountName}
+											disabled={_id.toString() === form.sourceAccount}
+											value={`${_id},${accountName}`}
+											className='select-item'
+										>
+											<span>{accountName}</span>
+											<span> ${formatCurrency(accountBalance)}</span>
+										</SelectItem>
+									))
+								) : (
+									<NoDataSpan text='No accounts.' />
+								)}
+							</SelectContent>
+						</Select>
+						<FormErrorText text={formError.destinationName} className='-mb-2' />
+					</div>
+					<div className='w-full'>
+						<CurrencyInput
+							label='Amount'
+							id='transferAmount'
+							name='amount'
+							min='1'
+							step={0.01}
+							value={form.amount}
+							placeholder=''
+							changeFunction={handleAmount}
+						/>
+						<FormErrorText
+							text={formError.amount.toString()}
+							className='-mt-4'
+						/>
+					</div>
+					<Button className='w-full mt-2 bg-bank-green green-button'>Transfer</Button>
 				</div>
-				<div className='mb-4 text-sm font-medium'>
-					<Label>To</Label>
-					<Select
-						onValueChange={(e: string) => handleAccount(e, 'to')}
-						key={selectKeys.to}
-						name='to'
-					>
-						<SelectTrigger className='w-full no-focus focus:border-gray-400'>
-							<SelectValue placeholder='Account' />
-						</SelectTrigger>
-						<SelectContent>
-							{accounts.length ? (
-								accounts.map(({ _id, accountName, accountBalance }) => (
-									<SelectItem
-										key={accountName}
-										disabled={_id.toString() === form.sourceAccount}
-										value={`${_id},${accountName}`}
-										className='select-item'
-									>
-										<span>{accountName}</span>
-										<span> ${formatCurrency(accountBalance)}</span>
-									</SelectItem>
-								))
-							) : (
-								<NoDataSpan text='No accounts.' />
-							)}
-						</SelectContent>
-					</Select>
-					<FormErrorText text={formError.destinationName} className='-mb-2' />
-				</div>
-				<div className='w-full'>
-					<CurrencyInput
-						label='Amount'
-						id='transferAmount'
-						name='amount'
-						min='1'
-						step={0.01}
-						value={form.amount}
-						placeholder=''
-						changeFunction={handleAmount}
-					/>
-					<FormErrorText text={formError.amount.toString()} className='-mt-4' />
-				</div>
-				<Button className='w-full mt-2'>Transfer</Button>
 			</form>
 		</div>
 	);

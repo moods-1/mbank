@@ -1,10 +1,13 @@
-import { SlideLoader } from "./Loaders";
+import { SlideLoader } from './Loaders';
 
-export default function DoubleSlider() {
+type Props = {
+	height?: string;
+};
+export default function DoubleSlider({ height }: Props) {
 	return (
 		<div className='w-full mt-1'>
-			<SlideLoader className='h-10' />
-			<SlideLoader className='h-10 ' />
+			<SlideLoader className={`${height ? height : 'h-10'}`} />
+			<SlideLoader className={`${height ? height : 'h-10'}`} />
 		</div>
 	);
 }

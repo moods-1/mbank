@@ -12,17 +12,15 @@ import {
 	partOfDayGreeting,
 } from '@/lib/clientFunctions';
 import { useAppSelector } from '@/lib/store/store';
-import AccountItem from './AccountItem';
 import { AccountType } from '@/lib/types';
 import { SlideLoader } from '@/components/Loaders';
-import DoubleSlider from '@/components/DoubleSlider';
 import { Button } from '@/components/ui/button';
 import { getAccounts } from '@/api/client/accounts';
 import { useAppDispatch } from '@/lib/store/store';
 import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
-import AddAccount from './admin/ClientAddAccount';
+import AddAccount from './ClientAddAccount';
 import Profile from '@/components/profile/page';
-import DonutChart from '@/components/charts/DonutChart';
+import AccountCard from '@/components/AccountCard';
 
 export default function ClientHome() {
 	const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -94,29 +92,30 @@ export default function ClientHome() {
 					onClick={() => setOpenProfile(true)}
 				/>
 			</div>
-			<div className='flex flex-wrap flex-col lg:flex-row gap-10'>
+			<div className='flex flex-wrap flex-col lg:flex-row items-start gap-10 '>
 				<div className='flex-1 min-w-60'>
-					<div className='mb-3'>
-						<p>Growing balance with us:</p>
+					<div className=' mb-10'>
+						<p className='font-semibold'>Growing balance with us:</p>
 						<CountUp
 							start={0}
 							end={totalBalance}
 							decimals={2}
 							prefix='$'
-							className='text-2xl font-semibold text-bank-green'
+							className='text-2xl xs:text-5xl font-semibold text-bank-green'
 						/>
 					</div>
-					<div className='w-36 h-36 mb-6'>
-						<DonutChart data={chartData} />
-					</div>
-					<p className='font-semibold mb-2'>Your Accounts</p>
+					<p className='font-semibold mb-2 text-xl'>Your Accounts</p>
 					{noAccounts ? (
 						<div>No accounts</div>
 					) : (
-						<div className='flex flex-col border max-w-2xl'>
-							{isLoading ? <DoubleSlider /> : null}
+						<div className='flex flex-wrap justify-center xs:justify-normal gap-5 max-w-2xl'>
+							{isLoading ? <SlideLoader className='h-44' /> : null}
 							{accounts.map((account, idx) => (
-								<AccountItem key={idx} account={account} />
+								<AccountCard
+									key={idx}
+									account={account}
+									background='bg-black'
+								/>
 							))}
 						</div>
 					)}
@@ -138,7 +137,7 @@ export default function ClientHome() {
 					<p>Are you ready to add an account?</p>
 					<Button
 						size={'sm'}
-						className='mt-2 bg-bank-green px-6'
+						className='mt-2 bg-bank-green px-6 green-button'
 						onClick={() => setShowAddAccount((prev) => !prev)}
 					>
 						{`${showAddAccount ? 'Not now' : "Let's Go"}`}

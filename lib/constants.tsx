@@ -6,11 +6,7 @@ export const CLIENT_HEADER_LINKS = [
 	{
 		title: 'Pay and Transfer',
 		link: '/client/pay-transfer',
-	},
-	{
-		title: 'Admin',
-		link: '/client/admin',
-	},
+	}
 ];
 
 export const CLIENT_SLUG_ROUTES: Record<string, string> = {
@@ -332,18 +328,28 @@ export const STATIC_DATE_BUTTONS = [
 
 export const donutChartOptions = {
 	cutout: 38,
-	plugins: { legend: { display: false },tooltip:{callbacks: {
-		label: function (context: any) {
-			console.log(context)
-			let label = context.dataset.label || '';
+	plugins: {
+		legend: {
+			display: false,
+		},
+		tooltip: {
+			callbacks: {
+				label: function (context: any) {
+					console.log(context);
+					let label = context.dataset.label || '';
 
-			if (label) {
-				label += ': ';
-			}
-			if (context.parsed !== null) {
-				label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed);
-			}
-			return label;
-		}
-	}} },
+					if (label) {
+						label += ': ';
+					}
+					if (context.parsed !== null) {
+						label += new Intl.NumberFormat('en-US', {
+							style: 'currency',
+							currency: 'USD',
+						}).format(context.parsed);
+					}
+					return label;
+				},
+			},
+		},
+	},
 };

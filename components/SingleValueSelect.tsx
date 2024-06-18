@@ -45,6 +45,7 @@ export default function SingleValueSelect({
 				<SelectTrigger
 					className='w-full focus:border-gray-400'
 					style={{ borderColor: invalid ? 'red' : '' }}
+					tabIndex={-1}
 				>
 					<SelectValue placeholder={placeholder || 'Select'} />
 				</SelectTrigger>

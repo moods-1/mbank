@@ -16,6 +16,7 @@ type Props = {
 	invalid?: boolean;
 	requiredStar?: boolean;
 	readOnly?: boolean;
+	autoFocus?: boolean;
 };
 
 const CustomInput = ({
@@ -32,6 +33,7 @@ const CustomInput = ({
 	required,
 	requiredStar,
 	readOnly,
+	autoFocus,
 }: Props) => {
 	return (
 		<div className='mb-4'>
@@ -55,6 +57,8 @@ const CustomInput = ({
 				required={required || false}
 				readOnly={readOnly}
 				autoComplete={type === 'password' ? 'on' : 'off'}
+				autoFocus={autoFocus || false}
+				tabIndex={-1}
 			/>
 		</div>
 	);

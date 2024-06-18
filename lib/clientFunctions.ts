@@ -43,15 +43,12 @@ export const accountsDonutChartData = (accounts: AccountType[]) => {
 			{
 				data,
 				backgroundColor: [
-					'#87CEFA',
-					'#4682B4',
-					'#A9A9A9',
-					'#B0C4DE',
-
-					// '#808080',
-					// '#A9A9A9',
-					// '#C0C0C0',
-					// '#DCDCDC',
+					'#000',
+					'#DDD',
+					'#333',
+					'#AAA',
+					'#666',
+					'#999',				
 				],
 			},
 		],

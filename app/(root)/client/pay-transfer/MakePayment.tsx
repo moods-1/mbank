@@ -141,75 +141,80 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 
 	return (
 		<div className='w-full max-w-md' suppressHydrationWarning={true}>
-			<form className='card border' onSubmit={handleSubmit}>
-				<FormHeader className='!pb-4'>
+			<form className='pay-transfer-card' onSubmit={handleSubmit}>
+				<FormHeader className='bg-black text-white p-3 sm:px-6 !pb-4'>
 					<div className='flex justify-between items-center gap-5'>
 						<p className='form-title-sm !mb-0'>Make Payment</p>
-						<Button size={'sm'} className='px-6'>
+						<Button
+							size={'sm'}
+							className='px-6 bg-bank-green green-button'
+						>
 							Pay
 						</Button>
 					</div>
 				</FormHeader>
-				<div className='max-w-40'>
-					<CustomDatePicker
-						label='Payment Date'
-						minDate={new Date()}
-						changeFunction={handlePaymentDate}
-						date={form.transactionDate}
-					/>
-				</div>
-				<div className='my-4 text-sm font-medium'>
-					<Label>Payment Source</Label>
-					<Select onValueChange={handleAccount} key={selectKey}>
-						<SelectTrigger className='w-full select-trigger'>
-							<SelectValue placeholder='Payment Source' />
-						</SelectTrigger>
-						<SelectContent>
-							{accounts.length ? (
-								accounts.map(({ _id, accountName, accountBalance }) => (
-									<SelectItem
-										key={accountName}
-										value={_id.toString()}
-										className='select-item'
-									>
-										<span>{accountName}</span>
-										<span> ${formatCurrency(accountBalance)}</span>
-									</SelectItem>
-								))
-							) : (
-								<NoDataSpan text='No payment sources.' />
-							)}
-						</SelectContent>
-					</Select>
-				</div>
-				<FormErrorText
-					text={formError.sourceAccountName || ''}
-					className='-mt-3 mb-2'
-				/>
-				<CurrencyInput
-					label='Amount'
-					name='amount'
-					min='1'
-					step={0.01}
-					value={form.amount}
-					placeholder=''
-					changeFunction={handleAmount}
-				/>
-				<FormErrorText
-					text={formError.amount.toString() || ''}
-					className='-mt-3 mb-2'
-				/>
-				<div>
-					<Label>Payees</Label>
+				<div className='pay-transfer-card-content'>
+					<div className='max-w-40'>
+						<CustomDatePicker
+							label='Payment Date'
+							minDate={new Date()}
+							changeFunction={handlePaymentDate}
+							date={form.transactionDate}
+						/>
+					</div>
+					<div className='my-4 text-sm font-medium'>
+						<Label>Payment Source</Label>
+						<Select onValueChange={handleAccount} key={selectKey}>
+							<SelectTrigger className='w-full select-trigger'>
+								<SelectValue placeholder='Payment Source' />
+							</SelectTrigger>
+							<SelectContent>
+								{accounts.length ? (
+									accounts.map(({ _id, accountName, accountBalance }) => (
+										<SelectItem
+											key={accountName}
+											value={_id.toString()}
+											className='select-item'
+										>
+											<span>{accountName}</span>
+											<span> ${formatCurrency(accountBalance)}</span>
+										</SelectItem>
+									))
+								) : (
+									<NoDataSpan text='No payment sources.' />
+								)}
+							</SelectContent>
+						</Select>
+					</div>
 					<FormErrorText
-						text={formError.destinationName || ''}
-						className='mt-1 mb-2'
+						text={formError.sourceAccountName || ''}
+						className='-mt-3 mb-2'
 					/>
-					<PayeeItems
-						payees={payees}
-						selectedId={form.destinationId}
-						onSelect={handlePayee}
+					<CurrencyInput
+						label='Amount'
+						name='amount'
+						min='1'
+						step={0.01}
+						value={form.amount}
+						placeholder=''
+						changeFunction={handleAmount}
 					/>
+					<FormErrorText
+						text={formError.amount.toString() || ''}
+						className='-mt-3 mb-2'
+					/>
+					<div>
+						<Label>Payees</Label>
+						<FormErrorText
+							text={formError.destinationName || ''}
+							className='mt-1 mb-2'
+						/>
+						<PayeeItems
+							payees={payees}
+							selectedId={form.destinationId}
+							onSelect={handlePayee}
+						/>
+					</div>
 				</div>
 			</form>
 		</div>

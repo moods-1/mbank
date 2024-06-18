@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function HeaderButtons() {
 	return (
 		<div className='flex gap-5'>
-			<Button size={'sm'} className='bg-bank-green font-semibold flex-1'>
+			<Button size={'sm'} className='bg-bank-green font-semibold flex-1 green-button'>
 				<Link href='/login'>Log In</Link>
 			</Button>
 			<Button

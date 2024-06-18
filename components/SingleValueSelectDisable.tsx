@@ -12,7 +12,7 @@ type Props = {
 	reset: string;
 	invalid?: boolean;
 	label?: string;
-	data:AccountSelectType[];
+	data: AccountSelectType[];
 	name: string;
 	placeholder: string | undefined;
 	changeFunction: (e: string, field: string) => void;
@@ -43,6 +43,7 @@ export default function SingleValueSelect({
 				<SelectTrigger
 					className='w-full focus:border-gray-400'
 					style={{ borderColor: invalid ? 'red' : '' }}
+					tabIndex={-1}
 				>
 					<SelectValue placeholder={placeholder || 'Select'} />
 				</SelectTrigger>

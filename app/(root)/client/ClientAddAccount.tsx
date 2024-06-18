@@ -8,7 +8,6 @@ import { formValidator, isDebt, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
 import { ACCOUNT_TYPE_NUMBER } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
-import FormHeader from '@/components/FormHeader';
 import { AccountSelectType, AddAccountFormType } from '@/lib/types';
 import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
@@ -165,7 +164,7 @@ export default function AddAccount({ clientNumber }: Props) {
 				</div>
 
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus'>Add Account</Button>
+					<Button className='auth-form-button no-focus bg-bank-green  green-button'>Add Account</Button>
 				</div>
 				<p className='text-sm mt-5 font-medium'>{`Upon successful account addition, we'll send you the appropriate paperwork digitally.`}</p>
 			</form>

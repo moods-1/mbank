@@ -104,46 +104,51 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 
 	return (
 		<div>
-			<form className='card border max-w-72' onSubmit={handleSubmit}>
-				<FormHeader>
+			<form className='pay-transfer-card max-w-72' onSubmit={handleSubmit}>
+				<FormHeader className='bg-black text-white p-3 sm:px-6'>
 					<p className='form-title-sm'>Add Payee</p>
 					<p className='text-sm'>Add a billing entity</p>
 				</FormHeader>
-				<SearchableInput
-					reset={selectKey}
-					placeholder='Select payee'
-					name='payeeId'
-					emptyMessage='No payee found.'
-					label='Payee Name'
-					options={payeeOptions}
-					changeFunction={handleSelect}
-				/>
-				<FormErrorText
-					text={formError.payeeName || ''}
-					className='-mt-3 mb-2'
-				/>
-				<CustomInput
-					name='accountNumber'
-					placeholder='Enter account number'
-					value={form.accountNumber}
-					changeFunction={handleChange}
-					label='Payee Account Number'
-					invalid={formError.accountNumber ? true : false}
-				/>
-				<FormErrorText
-					text={formError.accountNumber || ''}
-					className='-mt-3 mb-2'
-				/>
-				<CustomInput
-					name='nickname'
-					placeholder='Enter account nickname'
-					value={form.nickname}
-					changeFunction={handleChange}
-					label='Payee Nickname'
-					invalid={formError.nickname ? true : false}
-				/>
-				<FormErrorText text={formError.nickname || ''} className='-mt-3 mb-2' />
-				<Button className='w-full mt-2'>Add Payee</Button>
+				<div className='pay-transfer-card-content'>
+					<SearchableInput
+						reset={selectKey}
+						placeholder='Select payee'
+						name='payeeId'
+						emptyMessage='No payee found.'
+						label='Payee Name'
+						options={payeeOptions}
+						changeFunction={handleSelect}
+					/>
+					<FormErrorText
+						text={formError.payeeName || ''}
+						className='-mt-3 mb-2'
+					/>
+					<CustomInput
+						name='accountNumber'
+						placeholder='Enter account number'
+						value={form.accountNumber}
+						changeFunction={handleChange}
+						label='Payee Account Number'
+						invalid={formError.accountNumber ? true : false}
+					/>
+					<FormErrorText
+						text={formError.accountNumber || ''}
+						className='-mt-3 mb-2'
+					/>
+					<CustomInput
+						name='nickname'
+						placeholder='Enter account nickname'
+						value={form.nickname}
+						changeFunction={handleChange}
+						label='Payee Nickname'
+						invalid={formError.nickname ? true : false}
+					/>
+					<FormErrorText
+						text={formError.nickname || ''}
+						className='-mt-3 mb-2'
+					/>
+					<Button className='w-full mt-2 bg-bank-green green-button'>Add Payee</Button>
+				</div>
 			</form>
 		</div>
 	);
