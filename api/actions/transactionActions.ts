@@ -10,7 +10,7 @@ import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
 import Account from '../models/Account';
 import Client from '../models/Client';
-import { handleError, verifyToken } from '@/lib/serverFunctions';
+import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
 
 export async function addTransaction(
 	token: string,
@@ -44,7 +44,7 @@ export async function addTransaction(
 					{ accountBalance: newBalance, $push: { transactions: _id } }
 				);
 				const result = await Client.findOne({ _id: clientId });
-				return JSON.parse(JSON.stringify(result));
+				return parsedResponse(result);
 			} else {
 				throw new Error('Insufficient funds in this account.');
 			}
@@ -59,7 +59,7 @@ export async function getTransactionById(id: Types.ObjectId | string) {
 	try {
 		await connectToDatabase();
 		const transaction = await Transaction.findOne({ _id: id });
-		return JSON.parse(JSON.stringify(transaction));
+		return parsedResponse(transaction);
 	} catch (error) {
 		handleError(error);
 	}

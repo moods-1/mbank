@@ -30,7 +30,7 @@ export default function Footer() {
 							alt='apple'
 							width={140}
 							height={50}
-							className='border border-slate-600 rounded-lg h-auto w-auto'
+							className='border border-slate-600 rounded-md h-auto w-auto'
 						/>
 					</a>
 				</div>
@@ -45,7 +45,7 @@ export default function Footer() {
 							alt='apple'
 							width={140}
 							height={50}
-							className='border border-slate-600 rounded-lg h-auto w-auto'
+							className='border border-slate-600 rounded-md h-auto w-auto'
 						/>
 					</a>
 				</div>

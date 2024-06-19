@@ -233,7 +233,7 @@ section {
 	@apply w-full min-h-[80vh] flex items-center justify-center px-6 sm:px-10 py-6 sm:py-10;
 }
 .auth-form {
-	@apply w-full p-6 rounded-lg shadow-md min-h-80 bg-white mb-6;
+	@apply w-full p-6 rounded-sm shadow-md min-h-80 bg-white mb-6;
 }
 .auth-form-button {
 	@apply w-full sm:text-lg;
@@ -277,7 +277,7 @@ section {
 	content: '';
 }
 .card {
-	@apply p-3 sm:p-6 rounded-lg shadow-md;
+	@apply p-3 sm:p-6 rounded-sm shadow-md;
 }
 /* Filter Section */
 .account-filter-box {
@@ -424,7 +424,7 @@ section {
 	@apply rounded-full relative flex items-center justify-center border-8;
 }
 .pay-transfer-card {
-	@apply rounded-lg shadow-md border overflow-hidden;
+	@apply rounded-sm shadow-md border overflow-hidden;
 }
 .pay-transfer-card-content {
 	@apply p-3 sm:p-6;

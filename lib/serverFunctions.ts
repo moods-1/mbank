@@ -33,3 +33,7 @@ export const handleError = (error: unknown) => {
 	}
 	return error;
 };
+
+export const parsedResponse = (data: any) => {
+	return JSON.parse(JSON.stringify(data));
+}

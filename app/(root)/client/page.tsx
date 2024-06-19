@@ -35,8 +35,6 @@ export default function ClientHome() {
 
 	const noAccounts = !accounts.length && !isLoading;
 
-	const chartData = accountsDonutChartData(accounts);
-
 	const openProfileChange = () => {
 		setOpenProfile((prev) => !prev);
 	};
@@ -94,8 +92,8 @@ export default function ClientHome() {
 			</div>
 			<div className='flex flex-wrap flex-col lg:flex-row items-start gap-10 '>
 				<div className='flex-1 min-w-60'>
-					<div className=' mb-10'>
-						<p className='font-semibold'>Growing balance with us:</p>
+					<div className=' mb-4'>
+						<p className='font-semibold mb-4'>Growing balance with us:</p>
 						<CountUp
 							start={0}
 							end={totalBalance}

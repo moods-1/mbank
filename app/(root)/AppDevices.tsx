@@ -21,7 +21,7 @@ export default function AppDevices() {
 									alt='apple'
 									width={160}
 									height={50}
-									className='rounded-lg h-auto w-auto bg-black'
+									className='rounded-md h-auto w-auto bg-black'
 								/>
 							</a>
 							<a
@@ -34,7 +34,7 @@ export default function AppDevices() {
 									alt='apple'
 									width={160}
 									height={50}
-									className='rounded-lg h-auto w-auto bg-black'
+									className='rounded-md h-auto w-auto bg-black'
 								/>
 							</a>
 						</div>

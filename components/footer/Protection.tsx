@@ -22,7 +22,7 @@ export default function Protection() {
 								width={1000}
 								height={1000}
 								alt={alt}
-								className='w-full rounded-lg'
+								className='w-full rounded-md'
 							/>
 						</span>
 					</a>

@@ -96,7 +96,7 @@ export default function Header() {
 								<div key={title} className='mb-8 text=[15px]'>
 									{link ? (
 										<span
-											className='cursor-pointer sidemenu-item !-mt-2'
+											className='cursor-pointer sidemenu-item !mb-1'
 											onClick={() => handleMenuLink(link, 'mobile')}
 										>
 											{title}

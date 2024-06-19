@@ -21,7 +21,7 @@ export default function ClientHeader() {
 	}, [currentPath]);
 
 	return (
-		<nav className='flex px-1 sm:px-10 bg-black text-white gap-3 pb-1 text-sm'>
+		<nav className='flex px-1 sm:px-10 bg-black text-white gap-3 pb-1 text-[15px]'>
 			{CLIENT_HEADER_LINKS.map(({ title, link }, idx) => (
 				<Link
 					key={title}

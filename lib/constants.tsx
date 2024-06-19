@@ -22,6 +22,11 @@ export const CLIENT_SLUG_ROUTES: Record<string, string> = {
 
 export const HEADER_LINKS = [
 	{
+		title: 'Rates',
+		link: '/rates',
+		subsection: [],
+	},
+	{
 		title: 'Save',
 		link: '',
 		subsection: [
@@ -79,11 +84,7 @@ export const HEADER_LINKS = [
 			},
 		],
 	},
-	{
-		title: 'Rates',
-		link: '/rates',
-		subsection: [],
-	},
+	
 ];
 
 export const CUSTOMERS_LOVE = [

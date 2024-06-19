@@ -6,6 +6,7 @@ import {
 	verifyToken,
 	hashPassword,
 	handleError,
+	parsedResponse,
 } from '@/lib/serverFunctions';
 import {
 	AddClientType,
@@ -37,7 +38,7 @@ export async function addClient(data: AddClientType) {
 		client.save();
 		const returnClient = client.toObject();
 		delete returnClient.password;
-		return JSON.parse(JSON.stringify(returnClient));
+		return parsedResponse(returnClient);
 	} catch (error) {
 		handleError(error);
 	}
@@ -59,7 +60,7 @@ export async function updateClient(token: string, data: UpdateClientType) {
 			{ ...data, token: newToken },
 			{ returnOriginal: false }
 		);
-		return JSON.parse(JSON.stringify(client));
+		return parsedResponse(client);
 	} catch (error) {
 		handleError(error);
 	}
@@ -83,7 +84,7 @@ export async function loginClient(data: LoginProps) {
 					{ $set: { ...clientExists } },
 					{ returnDocument: 'after' }
 				).select({ password: 0, createdAt: 0, updatedAt: 0 });
-				return JSON.parse(JSON.stringify(client));
+				return parsedResponse(client);
 			} else return 'The password is incorrect.';
 		} else {
 			return 'No client exists with these credentials.';
@@ -108,7 +109,7 @@ export async function removePayee(token: string, data: PayeeProps) {
 		return {
 			status: 201,
 			msg: `Payee has been removed.`,
-			response: JSON.parse(JSON.stringify(result)),
+			response: parsedResponse(result),
 		};
 	} catch (error) {
 		return { status: 500, msg: `Sorry, we could not remove the payee.` };
@@ -129,7 +130,7 @@ export async function addPayee(token: string, data: PayeeProps) {
 		return {
 			status: 201,
 			msg: 'Payee has been added.',
-			response: JSON.parse(JSON.stringify(result)),
+			response: parsedResponse(result),
 		};
 	} catch (error) {
 		return {

@@ -17,7 +17,7 @@ import { connectToDatabase } from '../db';
 import Account from '../models/Account';
 import Client from '../models/Client';
 import Transaction from '../models/Transaction';
-import { handleError, verifyToken } from '@/lib/serverFunctions';
+import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
 import { DEBT_SET } from '@/lib/constants';
 
 export async function addAccount(data: AddAccountType) {
@@ -51,7 +51,7 @@ export async function getAccountsById(
 		const response: GetAccountsReturn = {
 			status: 200,
 			msg: 'OK',
-			response: JSON.parse(JSON.stringify(accounts)),
+			response: parsedResponse(accounts),
 		};
 		return response;
 	} catch (error) {
@@ -63,7 +63,7 @@ export async function getAccountById(id: Types.ObjectId | string) {
 	try {
 		await connectToDatabase();
 		const account = await Account.findOne({ _id: id });
-		return JSON.parse(JSON.stringify(account));
+		return parsedResponse(account);
 	} catch (error) {
 		handleError(error);
 	}
@@ -97,7 +97,7 @@ export async function getAccountDetails(
 			const transactions: TransactionReturnType[] = JSON.parse(
 				JSON.stringify(transactionsResult)
 			);
-			const account: AccountType = JSON.parse(JSON.stringify(accountResult));
+			const account: AccountType = parsedResponse(accountResult);
 			const response: AccountDetailsProps = {
 				status: 201,
 				account,
@@ -175,7 +175,7 @@ export async function quickTransfer(token: string, data: PaymentFormProps) {
 		const creditData = { ...data, amount: Number(data.amount), credit: true };
 		await quickTransaction(creditData);
 		const result = await Client.findOne({ _id: clientId });
-		return JSON.parse(JSON.stringify(result));
+		return parsedResponse(result);
 	} catch (error) {
 		return handleError(error);
 	}

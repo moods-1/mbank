@@ -9,16 +9,21 @@ import { SlideLoader } from '@/components/Loaders';
 import DoubleSlider from '@/components/DoubleSlider';
 import { getAccDetails } from '@/api/client/accounts';
 import { Button } from '@/components/ui/button';
-import { useAppDispatch } from '@/lib/store/store';
+import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';
 import CustomDataTable from '@/components/CustomDataTable';
 import { TRANSACTION_HEADERS } from '@/lib/constants';
-import { formatCurrency, formatDate } from '@/lib/clientFunctions';
+import {
+	balanceCalculator,
+	formatCurrency,
+	formatDate,
+} from '@/lib/clientFunctions';
 import SearchInput from '@/components/SearchInput';
 import CustomDatePicker from '@/components/CustomDatePicker';
 import CurrencyInput from '@/components/CurrencyInput';
 import FormErrorText from '@/components/FormErrorText';
 import StaticDateRanges from './StaticDateRanges';
+import ProgressBar from '@/components/ProgressBar';
 
 const today = new Date();
 const end = new Date(today.setHours(23, 59, 59));
@@ -45,8 +50,10 @@ export default function AccountDetails() {
 	const [resetDateButtons, setResetDateButtons] = useState(false);
 	const [customSearch, setCustomSearch] = useState(false);
 	const [hideCustomSearch, setHideCustomSearch] = useState(false);
+	const [accountPercentage, setAccountPercentage] = useState(0);
 	const router = useRouter();
 	const dispatch = useAppDispatch();
+	const { accounts } = useAppSelector((state) => state.client);
 	const { slug } = useParams();
 	const id = slug[2];
 	const noData = !isLoading && !transactions?.length;
@@ -174,6 +181,17 @@ export default function AccountDetails() {
 		fetchAccount();
 	}, [dispatch, id, router, refetchData]);
 
+	useEffect(() => {
+		const totalBalance = balanceCalculator(accounts, 'credit');
+		let accountPercentage: number = 0;
+		if (account?.accountBalance) {
+			accountPercentage = Math.round(
+				(account.accountBalance / totalBalance) * 100
+			);
+		}
+		setAccountPercentage(accountPercentage);
+	}, [account, accounts]);
+
 	const balance = account?.accountBalance.toLocaleString(undefined, {
 		maximumFractionDigits: 2,
 		minimumFractionDigits: 2,
@@ -186,7 +204,7 @@ export default function AccountDetails() {
 	};
 
 	return (
-		<div className='pb-10 flex gap-6'>
+		<div className='pb-10 flex flex-col-reverse md:flex-row gap-6'>
 			<div className='flex-1 max-w-4xl'>
 				<div>
 					<p className='text-lg sm:text-xl font-semibold'>
@@ -339,7 +357,24 @@ export default function AccountDetails() {
 					</div>
 				</div>
 			</div>
-			<div className='flex-1 max-w-xl bg-red-500 hidden xl:block' />
+			{/* <div className='flex-1 max-w-xl border hidden xl:block'> */}
+			<div className='flex-1 max-w-xl mx-auto'>
+				<p className='text-lg sm:text-xl font-semibold text-center'>
+					Percentage as part of all your accounts:
+				</p>
+				<div className='w-full flex justify-center mt-8 pb-4'>
+					<ProgressBar
+						className='w-32 sm:w-40 font-semibold'
+						value={accountPercentage}
+						strokeWidth={20}
+						textColor='#000'
+						textSize='22px'
+						pathColor='#27c522'
+						trailColor='#000'
+					/>
+				</div>
+				<p></p>
+			</div>
 		</div>
 	);
 }

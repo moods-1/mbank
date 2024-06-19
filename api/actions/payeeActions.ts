@@ -3,7 +3,7 @@
 import { PayeeReturnType, PayeeType } from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Payee from '../models/Payee';
-import { handleError, verifyToken } from '@/lib/serverFunctions';
+import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
 
 
 export async function adminAddPayee(data: PayeeType) {
@@ -24,7 +24,7 @@ export async function getAllPayees(token: string) {
 		const response: PayeeReturnType = {
 			status: 201,
 			msg: 'Ok',
-			response: JSON.parse(JSON.stringify(result)),
+			response: parsedResponse(result),
 		};
 		return response;
 	} catch (error) {
