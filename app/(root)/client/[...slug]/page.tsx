@@ -114,9 +114,33 @@ export default function AccountDetails() {
 	};
 
 	const handleFilter = async () => {
-		const min = Number(minAmount);
-		const max = Number(maxAmount);
-		if (min > max) {
+		let min = Number(minAmount);
+		let max = Number(maxAmount);
+		console.log({ max });
+		if (min && !maxAmount) {
+			try {
+				setIsLoading(true);
+				const queryData = {
+					id,
+					filter: { startDate, endDate, minAmount: min, maxAmount: max },
+				};
+				const result = await getAccDetails(queryData);
+				if (result && 'account' in result) {
+					const { account, transactions } = result;
+					setAccount(account);
+					setTransactions(transactions);
+				} else if (result && 'msg' in result) {
+					const { status, msg } = result;
+					if (status === 401) {
+						dispatch(logoutClient());
+						router.push('/');
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+			setIsLoading(false);
+		} else if (min > max) {
 			return timedError(
 				'Upper limit must be greater than or equal to the lower!',
 				'maxAmount'
@@ -125,28 +149,6 @@ export default function AccountDetails() {
 		if (endDate < startDate) {
 			return timedError('End date must greater than start date!', 'endDate');
 		}
-		try {
-			setIsLoading(true);
-			const queryData = {
-				id,
-				filter: { startDate, endDate, minAmount: min, maxAmount: max },
-			};
-			const result = await getAccDetails(queryData);
-			if (result && 'account' in result) {
-				const { account, transactions } = result;
-				setAccount(account);
-				setTransactions(transactions);
-			} else if (result && 'msg' in result) {
-				const { status, msg } = result;
-				if (status === 401) {
-					dispatch(logoutClient());
-					router.push('/');
-				}
-			}
-		} catch (error) {
-			console.log(error);
-		}
-		setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -204,7 +206,7 @@ export default function AccountDetails() {
 	};
 
 	return (
-		<div className='pb-10 flex flex-col-reverse md:flex-row gap-6'>
+		<div className='pb-10 flex flex-col-reverse lg:flex-row gap-6'>
 			<div className='flex-1 max-w-4xl'>
 				<div>
 					<p className='text-lg sm:text-xl font-semibold'>
@@ -223,7 +225,10 @@ export default function AccountDetails() {
 						)}
 					</p>
 					<div className='mt-6 '>
-						<p className='font-medium mb-1 text-sm xs:text-base'>{`Past Transactions (${formattedDates()})`}</p>
+						<p className='font-medium mb-1 text-sm xs:text-base flex flex-wrap gap-x-1'>
+							<span>{`Past Transactions `}</span>
+							<span>{`(${formattedDates()})`}</span>
+						</p>
 						<div className='border p-4 pb-0 border-t-4 border-t-black'>
 							<div className='flex justify-between items-start flex-wrap gap-5'>
 								<div
@@ -264,6 +269,7 @@ export default function AccountDetails() {
 									<div className='account-filter-box'>
 										<div className='w-full max-w-52'>
 											<CurrencyInput
+												className='input-effects'
 												id='minAmount'
 												name='minAmount'
 												label='Lower Limit'
@@ -272,6 +278,7 @@ export default function AccountDetails() {
 												value={minAmount}
 												placeholder=''
 												changeFunction={handleChange}
+												invalid={filterError.minAmount ? true : false}
 											/>
 											<FormErrorText
 												text={filterError.minAmount}
@@ -280,6 +287,7 @@ export default function AccountDetails() {
 										</div>
 										<div className='max-w-52 w-full'>
 											<CurrencyInput
+												className='input-effects'
 												id='maxAmount'
 												name='maxAmount'
 												label='Upper Limit'
@@ -288,6 +296,7 @@ export default function AccountDetails() {
 												value={maxAmount}
 												placeholder=''
 												changeFunction={handleChange}
+												invalid={filterError.maxAmount ? true : false}
 											/>
 											<FormErrorText
 												text={filterError.maxAmount}

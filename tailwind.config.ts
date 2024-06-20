@@ -70,6 +70,8 @@ const config = {
 			backgroundImage: {
 				hero: "url('/images/hero-balls-hd.png')",
 				auth: "url('/images/auth-bg.png')",
+				contactUs: "url('/images/contact-banner.png')",
+				contactUsSmall: "url('/images/contact-banner-crop.png')",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -100,12 +102,16 @@ const config = {
 				grow: {
 					from: { transform: 'translateY(-100%)' },
 				},
+				fade: {
+					from: { opacity: '0' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'slide-right': 'slide-load 1.2s ease infinite',
 				'div-grow': 'grow 0.5s ease',
+				fade: 'fade 1s ease',
 			},
 		},
 	},

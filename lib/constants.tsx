@@ -6,7 +6,7 @@ export const CLIENT_HEADER_LINKS = [
 	{
 		title: 'Pay and Transfer',
 		link: '/client/pay-transfer',
-	}
+	},
 ];
 
 export const CLIENT_SLUG_ROUTES: Record<string, string> = {
@@ -84,7 +84,6 @@ export const HEADER_LINKS = [
 			},
 		],
 	},
-	
 ];
 
 export const CUSTOMERS_LOVE = [
@@ -353,4 +352,58 @@ export const donutChartOptions = {
 			},
 		},
 	},
+};
+
+// Contact Us
+
+export const CONTACT_US_SELECT_OPTIONS = [
+	'MBank Telephone Banking',
+	'Personal Bank Accounts',
+	'Mortgage Specialist',
+	'Credit Cards',
+];
+
+export const PHONE_OPTIONS = [
+	{
+		language: 'English',
+		number: '1-866-555-1234',
+		option: '',
+	},
+	{
+		language: 'French',
+		number: '1-800-555-1234',
+		option: '',
+	},
+	{
+		language: 'Cantonese',
+		number: '1-800-555-4321',
+		option: 'option 1',
+	},
+	{
+		language: 'Mandarin',
+		number: '1-866-555-4321',
+		option: 'option 2',
+	},
+];
+
+export const CONTACT_PERSONAL_ACCOUNTS = {
+	points: [
+		'Log into MBank on your desktop',
+		'Select your Chequing or Savings account',
+		'On the bottom right of your screen, select the messaging icon and type in your question to begin your live agent conversation',
+	],
+	text: "We will get back to you either immediately or when the next live agent is available, between the hours of 9 am to 11 pm ET Monday to Friday and between 10 am to 7 pm ET Saturday and Sunday.",
+	button1Text:"Login into MBank"
+};
+
+export const CONTACT_MBANK_APP = {
+	points: [
+		'Log into the MBank app on your mobile device',
+		'Scroll down and select “Contact Us” from the MBank app menu',
+		'Select “Call Us” and choose MBank',
+	],
+	text: "If you do not have the MBank app, download the app below.",
+	text2: "The MBank app “Call Us” feature only works if you are physically located in Canada.",
+	button1Text: "Apple iOS",
+	button2Text: "Android"
 };

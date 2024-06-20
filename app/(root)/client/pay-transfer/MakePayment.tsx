@@ -145,10 +145,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				<FormHeader className='bg-black text-white p-3 sm:px-6 !pb-4'>
 					<div className='flex justify-between items-center gap-5'>
 						<p className='form-title-sm !mb-0'>Make Payment</p>
-						<Button
-							size={'sm'}
-							className='px-6 bg-bank-green green-button'
-						>
+						<Button size={'sm'} className='px-6 bg-bank-green green-button'>
 							Pay
 						</Button>
 					</div>
@@ -156,6 +153,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				<div className='pay-transfer-card-content'>
 					<div className='max-w-40'>
 						<CustomDatePicker
+							className='input-effects'
 							label='Payment Date'
 							minDate={new Date()}
 							changeFunction={handlePaymentDate}
@@ -165,7 +163,12 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 					<div className='my-4 text-sm font-medium'>
 						<Label>Payment Source</Label>
 						<Select onValueChange={handleAccount} key={selectKey}>
-							<SelectTrigger className='w-full select-trigger'>
+							<SelectTrigger
+								className='w-full input-effects'
+								style={{
+									borderColor: formError.sourceAccountName ? 'red' : '',
+								}}
+							>
 								<SelectValue placeholder='Payment Source' />
 							</SelectTrigger>
 							<SelectContent>
@@ -191,6 +194,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 						className='-mt-3 mb-2'
 					/>
 					<CurrencyInput
+						className='input-effects'
 						label='Amount'
 						name='amount'
 						min='1'
@@ -198,6 +202,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 						value={form.amount}
 						placeholder=''
 						changeFunction={handleAmount}
+						invalid={formError.amount ? true : false}
 					/>
 					<FormErrorText
 						text={formError.amount.toString() || ''}

@@ -2,7 +2,6 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaMoneyBillTransfer } from 'react-icons/fa6';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
@@ -175,10 +174,7 @@ export default function QuickTransfer() {
 
 	return (
 		<div className=''>
-			<form
-				className='pay-transfer-card max-w-72'
-				onSubmit={handleSubmit}
-			>
+			<form className='pay-transfer-card max-w-72' onSubmit={handleSubmit}>
 				<FormHeader className='bg-black text-white p-3 sm:px-6'>
 					<p className='form-title-sm flex items-center'>
 						{/* <FaMoneyBillTransfer className='text-2xl text-bank-green mr-2' /> */}
@@ -195,7 +191,10 @@ export default function QuickTransfer() {
 							key={selectKeys.from}
 							name='from'
 						>
-							<SelectTrigger className='w-full no-focus focus:border-gray-400'>
+							<SelectTrigger
+								className='w-full no-focus input-effects'
+								style={{ borderColor: formError.destinationName ? 'red' : '' }}
+							>
 								<SelectValue placeholder='Account' />
 							</SelectTrigger>
 							<SelectContent>
@@ -228,7 +227,10 @@ export default function QuickTransfer() {
 							key={selectKeys.to}
 							name='to'
 						>
-							<SelectTrigger className='w-full no-focus focus:border-gray-400'>
+							<SelectTrigger
+								className='w-full no-focus input-effects'
+								style={{ borderColor: formError.destinationName ? 'red' : '' }}
+							>
 								<SelectValue placeholder='Account' />
 							</SelectTrigger>
 							<SelectContent>
@@ -253,6 +255,7 @@ export default function QuickTransfer() {
 					</div>
 					<div className='w-full'>
 						<CurrencyInput
+							className='input-effects'
 							label='Amount'
 							id='transferAmount'
 							name='amount'
@@ -260,6 +263,7 @@ export default function QuickTransfer() {
 							step={0.01}
 							value={form.amount}
 							placeholder=''
+							invalid={formError.amount ? true : false}
 							changeFunction={handleAmount}
 						/>
 						<FormErrorText
@@ -267,7 +271,9 @@ export default function QuickTransfer() {
 							className='-mt-4'
 						/>
 					</div>
-					<Button className='w-full mt-2 bg-bank-green green-button'>Transfer</Button>
+					<Button className='w-full mt-2 bg-bank-green green-button'>
+						Transfer
+					</Button>
 				</div>
 			</form>
 		</div>

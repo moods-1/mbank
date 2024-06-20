@@ -34,6 +34,7 @@ type Props = {
 	label: string;
 	options: Option[];
 	changeFunction: (value: any, name: string) => void;
+	invalid?: boolean;
 };
 
 export function SearchableInput({
@@ -44,6 +45,7 @@ export function SearchableInput({
 	label,
 	options,
 	changeFunction,
+	invalid,
 }: Props) {
 	const [open, setOpen] = React.useState(false);
 	const [value, setValue] = React.useState('');
@@ -63,7 +65,8 @@ export function SearchableInput({
 						variant='outline'
 						role='combobox'
 						aria-expanded={open}
-						className='w-full h-9 justify-between no-focus focus:border-gray-400'
+						className='w-full h-9 justify-between no-focus input-effects rounded-none'
+						style={{ borderColor: invalid ? 'red' : '' }}
 					>
 						{value
 							? options.find((item) => item.value === value)?.label
@@ -79,6 +82,7 @@ export function SearchableInput({
 							<CommandGroup>
 								{options.map((item) => (
 									<CommandItem
+										className='select-item'
 										key={item.value}
 										value={item.value}
 										onSelect={(currentValue) =>

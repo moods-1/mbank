@@ -125,6 +125,7 @@ export default function SignUp() {
 				<div className='form-section'>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='firstName'
 							placeholder='Enter first name'
 							value={form.firstName}
@@ -136,6 +137,7 @@ export default function SignUp() {
 					</div>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='lastName'
 							placeholder='Enter last name'
 							value={form.lastName}
@@ -149,6 +151,7 @@ export default function SignUp() {
 				<div className='form-section'>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='email'
 							placeholder='Enter email'
 							value={form.email}
@@ -162,6 +165,7 @@ export default function SignUp() {
 					</div>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='phoneNumber'
 							placeholder='Enter phone number'
 							value={form.phoneNumber}
@@ -179,6 +183,7 @@ export default function SignUp() {
 				<div className='form-section'>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='address'
 							placeholder='Enter address'
 							value={form.address}
@@ -193,6 +198,7 @@ export default function SignUp() {
 				<div className='form-section'>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='city'
 							placeholder='Enter city'
 							value={form.city}
@@ -216,6 +222,7 @@ export default function SignUp() {
 				</div>
 				<div className='form-section'>
 					<CustomInput
+						className='input-effects'
 						name='country'
 						placeholder='Canada'
 						readOnly
@@ -225,6 +232,7 @@ export default function SignUp() {
 					/>
 					<div>
 						<CustomInput
+							className='input-effects'
 							name='postalCode'
 							placeholder='Enter postal code'
 							value={form.postalCode}
@@ -243,7 +251,7 @@ export default function SignUp() {
 						placeholder='Enter password'
 						value={form.password}
 						changeFunction={handleChange}
-						className='focus:border-gray-400'
+						className='input-effects'
 						label='Password(case sensitive)'
 						invalid={formError.password ? true : false}
 					/>

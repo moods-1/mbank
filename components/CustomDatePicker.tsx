@@ -32,7 +32,7 @@ const CustomDatePicker = ({
 				maxDate={maxDate || new Date('2100-01-01')}
 				onChange={(date: Date) => changeFunction(date)}
 				dateFormat='MMMM do, yyyy'
-				className='calendar-input'
+				className='calendar-input input-effects'
 				wrapperClassName='calendar-wrapper'
 			/>
 		</div>

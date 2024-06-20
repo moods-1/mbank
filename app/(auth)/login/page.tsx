@@ -90,6 +90,7 @@ export default function LogIn() {
 				</FormHeader>
 
 				<CustomInput
+					className='input-effects'
 					name='clientNumber'
 					placeholder='Enter card number'
 					value={form.clientNumber}
@@ -100,6 +101,7 @@ export default function LogIn() {
 				/>
 				<FormErrorText text={formError.clientNumber} className='-mt-3 mb-2' />
 				<CustomInput
+					className='input-effects'
 					name='password'
 					type={showPassword ? 'text' : 'password'}
 					placeholder='Enter password'

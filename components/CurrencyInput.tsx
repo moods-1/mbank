@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { ChangeEvent } from 'react';
 
 type Props = {
+	className?: string;
 	label?: string;
 	id?: string;
 	name?: string;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export default function CurrencyInput({
+	className,
 	label,
 	id,
 	name,
@@ -29,7 +31,7 @@ export default function CurrencyInput({
 		<div className='w-full flex flex-col mb-4'>
 			{label ? <Label>{label}</Label> : null}
 			<div
-				className='h-9 border rounded-sm relative flex items-center focus-within:border-gray-400'
+				className={`h-9 border relative flex items-center ${className}`}
 				style={{ borderColor: invalid ? 'red' : '' }}
 			>
 				<span className='ml-2 text-sm'>$</span>

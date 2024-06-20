@@ -148,7 +148,8 @@ footer {
 	@apply w-full min-h-24 bg-black text-white p-6 sm:p-10;
 }
 .footer-content {
-	@apply flex flex-wrap justify-center sm:justify-between gap-10 mb-10;
+	/* @apply flex flex-wrap justify-center sm:justify-between gap-10 mb-10; */
+	@apply flex flex-wrap justify-center gap-10 mb-10;
 }
 .footer-content-box {
 	@apply min-w-56 max-w-72 w-full;
@@ -343,6 +344,9 @@ section {
 	@apply pl-6 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50;
 }
 /*  */
+.select-item {
+	@apply hover:!bg-green-100 focus:!bg-green-100 data-[selected=true]:!bg-green-100;
+}
 .select-item span:nth-child(1) {
 	@apply w-full flex justify-between items-center gap-5;
 }
@@ -354,7 +358,7 @@ section {
 	@apply fill-slate-500 mt-[2px];
 }
 .calendar-input {
-	@apply max-w-52 text-sm border h-9 rounded-sm outline-none focus:border-gray-400 !pl-8;
+	@apply max-w-52 text-sm border h-9 outline-none  !pl-8;
 }
 /*  Tables */
 .table-div {
@@ -409,7 +413,7 @@ section {
 }
 /* Select Drop */
 .select-trigger {
-	@apply focus:border-gray-400;
+	/* @apply focus:border-gray-400; */
 }
 
 /* Profile Content */
@@ -427,8 +431,26 @@ section {
 	@apply rounded-sm shadow-md border overflow-hidden;
 }
 .pay-transfer-card-content {
-	@apply p-3 sm:p-6;
+	@apply p-3 sm:p-6 relative;
 }
 .green-button {
-	@apply  hover:border-green-700 hover:text-bank-green hover:border;
+	@apply hover:border-green-700 hover:text-bank-green hover:border;
+}
+.input-effects {
+	@apply hover:border-b hover:border-b-bank-green focus:border-b-bank-green focus-within:border-b-bank-green;
+}
+.static-date-range-btn {
+	@apply border border-gray-300 px-3 py-1 cursor-pointer text-xs min-w-28 text-center font-medium w-full xs:w-auto hover:bg-bank-green hover:text-white;
+}
+.add-payee-info {
+	@apply absolute top-0 left-5;
+}
+.add-payee-info:hover .app-payee-info-box {
+	@apply block;
+}
+.app-payee-info-icon {
+	@apply w-5 h-5 text-white grid place-items-center rounded-full bg-black  text-sm cursor-pointer;
+}
+.app-payee-info-box {
+	@apply hidden bg-white w-44 shadow-md p-5 border text-sm;
 }

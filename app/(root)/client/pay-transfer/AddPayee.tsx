@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import Link from 'next/link';
 
 import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
@@ -118,12 +119,14 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						label='Payee Name'
 						options={payeeOptions}
 						changeFunction={handleSelect}
+						invalid={formError.payeeName ? true : false}
 					/>
 					<FormErrorText
 						text={formError.payeeName || ''}
 						className='-mt-3 mb-2'
 					/>
 					<CustomInput
+						className='input-effects'
 						name='accountNumber'
 						placeholder='Enter account number'
 						value={form.accountNumber}
@@ -136,6 +139,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						className='-mt-3 mb-2'
 					/>
 					<CustomInput
+						className='input-effects'
 						name='nickname'
 						placeholder='Enter account nickname'
 						value={form.nickname}
@@ -147,7 +151,18 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						text={formError.nickname || ''}
 						className='-mt-3 mb-2'
 					/>
-					<Button className='w-full mt-2 bg-bank-green green-button'>Add Payee</Button>
+					<Button className='w-full mt-2 bg-bank-green green-button'>
+						Add Payee
+					</Button>
+					<div className='add-payee-info'>
+						<span className='app-payee-info-icon'>i</span>
+						<span className='app-payee-info-box'>
+							<Link href='/contact-us' className='text-bank-green font-medium'>
+								Contact us
+							</Link>{' '}
+							if you do not see a payee that you would like to add.
+						</span>
+					</div>
 				</div>
 			</form>
 		</div>
