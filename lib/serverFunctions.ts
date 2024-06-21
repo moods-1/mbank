@@ -8,7 +8,7 @@ export const hashPassword = async (data: string) => {
 
 export const generateToken = async (id: Types.ObjectId | string) => {
 	const secret = process.env.JWT_SECRET || '';
-	return sign({ id }, secret, { expiresIn: 360 });
+	return sign({ id }, secret, { expiresIn: 1800 });
 };
 
 export const responseFormatter = async (
