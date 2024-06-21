@@ -10,7 +10,7 @@ import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
-import { loginClient } from '@/api/actions/clientActions';
+import { loginClient } from '@/appInterface/actions/clientActions';
 import {
 	clearClientNumber,
 	clearPersist,
@@ -136,7 +136,9 @@ export default function LogIn() {
 				</div>
 
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus green-button'>Login</Button>
+					<Button className='auth-form-button no-focus green-button'>
+						Login
+					</Button>
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}

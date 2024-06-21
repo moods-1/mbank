@@ -7,7 +7,7 @@ import { AccountType, TransactionReturnType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
 import { SlideLoader } from '@/components/Loaders';
 import DoubleSlider from '@/components/DoubleSlider';
-import { getAccDetails } from '@/api/client/accounts';
+import { getAccDetails } from '@/appInterface/client/accounts';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';

@@ -12,9 +12,9 @@ import {
 	formValidator,
 	randomString,
 } from '@/lib/clientFunctions';
-import { payeeAdd } from '@/api/client/client';
+import { payeeAdd } from '@/appInterface/client/client';
 import { PayeeType, PublicClientType } from '@/lib/types';
-import { getPayees } from '@/api/client/payee';
+import { getPayees } from '@/appInterface/client/payee';
 import { SearchableInput } from '@/components/SearchableInput';
 import { Types } from 'mongoose';
 import FormErrorText from '@/components/FormErrorText';
@@ -151,9 +151,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						text={formError.nickname || ''}
 						className='-mt-3 mb-2'
 					/>
-					<Button className='w-full mt-2 green-button'>
-						Add Payee
-					</Button>
+					<Button className='w-full mt-2 green-button'>Add Payee</Button>
 					<div className='add-payee-info'>
 						<span className='app-payee-info-icon'>i</span>
 						<span className='app-payee-info-box'>

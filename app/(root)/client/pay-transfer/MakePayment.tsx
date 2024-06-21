@@ -26,7 +26,7 @@ import PayeeItems from './PayeeItems';
 import FormErrorText from '@/components/FormErrorText';
 import CustomDatePicker from '@/components/CustomDatePicker';
 import { Button } from '@/components/ui/button';
-import { transactionAdd } from '@/api/client/transaction';
+import { transactionAdd } from '@/appInterface/client/transaction';
 import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';

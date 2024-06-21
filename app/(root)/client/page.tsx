@@ -6,15 +6,12 @@ import Image from 'next/image';
 import { FaUserEdit } from 'react-icons/fa';
 import CountUp from 'react-countup';
 
-import {
-	balanceCalculator,
-	partOfDayGreeting,
-} from '@/lib/clientFunctions';
+import { balanceCalculator, partOfDayGreeting } from '@/lib/clientFunctions';
 import { useAppSelector } from '@/lib/store/store';
 import { AccountType } from '@/lib/types';
 import { SlideLoader } from '@/components/Loaders';
 import { Button } from '@/components/ui/button';
-import { getAccounts } from '@/api/client/accounts';
+import { getAccounts } from '@/appInterface/client/accounts';
 import { useAppDispatch } from '@/lib/store/store';
 import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import AddAccount from './ClientAddAccount';

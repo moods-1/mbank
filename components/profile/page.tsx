@@ -17,7 +17,7 @@ import { PROVINCES_TERRITORIES } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { clientUpdate } from '@/api/client/client';
+import { clientUpdate } from '@/appInterface/client/client';
 
 type Props = {
 	open: boolean;
@@ -150,11 +150,7 @@ export default function Profile({ open, openChange }: Props) {
 	return (
 		<Sheet open={open} onOpenChange={openChange}>
 			<SheetContent className='profile-content'>
-				<form
-					onSubmit={handleSubmit}
-					className='pt-4 sm:w-[500px]'
-					
-				>
+				<form onSubmit={handleSubmit} className='pt-4 sm:w-[500px]'>
 					<FormHeader className='flex flex-col gap-1 items-center flex-wrap'>
 						<FaUserEdit size={30} className='text-green-600' />
 						<span className='form-title-md'>{clientName}</span>

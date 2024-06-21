@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
-import { getAccounts, transferQuick } from '@/api/client/accounts';
+import { getAccounts, transferQuick } from '@/appInterface/client/accounts';
 import { logoutClient, updateClient } from '@/lib/store/clientSlice';
 import {
 	Select,
@@ -271,9 +271,7 @@ export default function QuickTransfer() {
 							className='-mt-4'
 						/>
 					</div>
-					<Button className='w-full mt-2 green-button'>
-						Transfer
-					</Button>
+					<Button className='w-full mt-2 green-button'>Transfer</Button>
 				</div>
 			</form>
 		</div>

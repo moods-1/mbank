@@ -11,7 +11,7 @@ import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
-import { addClient } from '@/api/actions/clientActions';
+import { addClient } from '@/appInterface/actions/clientActions';
 import { formValidator, randomString } from '@/lib/clientFunctions';
 import NotificationModal from '@/components/modals/NotificationModal';
 import SingleValueSelect from '@/components/SingleValueSelect';
@@ -268,7 +268,9 @@ export default function SignUp() {
 					</span>
 				</div>
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus green-button'>Sign Up</Button>
+					<Button className='auth-form-button no-focus green-button'>
+						Sign Up
+					</Button>
 				</div>
 				<p className='mt-3'>
 					{'Already have an account?'}
