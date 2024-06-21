@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { MdWarningAmber } from 'react-icons/md';
 
 import {
 	AccountType,
@@ -32,6 +33,7 @@ import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
 import NoDataSpan from '@/components/NoDataSpan';
+import NotificationModal from '@/components/modals/NotificationModal';
 
 type PaymentProps = {
 	client: PublicClientType;
@@ -55,8 +57,38 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 	const [formError, setFormError] = useState<ErrorProps>(initialFormError);
 	const [selectKey, setSelectKey] = useState('source');
 	const [paymentSource, setPaymentSource] = useState<AccountType>();
+	const [openNotification, setOpenNotification] = useState(false);
+	const [notificationBody, setNotificationBody] = useState('');
+
 	const { payees, _id: clientId } = client;
 	const dispatch = useAppDispatch();
+
+	const reset = () => {
+		setForm(INITIAL_PAYMENT_FORM);
+		setFormError(initialFormError);
+		setSelectKey(randomString(3));
+	};
+
+	const handleNotification = () => {
+		reset();
+		setOpenNotification((prev) => !prev);
+	};
+
+	const notificationProps = {
+		title: 'Warning!',
+		body: notificationBody,
+		buttonText: 'Close',
+		buttonFunction: handleNotification,
+		buttonClass: '',
+		className: 'sm:max-w-lg',
+		open: openNotification,
+		openChange: handleNotification,
+		icon: (
+			<div className='w-14 h-14 rounded-full bg-red-600 flex-center-row mx-auto text-white'>
+				<MdWarningAmber className='text-3xl' />
+			</div>
+		),
+	};
 
 	const handleAccount = (id: string) => {
 		const selectedAccount = accounts.find((a) => a._id === id);
@@ -127,9 +159,13 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				const result = await transactionAdd(queryData);
 				if (result && 'firstName' in result) {
 					dispatch(updateClient(result));
-					setForm(INITIAL_PAYMENT_FORM);
-					setFormError(initialFormError);
-					setSelectKey(randomString(3));
+					reset();
+				} else if (result && 'msg' in result) {
+					const { msg } = result;
+					if (typeof msg === 'string') {
+						setNotificationBody(msg);
+						setOpenNotification(true);
+					}
 				}
 			}
 		}
@@ -151,7 +187,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 					</div>
 				</FormHeader>
 				<div className='pay-transfer-card-content'>
-					<div className='max-w-40'>
+					<div className=''>
 						<CustomDatePicker
 							className='input-effects'
 							label='Payment Date'
@@ -222,6 +258,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 					</div>
 				</div>
 			</form>
+			{openNotification ? <NotificationModal {...notificationProps} /> : null}
 		</div>
 	);
 }

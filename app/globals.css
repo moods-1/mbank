@@ -449,7 +449,7 @@ section {
 	@apply block;
 }
 .app-payee-info-icon {
-	@apply w-5 h-5 text-white grid place-items-center rounded-full bg-black  text-sm cursor-pointer;
+	@apply w-5 h-5 text-black grid place-items-center rounded-full bg-bank-green text-sm cursor-pointer;
 }
 .app-payee-info-box {
 	@apply hidden bg-white w-44 shadow-md p-5 border text-sm;

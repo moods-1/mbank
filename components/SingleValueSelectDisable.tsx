@@ -41,7 +41,7 @@ export default function SingleValueSelect({
 				key={reset}
 			>
 				<SelectTrigger
-					className='w-full focus:border-gray-400'
+					className='w-full no-focus input-effects'
 					style={{ borderColor: invalid ? 'red' : '' }}
 					tabIndex={-1}
 				>

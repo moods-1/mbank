@@ -268,7 +268,7 @@ export default function SignUp() {
 					</span>
 				</div>
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus'>Sign Up</Button>
+					<Button className='auth-form-button no-focus green-button'>Sign Up</Button>
 				</div>
 				<p className='mt-3'>
 					{'Already have an account?'}

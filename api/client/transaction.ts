@@ -8,6 +8,7 @@ export const transactionAdd = async (
 	data: ClientNewTransactionType
 ): Promise<PublicClientType | null | {}> => {
 	const result = await addTransaction(token, data);
+	console.log({result})
 	if (result && Object.keys(result)) {
 		return result;
 	}

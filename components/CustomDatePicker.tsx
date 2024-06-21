@@ -1,5 +1,3 @@
-'use client';
-import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 import 'react-datepicker/dist/react-datepicker.css';
@@ -26,6 +24,7 @@ const CustomDatePicker = ({
 		<div className='flex flex-col'>
 			<Label className='mb-1'>{label || ''}</Label>
 			<DatePicker
+				portalId='root'
 				showIcon
 				selected={date}
 				minDate={minDate || new Date('1900-01-01')}

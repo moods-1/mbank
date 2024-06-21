@@ -14,7 +14,7 @@ type Props = {
 	buttonClass?: string;
 	className?: string;
 	open: boolean;
-	openChange: (open: boolean) => void;
+	openChange: (open: boolean) => void | (()=> void);
 };
 
 export default function NotificationModal({

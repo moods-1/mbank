@@ -7,7 +7,6 @@ import { FaUserEdit } from 'react-icons/fa';
 import CountUp from 'react-countup';
 
 import {
-	accountsDonutChartData,
 	balanceCalculator,
 	partOfDayGreeting,
 } from '@/lib/clientFunctions';

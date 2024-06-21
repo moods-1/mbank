@@ -136,7 +136,7 @@ export default function LogIn() {
 				</div>
 
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus'>Login</Button>
+					<Button className='auth-form-button no-focus green-button'>Login</Button>
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}

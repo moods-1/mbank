@@ -271,7 +271,7 @@ export default function QuickTransfer() {
 							className='-mt-4'
 						/>
 					</div>
-					<Button className='w-full mt-2 bg-bank-green green-button'>
+					<Button className='w-full mt-2 green-button'>
 						Transfer
 					</Button>
 				</div>

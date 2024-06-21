@@ -1,5 +1,5 @@
+import Construction from '@/components/Construction';
 import PageHeader from '@/components/PageHeader';
-import React from 'react';
 
 export default function page() {
 	return (
@@ -8,6 +8,7 @@ export default function page() {
 				title='Retirement Savings Account'
 				subtitle='Do a whole lot of nothing sooner!'
 			/>
+			<Construction className='max-w-sm' />
 		</main>
 	);
 }

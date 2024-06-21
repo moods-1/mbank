@@ -151,7 +151,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						text={formError.nickname || ''}
 						className='-mt-3 mb-2'
 					/>
-					<Button className='w-full mt-2 bg-bank-green green-button'>
+					<Button className='w-full mt-2 green-button'>
 						Add Payee
 					</Button>
 					<div className='add-payee-info'>

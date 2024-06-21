@@ -2,6 +2,7 @@
 
 import { Types } from 'mongoose';
 
+import { formatDate } from '@/lib/clientFunctions';
 import {
 	ClientNewTransactionType,
 	ServerNewTransactionType,
@@ -10,7 +11,11 @@ import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
 import Account from '../models/Account';
 import Client from '../models/Client';
-import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
+import {
+	handleError,
+	parsedResponse,
+	verifyToken,
+} from '@/lib/serverFunctions';
 
 export async function addTransaction(
 	token: string,
@@ -21,16 +26,25 @@ export async function addTransaction(
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
-		const { amount, sourceAccount, credit, clientId } = data;
-		const targetAcc = await Account.findOne({ _id: sourceAccount });
-		if (targetAcc) {
+		const {
+			amount,
+			sourceAccount,
+			sourceAccountName,
+			credit,
+			clientId,
+			transactionDate,
+		} = data;
+		const sourceAcc = await Account.findOne({ _id: sourceAccount });
+		console.log({ sourceAcc });
+		if (sourceAcc) {
 			let newBalance: number;
-			const { accountBalance } = targetAcc;
+			const { accountBalance } = sourceAcc;
 			if (credit) {
 				newBalance = accountBalance + Number(amount);
 			} else {
 				newBalance = accountBalance - Number(amount);
 			}
+			console.log({ data });
 			if (newBalance >= 0) {
 				const newData: ServerNewTransactionType = {
 					...data,
@@ -46,10 +60,14 @@ export async function addTransaction(
 				const result = await Client.findOne({ _id: clientId });
 				return parsedResponse(result);
 			} else {
-				throw new Error('Insufficient funds in this account.');
+				const date = formatDate(transactionDate, 'DD-MMM-YYYY');
+				return {
+					status: 201,
+					msg: `Your ${sourceAccountName} has insufficient funds. Please make sure $${amount} is in the account on ${date}, or the payment will not be made.`,
+				};
 			}
 		}
-		return {};
+		return { status: 500, msg: `${sourceAccountName} could not be found.` };
 	} catch (error) {
 		handleError(error);
 	}

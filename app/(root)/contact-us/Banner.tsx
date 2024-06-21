@@ -7,7 +7,7 @@ export default function Banner() {
 			<div className='bg-contactUsSmall bg-cover bg-no-repeat flex-1 min-h-80 xs:bg-contactUs' />
 			<div className='flex-1 flex justify-center items-center p-6 min-h-80'>
 				<div>
-					<p className='max-w-lg text-2xl font-medium'>
+					<p className='max-w-lg text-lg sm:text-2xl font-medium'>
 						Meet with an advisor, in branch or by phone, to discuss your
 						personal banking needs. Booking an appointment is fast and easy.
 					</p>
