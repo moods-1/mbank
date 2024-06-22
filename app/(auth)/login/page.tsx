@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import { loginClient } from '@/appInterface/actions/clientActions';
 import {
 	clearClientNumber,
-	clearPersist,
 	formValidator,
 	getClientNumber,
 	storeClientNumber,
@@ -61,7 +60,6 @@ export default function LogIn() {
 			const result = await loginClient(formObject);
 			const resultType = typeof result;
 			if (resultType === 'object' && Object.keys(result).length) {
-				clearPersist();
 				dispatch(loadClient(result));
 				router.push('/client');
 			} else if (resultType === 'string' && result.includes('password')) {

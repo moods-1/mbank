@@ -331,7 +331,7 @@ export default function Profile({ open, openChange }: Props) {
 					</div>
 					<div className='mt-6'>
 						<Button
-							className='auth-form-button no-focus'
+							className='auth-form-button no-focus green-button'
 							disabled={disableSubmit}
 							type='submit'
 						>
