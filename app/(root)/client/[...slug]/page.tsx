@@ -116,8 +116,7 @@ export default function AccountDetails() {
 	const handleFilter = async () => {
 		let min = Number(minAmount);
 		let max = Number(maxAmount);
-		console.log({ max });
-		if (min && !maxAmount) {
+		if ((min && !maxAmount) || min <= max) {
 			try {
 				setIsLoading(true);
 				const queryData = {
