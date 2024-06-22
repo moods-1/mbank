@@ -1,6 +1,5 @@
 import { AccountType, PublicClientType } from '@/lib/types';
 import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
-import { clearPersist } from '../clientFunctions';
 import { Types } from 'mongoose';
 
 const mongoId = new Types.ObjectId('6000000aac0fc18695d23aaa');
@@ -51,7 +50,6 @@ export const clientSlice = createSlice({
 			return;
 		},
 		logoutClient: (state) => {
-			clearPersist();
 			return initialState;
 		},
 		loadAccounts: (state, action: PayloadAction<AccountType[]>) => {
