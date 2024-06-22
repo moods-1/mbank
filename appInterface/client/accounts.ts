@@ -9,7 +9,6 @@ import {
 	GetAccountsReturn,
 	AccountDetailsProps,
 	GetAccountDetailsProps,
-	ClientNewTransactionType,
 	PublicClientType,
 	PaymentFormProps,
 	AddAccountFormType,
@@ -17,11 +16,10 @@ import {
 } from '@/lib/types';
 import { Types } from 'mongoose';
 
-export const token: string = getToken();
-
 export const getAccounts = async (
 	data: Types.ObjectId[]
 ): Promise<GetAccountsReturn | null | {}> => {
+	const token: string = await getToken();
 	const result = await getAccountsById(token, data);
 	if (result && Object.keys(result)) {
 		return result;
@@ -32,6 +30,7 @@ export const getAccounts = async (
 export const getAccDetails = async (
 	data: GetAccountDetailsProps
 ): Promise<AccountDetailsProps | null> => {
+	const token: string = await getToken();
 	const result = await getAccountDetails(token, data);
 	return result ? result : null;
 };
@@ -39,6 +38,7 @@ export const getAccDetails = async (
 export const transferQuick = async (
 	data: PaymentFormProps
 ): Promise<PublicClientType | null | {}> => {
+	const token: string = await getToken();
 	const result = await quickTransfer(token, data);
 	if (result && Object.keys(result)) {
 		return result;
@@ -46,13 +46,20 @@ export const transferQuick = async (
 	return null;
 };
 
-export const accountAdd = async (data: AddAccountFormType):Promise<PublicClientType|null> => {
+export const accountAdd = async (
+	data: AddAccountFormType
+): Promise<PublicClientType | null> => {
 	let queryData: AddAccountType;
 	const transactions: Types.ObjectId[] = [];
-	queryData = { ...data, clientNumber: Number(data.clientNumber), transactions, accountBalance: 0 }
+	queryData = {
+		...data,
+		clientNumber: Number(data.clientNumber),
+		transactions,
+		accountBalance: 0,
+	};
 	const result = await addAccount(queryData);
 	if (result && Object.keys(result)) {
 		return result;
 	}
 	return null;
-}
+};

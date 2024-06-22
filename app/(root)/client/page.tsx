@@ -45,6 +45,7 @@ export default function ClientHome() {
 			try {
 				const { accounts } = client;
 				const result = await getAccounts(accounts);
+				console.log({result})
 				if (result && 'response' in result) {
 					const { response } = result;
 					setTotalBalance(balanceCalculator(response, 'credit'));
