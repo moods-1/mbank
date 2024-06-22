@@ -82,13 +82,23 @@ export default function LogIn() {
 		} else setRememberMe(false);
 	}, []);
 
+	const testAutofill = () => {
+		setForm({ clientNumber: '800000001', password: '1234Ds' });
+	};
+
 	return (
 		<div className='auth-section'>
 			<form className='auth-form max-w-sm' onSubmit={handleSubmit}>
 				<FormHeader className='!mb-8'>
 					<p className='form-title-lg text-center'>Login</p>
 				</FormHeader>
-
+				<p
+					role='button'
+					className='px-2 py-1 bg-black text-white w-fit text-sm rounded-sm -mt-3 mb-4'
+					onClick={testAutofill}
+				>
+					Test Credentials
+				</p>
 				<CustomInput
 					className='input-effects'
 					name='clientNumber'

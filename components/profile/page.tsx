@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { FaUserEdit } from 'react-icons/fa';
 import { Types } from 'mongoose';
 
@@ -11,7 +11,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
 import { updateClient } from '@/lib/store/clientSlice';
-import { formValidator, randomString } from '@/lib/clientFunctions';
+import {
+	compareObjects,
+	formValidator,
+	randomString,
+} from '@/lib/clientFunctions';
 import SingleValueSelect from '@/components/SingleValueSelect';
 import { PROVINCES_TERRITORIES } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
@@ -55,9 +59,36 @@ export default function Profile({ open, openChange }: Props) {
 	const [showPassword, setShowPassword] = useState<boolean | CheckedState>(
 		false
 	);
+	const [disableSubmit, setDisableSubmit] = useState(true);
 	const [selectKey, setSelectKey] = useState('province');
 	const { client } = useAppSelector((state) => state.client);
+
 	const dispatch = useAppDispatch();
+	const clientObject = useMemo(() => {
+		const {
+			firstName,
+			lastName,
+			email,
+			phoneNumber,
+			address,
+			city,
+			province,
+			postalCode,
+			country,
+		} = client;
+		return {
+			firstName,
+			lastName,
+			email,
+			phoneNumber: phoneNumber.toString(),
+			address,
+			city,
+			province,
+			postalCode,
+			password: '',
+			country,
+		};
+	}, [client]);
 
 	const clientName = `${form.firstName} ${form.lastName}`;
 
@@ -92,7 +123,6 @@ export default function Profile({ open, openChange }: Props) {
 		} else {
 			delete form.password;
 		}
-
 		const validatedData = formValidator(form);
 		const { error, errorObject } = validatedData;
 		setFormError(errorObject);
@@ -121,34 +151,30 @@ export default function Profile({ open, openChange }: Props) {
 			console.log(error);
 		}
 	};
+
+	const handleOpenChange = () => {
+		setForm({...clientObject});
+		openChange();
+	};
+
 	useEffect(() => {
-		if (client.firstName) {
-			const {
-				firstName,
-				lastName,
-				email,
-				phoneNumber,
-				address,
-				city,
-				province,
-				postalCode,
-			} = client;
+		if (clientObject.firstName) {
 			setForm((prev) => ({
 				...prev,
-				firstName,
-				lastName,
-				email,
-				phoneNumber: phoneNumber.toString(),
-				address,
-				city,
-				province,
-				postalCode,
+				...clientObject,
 			}));
 		}
-	}, [client]);
+	}, [clientObject]);
+
+	useEffect(() => {
+		const checkChange = async () => {
+			setDisableSubmit(await compareObjects(clientObject, form));
+		};
+		checkChange();
+	}, [form, clientObject]);
 
 	return (
-		<Sheet open={open} onOpenChange={openChange}>
+		<Sheet open={open} onOpenChange={handleOpenChange}>
 			<SheetContent className='profile-content'>
 				<form onSubmit={handleSubmit} className='pt-4 sm:w-[500px]'>
 					<FormHeader className='flex flex-col gap-1 items-center flex-wrap'>
@@ -304,7 +330,13 @@ export default function Profile({ open, openChange }: Props) {
 						</div>
 					</div>
 					<div className='mt-6'>
-						<Button className='auth-form-button no-focus'>Update</Button>
+						<Button
+							className='auth-form-button no-focus'
+							disabled={disableSubmit}
+							type='submit'
+						>
+							Update
+						</Button>
 					</div>
 				</form>
 			</SheetContent>

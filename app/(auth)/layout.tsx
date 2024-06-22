@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'MBank - Auth',
+	description: 'MBank online banking',
+	icons: { icon: [{ url: '/images/logo.png' }] },
+};
+
 export default function RootLayout({
 	children,
 }: Readonly<{

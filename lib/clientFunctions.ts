@@ -42,14 +42,7 @@ export const accountsDonutChartData = (accounts: AccountType[]) => {
 		datasets: [
 			{
 				data,
-				backgroundColor: [
-					'#000',
-					'#DDD',
-					'#333',
-					'#AAA',
-					'#666',
-					'#999',				
-				],
+				backgroundColor: ['#000', '#DDD', '#333', '#AAA', '#666', '#999'],
 			},
 		],
 		labels,
@@ -438,4 +431,27 @@ export const randomString = (length: number) => {
 		output += alpha[Math.floor(Math.random() * 9)];
 	}
 	return output;
+};
+
+interface CompareObject {
+	[key: string]: any;
+}
+
+export const compareObjects = async (
+	object1: CompareObject,
+	object2: CompareObject
+) => {
+	const end: number = Object.keys(object1).length;
+	if (Object.keys(object1).length !== end) return false;
+	// Objects get sorted by their keys
+	const sortedObject1 = Object.entries(object1).sort();
+	const sortedObject2 = Object.entries(object2).sort();
+	// sortedObectX = [ [key,value], [key,value], ...]
+	for (let i: number = 0; i < end; i++) {
+		// Compare values of the same keys
+		if (sortedObject1[i][1] !== sortedObject2[i][1]) {
+			return false;
+		}
+	}
+	return true;
 };

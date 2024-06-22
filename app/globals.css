@@ -231,7 +231,7 @@ section {
 	text-shadow: 0px 0px 2px #fff;
 }
 .auth-section {
-	@apply w-full min-h-[80vh] flex items-center justify-center px-6 sm:px-10 py-6 sm:py-10;
+	@apply w-full min-h-[80vh] flex items-center justify-center px-3 xs:px-10 py-6 sm:py-10;
 }
 .auth-form {
 	@apply w-full p-6 rounded-sm shadow-md min-h-80 bg-white mb-6;

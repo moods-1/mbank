@@ -10,7 +10,8 @@ Clients can move money between their accounts. They can also make payments and a
 
 - NextJS
 - TypeScript
-- JavaScript ES6
+- JavaScript ES
+- Redux
 - Tailwind CSS
 - Shadcn/ui
 - MongoDB

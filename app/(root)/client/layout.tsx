@@ -5,7 +5,7 @@ import { getLoggedIn } from '@/lib/clientFunctions';
 
 export const metadata: Metadata = {
 	title: 'MBank - Accounts',
-	description: 'Client section.',
+	description: 'MBank client section.',
 	icons: { icon: [{ url: '/images/logo.png' }] },
 };
 
