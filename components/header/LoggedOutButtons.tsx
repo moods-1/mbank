@@ -3,15 +3,26 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 
-export default function HeaderButtons() {
+interface Props {
+	height?: string;
+}
+
+export default function LoggedOutButtons({ height }: Props) {
 	return (
 		<div className='flex gap-5'>
-			<Button size={'sm'} className='bg-bank-green font-semibold flex-1 green-button'>
+			<Button
+				size='sm'
+				className={`${
+					height ? height : 'h-[30px]'
+				} menu-button green-button bg-bank-green`}
+			>
 				<Link href='/login'>Log In</Link>
 			</Button>
 			<Button
-				size={'sm'}
-				className='bg-white text-bank-green font-semibold flex-1 border border-green-700'
+				size='sm'
+				className={`${
+					height ? height : 'h-[30px]'
+				} menu-button bg-white text-bank-green border border-green-700`}
 			>
 				<Link href='/sign-up'>Sign Up</Link>
 			</Button>

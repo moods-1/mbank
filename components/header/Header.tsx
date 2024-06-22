@@ -125,9 +125,9 @@ export default function Header() {
 						</div>
 						<div>
 							{userLoggedIn ? (
-								<LoggedInButtons changeFunction={toggleMobileMenu} />
+								<LoggedInButtons changeFunction={toggleMobileMenu} height='h-10' />
 							) : (
-								<LoggedOutButtons />
+								<LoggedOutButtons height='h-10'/>
 							)}
 						</div>
 					</SheetContent>

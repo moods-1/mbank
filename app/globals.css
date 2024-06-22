@@ -117,6 +117,9 @@ header {
 .header-sub-menu-item {
 	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full py-2;
 }
+.menu-button {
+	@apply flex-1 font-semibold;
+}
 /* Mobile menu */
 .sidemenu-div {
 	@apply relative mb-10 mr-5 w-full;
