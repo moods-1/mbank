@@ -24,6 +24,7 @@
 		"framer-motion": "^11.2.5",
 		"jsonwebtoken": "^9.0.2",
 		"lucide-react": "^0.378.0",
+		"mixpanel-browser": "^2.53.0",
 		"moment-timezone": "^0.5.45",
 		"mongoose": "^8.3.5",
 		"next": "14.2.3",

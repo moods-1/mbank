@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import ReduxProvider from '@/lib/store/StoreProvider';
+import { Mixpanel } from '@/components/Mixpanel';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,6 +17,9 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	Mixpanel.track('MBank financial app accessed.', {
+		action: 'MBank financial app accessed.',
+	});
 	return (
 		<html lang='en'>
 			<body className={`${inter.className}`}>

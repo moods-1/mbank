@@ -407,3 +407,5 @@ export const CONTACT_MBANK_APP = {
 	button1Text: "Apple iOS",
 	button2Text: "Android"
 };
+
+export const MIXPANEL_TOKEN = process.env.MIXPANEL_TOKEN;

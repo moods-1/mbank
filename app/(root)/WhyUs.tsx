@@ -41,10 +41,17 @@ export default function WhyUs() {
 							key={title}
 							className='w-80 min-h-72 text-black rounded-sm text-center overflow-hidden'
 						>
-							<Image src={image} width={400} height={300} alt={title} className='rounded-sm'  priority />
-							<div className='p-6 min-h-44'>
+							<Image
+								src={image}
+								width={400}
+								height={300}
+								alt={title}
+								className='rounded-sm'
+								priority
+							/>
+							<div className='p-2 min-h-44'>
 								<p className='text-2xl font-semibold mb-5'>{title}</p>
-								<p className='font-light'>{body}</p>
+								<p className='font-light w-full'>{body}</p>
 							</div>
 						</motion.div>
 					))}
