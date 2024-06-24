@@ -35,7 +35,6 @@ export async function addTransaction(
 			transactionDate,
 		} = data;
 		const sourceAcc = await Account.findOne({ _id: sourceAccount });
-		console.log({ sourceAcc });
 		if (sourceAcc) {
 			let newBalance: number;
 			const { accountBalance } = sourceAcc;
@@ -44,7 +43,6 @@ export async function addTransaction(
 			} else {
 				newBalance = accountBalance - Number(amount);
 			}
-			console.log({ data });
 			if (newBalance >= 0) {
 				const newData: ServerNewTransactionType = {
 					...data,

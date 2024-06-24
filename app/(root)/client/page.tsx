@@ -17,6 +17,7 @@ import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import AddAccount from './ClientAddAccount';
 import Profile from '@/components/profile/page';
 import AccountCard from '@/components/AccountCard';
+import { Mixpanel } from '@/components/Mixpanel';
 
 export default function ClientHome() {
 	const [accounts, setAccounts] = useState<AccountType[]>([]);
@@ -45,7 +46,6 @@ export default function ClientHome() {
 			try {
 				const { accounts } = client;
 				const result = await getAccounts(accounts);
-				console.log({result})
 				if (result && 'response' in result) {
 					const { response } = result;
 					setTotalBalance(balanceCalculator(response, 'credit'));
@@ -68,6 +68,10 @@ export default function ClientHome() {
 		};
 		fetchAccounts();
 	}, [client, dispatch, router]);
+
+	Mixpanel.track('MBank financial app accessed.', {
+		action: 'MBank financial app accessed.',
+	});
 
 	return (
 		<div>

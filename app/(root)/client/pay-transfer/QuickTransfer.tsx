@@ -46,7 +46,6 @@ export default function QuickTransfer() {
 	const dispatch = useAppDispatch();
 
 	const handleAccount = (e: string, field: string) => {
-		console.log('In handle account');
 		setFormError(initialError);
 		const [id, accountName] = e.split(',');
 		if (field === 'from') {

@@ -335,7 +335,6 @@ export const donutChartOptions = {
 		tooltip: {
 			callbacks: {
 				label: function (context: any) {
-					console.log(context);
 					let label = context.dataset.label || '';
 
 					if (label) {
@@ -392,8 +391,8 @@ export const CONTACT_PERSONAL_ACCOUNTS = {
 		'Select your Chequing or Savings account',
 		'On the bottom right of your screen, select the messaging icon and type in your question to begin your live agent conversation',
 	],
-	text: "We will get back to you either immediately or when the next live agent is available, between the hours of 9 am to 11 pm ET Monday to Friday and between 10 am to 7 pm ET Saturday and Sunday.",
-	button1Text:"Login into MBank"
+	text: 'We will get back to you either immediately or when the next live agent is available, between the hours of 9 am to 11 pm ET Monday to Friday and between 10 am to 7 pm ET Saturday and Sunday.',
+	button1Text: 'Login into MBank',
 };
 
 export const CONTACT_MBANK_APP = {
@@ -402,10 +401,12 @@ export const CONTACT_MBANK_APP = {
 		'Scroll down and select “Contact Us” from the MBank app menu',
 		'Select “Call Us” and choose MBank',
 	],
-	text: "If you do not have the MBank app, download the app below.",
-	text2: "The MBank app “Call Us” feature only works if you are physically located in Canada.",
-	button1Text: "Apple iOS",
-	button2Text: "Android"
+	text: 'If you do not have the MBank app, download the app below.',
+	text2:
+		'The MBank app “Call Us” feature only works if you are physically located in Canada.',
+	button1Text: 'Apple iOS',
+	button2Text: 'Android',
 };
 
-export const MIXPANEL_TOKEN = process.env.MIXPANEL_TOKEN;
+export const MIXPANEL_TOKEN =
+	process.env.MIXPANEL_TOKEN || process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
