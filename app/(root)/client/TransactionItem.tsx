@@ -6,13 +6,8 @@ export default function TransactionItem({
 }: {
 	transaction: TransactionReturnType;
 }) {
-	const {
-		amount,
-		transactionDate,
-		destinationName,
-		credit,
-		accountBalance,
-	} = transaction;
+	const { amount, transactionDate, destinationName, credit, accountBalance } =
+		transaction;
 	const currency = `$${formatCurrency(amount)}`;
 	const formattedAmount = credit ? currency : `-${currency}`;
 	const formattedBalance = `$${formatCurrency(accountBalance)}`;

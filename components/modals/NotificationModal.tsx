@@ -1,8 +1,6 @@
-import {
-	Dialog,
-	DialogContent,
-} from '@/components/ui/dialog';
 import { ReactElement } from 'react';
+
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
 
 type Props = {
@@ -14,7 +12,7 @@ type Props = {
 	buttonClass?: string;
 	className?: string;
 	open: boolean;
-	openChange: (open: boolean) => void | (()=> void);
+	openChange: (open: boolean) => void | (() => void);
 };
 
 export default function NotificationModal({

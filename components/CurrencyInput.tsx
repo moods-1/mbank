@@ -1,6 +1,7 @@
+import { ChangeEvent } from 'react';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ChangeEvent } from 'react';
 
 type Props = {
 	className?: string;

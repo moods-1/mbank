@@ -89,7 +89,7 @@ export const clearPersist = () => {
 	}
 };
 
-export const getToken = async() => {
+export const getToken = async () => {
 	if (typeof window !== 'undefined') {
 		const clientString = localStorage.getItem('persist:client');
 		if (clientString && typeof clientString === 'string') {

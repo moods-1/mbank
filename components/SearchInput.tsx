@@ -1,8 +1,6 @@
 import { ChangeEvent, useState } from 'react';
-import { IoIosSearch } from 'react-icons/io';
-import { FaTrash } from 'react-icons/fa6';
-import { FaSearch } from 'react-icons/fa';
 import { MdOutlineSearch, MdOutlineRestoreFromTrash } from 'react-icons/md';
+
 import { Input } from '@/components/ui/input';
 
 type Props = {

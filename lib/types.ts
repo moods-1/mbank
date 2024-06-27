@@ -10,7 +10,7 @@ export type TransactionType = {
 	credit: boolean;
 };
 
-// Accounts 
+// Accounts
 export type AccountType = {
 	_id: Types.ObjectId | string;
 	clientNumber: number;
@@ -22,11 +22,11 @@ export type AccountType = {
 };
 
 export type AddAccountFormType = {
-	clientNumber: string|number;
-	accountName: string; 
+	clientNumber: string | number;
+	accountName: string;
 	accountType: string;
 	debt: boolean;
-}
+};
 
 export type AddAccountType = {
 	clientNumber: number;
@@ -189,14 +189,13 @@ export type PaymentFormProps = {
 	sourceAccount: Types.ObjectId | string;
 	sourceAccountName: string;
 	accountBalance: number;
-
 };
 
 export type ClientNewTransactionType = {
 	transactionDate: Date;
 	destinationId: Types.ObjectId | string;
 	destinationName: string | undefined;
-	amount: number|string;
+	amount: number | string;
 	clientId: Types.ObjectId | string | undefined;
 	sourceAccount: Types.ObjectId | string;
 	sourceAccountName: string;

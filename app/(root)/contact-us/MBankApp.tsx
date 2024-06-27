@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import { Button } from '@/components/ui/button';
 import { CONTACT_MBANK_APP } from '@/lib/constants';
 import Image from 'next/image';

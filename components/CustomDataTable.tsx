@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode, useEffect, useState } from 'react';
-import { SlideLoader, TableRowLoader } from './Loaders';
+import { TableRowLoader } from './Loaders';
 
 type TablePropsType = {
 	rows: any[] | undefined;

@@ -9,7 +9,7 @@ export default function page() {
 				title='Home Equity Line of Credit'
 				subtitle='Friendship rates for you.'
 			/>
-			<Construction className='max-w-sm'/>
+			<Construction className='max-w-sm' />
 		</main>
 	);
 }

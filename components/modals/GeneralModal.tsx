@@ -1,8 +1,9 @@
+import { ReactElement, ReactNode } from 'react';
+
 import {
 	Dialog,
 	DialogContent,
 } from '@/components/ui/dialog';
-import { ReactElement, ReactNode } from 'react';
 
 type Props = {
     content: ReactElement | ReactNode;
