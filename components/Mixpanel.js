@@ -1,6 +1,9 @@
+'use client';
+
 import mixpanel from 'mixpanel-browser';
 
-import { MIXPANEL_TOKEN } from '@/lib/constants';
+const MIXPANEL_TOKEN =
+	process.env.NEXT_PUBLIC_MIXPANEL_TOKEN || process.env.MIXPANEL_TOKEN;
 
 mixpanel.init(MIXPANEL_TOKEN);
 
