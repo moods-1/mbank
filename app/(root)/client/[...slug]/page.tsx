@@ -1,17 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Types } from 'mongoose';
 
 import { AccountType, TransactionReturnType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
 import DoubleSlider from '@/components/DoubleSlider';
-import { getAccDetails } from '@/appInterface/client/accounts';
 import { Button } from '@/components/ui/button';
-import { useAppDispatch } from '@/lib/store/store';
+import { useAppDispatch, useAppSelector } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';
-import CustomDataTable from '@/components/CustomDataTable';
-import { TRANSACTION_HEADERS } from '@/lib/constants';
 import { formatCurrency, formatDate } from '@/lib/clientFunctions';
 import SearchInput from '@/components/SearchInput';
 import CustomDatePicker from '@/components/CustomDatePicker';
@@ -20,10 +18,14 @@ import FormErrorText from '@/components/FormErrorText';
 import StaticDateRanges from './StaticDateRanges';
 import PercentageDial from './PercentageDial';
 import AccountHead from './AccountHead';
+import { fetchTransactions } from '@/appInterface/client/transaction';
+import Transactions from './Transactions';
 
 const today = new Date();
 const end = new Date(today.setHours(23, 59, 59));
 const start = new Date(new Date().setDate(today.getDate() - 30));
+const page = 1;
+const size = 10;
 
 const initialError = {
 	startDate: '',
@@ -33,12 +35,12 @@ const initialError = {
 };
 
 export default function AccountDetails() {
-	const [account, setAccount] = useState<AccountType>();
 	const [startDate, setStartDate] = useState<Date>(start);
 	const [endDate, setEndDate] = useState<Date>(end);
 	const [minAmount, setMinAmount] = useState<string>('');
 	const [maxAmount, setMaxAmount] = useState<string>('');
-	const [transactions, setTransactions] = useState<TransactionReturnType[]>();
+	const [transactions, setTransactions] = useState<TransactionReturnType[]>([]);
+	const [transactionIds, setTransactionIds] = useState<Types.ObjectId[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [tableFilter, setTableFilter] = useState('');
 	const [filterError, setFilterError] = useState(initialError);
@@ -46,13 +48,17 @@ export default function AccountDetails() {
 	const [resetDateButtons, setResetDateButtons] = useState(false);
 	const [customSearch, setCustomSearch] = useState(false);
 	const [hideCustomSearch, setHideCustomSearch] = useState(false);
+	const [hasMore, setHasMore] = useState(false);
+	const [totalPages, setTotalPages] = useState(0);
+
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const { slug } = useParams();
 	const id = slug[2];
+	const { accounts } = useAppSelector((state) => state.client);
 	const noData = !isLoading && !transactions?.length;
 
-	const rows = transactions?.map((row: TransactionReturnType) => {
+	const rows = transactions.map((row: TransactionReturnType) => {
 		const { transactionDate, amount, credit, accountBalance } = row;
 		const formattedAmount = formatCurrency(amount);
 		const formattedBalance = formatCurrency(accountBalance);
@@ -64,6 +70,11 @@ export default function AccountDetails() {
 			accountBalance: formattedBalance,
 		};
 	});
+
+	const logout = useCallback(() => {
+		dispatch(logoutClient());
+		router.push('/');
+	}, [dispatch, router]);
 
 	const emptyMessage = () => {
 		return (
@@ -107,31 +118,34 @@ export default function AccountDetails() {
 		setTransactions([]);
 	};
 
-	const handleFilter = async () => {
+	const handleFilter = async (paginationNumber?: number) => {
 		let min = Number(minAmount);
-		let max = Number(maxAmount);
-		if ((min && !maxAmount) || min <= max) {
+		let max = Number(maxAmount) || Number.MAX_SAFE_INTEGER;
+		const pageNumber = paginationNumber || page;
+		if (((min && !maxAmount) || min <= max) && transactionIds.length) {
 			try {
 				setIsLoading(true);
+				setTransactions([]);
 				const queryData = {
-					id,
-					filter: { startDate, endDate, minAmount: min, maxAmount: max },
+					startDate,
+					endDate,
+					min,
+					max,
+					transactions: transactionIds,
+					page: pageNumber,
+					size,
 				};
-				const result = await getAccDetails(queryData);
-				if (result && 'account' in result) {
-					const { account, transactions } = result;
-					setAccount(account);
-					setTransactions(transactions);
-				} else if (result && 'msg' in result) {
-					const { status, msg } = result;
-					if (status === 401) {
-						dispatch(logoutClient());
-						router.push('/');
-					}
+				const result = await fetchTransactions(queryData);
+				const { status } = result;
+				if (status === 201 && result.response) {
+					const { data, totalPages, hasMore } = result.response;
+					setTotalPages(totalPages);
+					setHasMore(hasMore);
+					setTransactions(data);
+				} else if (status === 401) {
+					logout();
 				}
-			} catch (error) {
-				console.log(error);
-			}
+			} catch (error) {}
 			setIsLoading(false);
 		} else if (min > max) {
 			return timedError(
@@ -145,36 +159,42 @@ export default function AccountDetails() {
 	};
 
 	useEffect(() => {
-		setIsLoading(true);
-		const fetchAccount = async () => {
+		const account = accounts.find((a) => a._id === id);
+		if (account) {
+			setTransactionIds(account.transactions);
+		}
+	}, [accounts, id]);
+
+	useEffect(() => {
+		const getTransactions = async () => {
 			const startDate = start;
 			const endDate = end;
-			const minAmount = 0;
-			const maxAmount = Number.MAX_SAFE_INTEGER;
+			setIsLoading(true);
 			try {
 				const queryData = {
-					id,
-					filter: { startDate, endDate, minAmount, maxAmount },
+					startDate,
+					endDate,
+					min: 0,
+					max: Number.MAX_SAFE_INTEGER,
+					transactions: transactionIds,
+					page,
+					size,
 				};
-				const result = await getAccDetails(queryData);
-				if (result?.account && result?.transactions) {
-					const { account, transactions } = result;
-					setAccount(account);
-					setTransactions(transactions);
-				} else if (result && 'msg' in result) {
-					const { status, msg } = result;
-					if (status === 401) {
-						dispatch(logoutClient());
-						router.push('/');
-					}
+				const result = await fetchTransactions(queryData);
+				const { status } = result;
+				if (status === 201 && result.response) {
+					const { data, totalPages, hasMore } = result.response;
+					setTotalPages(totalPages);
+					setHasMore(hasMore);
+					setTransactions(data);
+				} else if (status === 401) {
+					logout();
 				}
-			} catch (error) {
-				console.log(error);
-			}
+			} catch (error) {}
 			setIsLoading(false);
 		};
-		fetchAccount();
-	}, [dispatch, id, router, refetchData]);
+		getTransactions();
+	}, [transactionIds, refetchData, logout]);
 
 	const formattedDates = () => {
 		const formattedStart = formatDate(startDate, 'MMM DD, YYYY');
@@ -305,18 +325,16 @@ export default function AccountDetails() {
 								</div>
 							</div>
 							<>
-								<div className='hidden sm:block w-full min-h-[410px] pt-0'>
-									<CustomDataTable
-										rows={rows}
-										isLoading={isLoading}
-										columns={TRANSACTION_HEADERS}
-										tableHeight={800}
-										emptyMessage={emptyMessage()}
-										dataFilter={tableFilter}
-										filterable
-									/>
-								</div>
-								<div className='block sm:hidden max-w-2xl border max-h-[70vh] overflow-y-auto'>
+								<Transactions
+									rows={rows}
+									isLoading={isLoading}
+									dataFilter={tableFilter}
+									hasMore={hasMore}
+									totalPages={totalPages}
+									handlePage={handleFilter}
+									reset={refetchData}
+								/>
+								<div className='block sm:hidden max-w-2xl border min-h-[410px] overflow-y-auto'>
 									{isLoading ? <DoubleSlider /> : null}
 									{noData
 										? emptyMessage()

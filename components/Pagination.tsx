@@ -1,10 +1,11 @@
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
 	hasMore: boolean;
 	totalPages: number;
 	handlePage: (paginationNumber: number) => void;
+	reset: boolean;
 	className?: string;
 }
 
@@ -12,6 +13,7 @@ export default function Pagination({
 	hasMore,
 	totalPages,
 	handlePage,
+	reset,
 	className,
 }: Props) {
 	const [selectedButton, setSelectedButton] = useState(1);
@@ -45,6 +47,10 @@ export default function Pagination({
 
 	const disableNext = selectedButton === totalPages || !hasMore;
 	const disablePrev = selectedButton === 1;
+
+	useEffect(() => {
+		setSelectedButton(1);
+	}, [reset]);
 
 	return (
 		<div className={cn('pagination', className)}>

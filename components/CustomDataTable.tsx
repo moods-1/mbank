@@ -9,6 +9,7 @@ type TablePropsType = {
 	tableHeight?: number;
 	isLoading: boolean;
 	emptyMessage?: ReactElement | ReactNode;
+	loaderRows?: number;
 };
 
 function CustomDataTable({
@@ -19,6 +20,7 @@ function CustomDataTable({
 	tableHeight,
 	isLoading,
 	emptyMessage,
+	loaderRows,
 }: TablePropsType) {
 	const [filterableIndexes, setFilterableIndexes] = useState<any[]>([]);
 	const filteredData = rows?.filter((row) => {
@@ -53,6 +55,7 @@ function CustomDataTable({
 	const main = {
 		maxHeight: tableHeight || 200,
 	};
+	
 	const CaptionMessage = () => {
 		return emptyMessage ? (
 			emptyMessage
@@ -92,7 +95,11 @@ function CustomDataTable({
 						</tr>
 					))}
 					{isLoading && (
-						<TableRowLoader columns={columns} className='h-6' quantity={2} />
+						<TableRowLoader
+							columns={columns}
+							className='h-6'
+							quantity={loaderRows || 2}
+						/>
 					)}
 				</tbody>
 			</table>

@@ -1,6 +1,6 @@
 import { getToken } from '@/lib/clientFunctions';
-import { addTransaction } from '../actions/transactionActions';
-import { ClientNewTransactionType, PublicClientType } from '@/lib/types';
+import { addTransaction, getTransactions } from '../actions/transactionActions';
+import { ClientNewTransactionType, GetTransactionsType, PublicClientType, TransactionsReturnType } from '@/lib/types';
 
 export const transactionAdd = async (
 	data: ClientNewTransactionType
@@ -12,3 +12,9 @@ export const transactionAdd = async (
 	}
 	return null;
 };
+
+export const fetchTransactions = async (queryData: GetTransactionsType): Promise<TransactionsReturnType> => {
+	const token: string = await getToken();
+	const result = await getTransactions(token, queryData);
+	return result;
+}
