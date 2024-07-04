@@ -397,9 +397,9 @@ section {
 .table tbody tr {
 	@apply border-b hover:bg-slate-100;
 }
-.table tbody tr:last-child {
+/* .table tbody tr:last-child {
 	@apply border-0;
-}
+} */
 .table tbody tr td {
 	@apply px-2 py-3 text-sm;
 }
@@ -456,4 +456,14 @@ section {
 }
 .app-payee-info-box {
 	@apply hidden bg-white w-44 shadow-md p-5 border text-sm;
+}
+/* Pagination */
+.pagination {
+	@apply w-full flex flex-wrap gap-1 xs:gap-5 justify-between items-center border p-2 select-none;
+}
+.pagination-nav {
+	@apply border bg-black text-white w-auto px-3 py-[2px] text-center;
+}
+.active-button {
+	@apply bg-bank-green text-white;
 }

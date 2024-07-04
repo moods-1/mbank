@@ -92,10 +92,7 @@ function CustomDataTable({
 						</tr>
 					))}
 					{isLoading && (
-						<>
-							<TableRowLoader columns={columns} className='h-6' />
-							<TableRowLoader columns={columns} className='h-6' />
-						</>
+						<TableRowLoader columns={columns} className='h-6' quantity={2} />
 					)}
 				</tbody>
 			</table>

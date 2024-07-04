@@ -24,6 +24,7 @@ import CurrencyInput from '@/components/CurrencyInput';
 import FormErrorText from '@/components/FormErrorText';
 import StaticDateRanges from './StaticDateRanges';
 import ProgressBar from '@/components/ProgressBar';
+import PercentageDial from './PercentageDial';
 
 const today = new Date();
 const end = new Date(today.setHours(23, 59, 59));
@@ -365,24 +366,7 @@ export default function AccountDetails() {
 					</div>
 				</div>
 			</div>
-			{/* <div className='flex-1 max-w-xl border hidden xl:block'> */}
-			<div className='flex-1 max-w-xl mx-auto'>
-				<p className='text-lg sm:text-xl font-semibold text-center'>
-					Percentage as part of all your accounts:
-				</p>
-				<div className='w-full flex justify-center mt-8 pb-4'>
-					<ProgressBar
-						className='w-32 sm:w-40 font-semibold'
-						value={accountPercentage}
-						strokeWidth={20}
-						textColor='#000'
-						textSize='22px'
-						pathColor='#27c522'
-						trailColor='#000'
-					/>
-				</div>
-				<p></p>
-			</div>
+			<PercentageDial id={id} />
 		</div>
 	);
 }

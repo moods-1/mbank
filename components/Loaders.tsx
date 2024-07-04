@@ -54,21 +54,37 @@ type TableHeaderType = {
 };
 
 type TableRowLoaderType = {
+	quantity: number;
 	columns: TableHeaderType[];
 	className?: string;
 };
 
-export function TableRowLoader({ columns, className }: TableRowLoaderType) {
+export function TableRowLoader({
+	columns,
+	className,
+	quantity,
+}: TableRowLoaderType) {
+	const quantityArr: number[] = [];
+	for (let i = 0; i < quantity; i++) {
+		quantityArr.push(i);
+	}
+
 	return (
-		<tr>
-			{columns.map(({ field }) => (
-				<td
-					key={field + Math.random() * 1000}
-					// className={`side-loader inline-block h-10`}
-				>
-					<span className={`side-loader inline-block ${className || 'h-10'}`} />
-				</td>
+		<>
+			{quantityArr.map((item) => (
+				<tr key={item}>
+					{columns.map(({ field }) => (
+						<td
+							key={field + Math.random() * 1000}
+							// className={`side-loader inline-block h-10`}
+						>
+							<span
+								className={`side-loader inline-block ${className || 'h-10'}`}
+							/>
+						</td>
+					))}
+				</tr>
 			))}
-		</tr>
+		</>
 	);
 }
