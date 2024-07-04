@@ -5,26 +5,21 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { AccountType, TransactionReturnType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
-import { SlideLoader } from '@/components/Loaders';
 import DoubleSlider from '@/components/DoubleSlider';
 import { getAccDetails } from '@/appInterface/client/accounts';
 import { Button } from '@/components/ui/button';
-import { useAppDispatch, useAppSelector } from '@/lib/store/store';
+import { useAppDispatch } from '@/lib/store/store';
 import { logoutClient } from '@/lib/store/clientSlice';
 import CustomDataTable from '@/components/CustomDataTable';
 import { TRANSACTION_HEADERS } from '@/lib/constants';
-import {
-	balanceCalculator,
-	formatCurrency,
-	formatDate,
-} from '@/lib/clientFunctions';
+import { formatCurrency, formatDate } from '@/lib/clientFunctions';
 import SearchInput from '@/components/SearchInput';
 import CustomDatePicker from '@/components/CustomDatePicker';
 import CurrencyInput from '@/components/CurrencyInput';
 import FormErrorText from '@/components/FormErrorText';
 import StaticDateRanges from './StaticDateRanges';
-import ProgressBar from '@/components/ProgressBar';
 import PercentageDial from './PercentageDial';
+import AccountHead from './AccountHead';
 
 const today = new Date();
 const end = new Date(today.setHours(23, 59, 59));
@@ -51,10 +46,8 @@ export default function AccountDetails() {
 	const [resetDateButtons, setResetDateButtons] = useState(false);
 	const [customSearch, setCustomSearch] = useState(false);
 	const [hideCustomSearch, setHideCustomSearch] = useState(false);
-	const [accountPercentage, setAccountPercentage] = useState(0);
 	const router = useRouter();
 	const dispatch = useAppDispatch();
-	const { accounts } = useAppSelector((state) => state.client);
 	const { slug } = useParams();
 	const id = slug[2];
 	const noData = !isLoading && !transactions?.length;
@@ -183,22 +176,6 @@ export default function AccountDetails() {
 		fetchAccount();
 	}, [dispatch, id, router, refetchData]);
 
-	useEffect(() => {
-		const totalBalance = balanceCalculator(accounts, 'credit');
-		let accountPercentage: number = 0;
-		if (account?.accountBalance) {
-			accountPercentage = Math.round(
-				(account.accountBalance / totalBalance) * 100
-			);
-		}
-		setAccountPercentage(accountPercentage);
-	}, [account, accounts]);
-
-	const balance = account?.accountBalance.toLocaleString(undefined, {
-		maximumFractionDigits: 2,
-		minimumFractionDigits: 2,
-	});
-
 	const formattedDates = () => {
 		const formattedStart = formatDate(startDate, 'MMM DD, YYYY');
 		const formattedEnd = formatDate(endDate, 'MMM DD, YYYY');
@@ -209,21 +186,7 @@ export default function AccountDetails() {
 		<div className='pb-10 flex flex-col-reverse lg:flex-row gap-6'>
 			<div className='flex-1 max-w-4xl'>
 				<div>
-					<p className='text-lg sm:text-xl font-semibold'>
-						{account?.accountName || <SlideLoader className='h-6 max-w-96' />}
-					</p>
-					<p className='text-sm'>
-						<span className='font-semibold'>Account number:</span>{' '}
-						<span className='font-medium'>{id}</span>
-					</p>
-					<p className='flex text-sm'>
-						<span className='font-semibold'>Balance: </span>
-						{balance ? (
-							<span className='font-medium'>{`$ ${balance}`}</span>
-						) : (
-							<SlideLoader className='h-6 max-w-40' />
-						)}
-					</p>
+					<AccountHead id={id} />
 					<div className='mt-6 '>
 						<p className='font-medium mb-1 text-sm xs:text-base flex flex-wrap gap-x-1'>
 							<span>{`Past Transactions `}</span>
@@ -342,12 +305,12 @@ export default function AccountDetails() {
 								</div>
 							</div>
 							<>
-								<div className='hidden sm:block w-full max-h-[70vh] pt-0'>
+								<div className='hidden sm:block w-full min-h-[410px] pt-0'>
 									<CustomDataTable
 										rows={rows}
 										isLoading={isLoading}
 										columns={TRANSACTION_HEADERS}
-										tableHeight={400}
+										tableHeight={800}
 										emptyMessage={emptyMessage()}
 										dataFilter={tableFilter}
 										filterable

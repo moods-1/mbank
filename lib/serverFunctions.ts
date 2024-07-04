@@ -31,7 +31,7 @@ export const handleError = (error: unknown) => {
 	if (error instanceof JsonWebTokenError) {
 		return { status: 401, msg: 'Invalid or expired token.' };
 	}
-	return error;
+	return { status: 500, msg: 'Failed.' };
 };
 
 export const parsedResponse = (data: any) => {

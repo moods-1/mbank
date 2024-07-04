@@ -9,6 +9,26 @@ export type TransactionType = {
 	destinationName: string;
 	credit: boolean;
 };
+export type GetTransactionsType = {
+	page: number;
+	size: number;
+	startDate: Date;
+	endDate: Date;
+	min: number;
+	max: number;
+	transactions: Types.ObjectId[];
+};
+export type PaginationType = {
+	hasMore: boolean;
+	totalPages: number;
+	data: TransactionReturnType[];
+}
+
+export type TransactionsReturnType = {
+	status: number;
+	msg: string;
+	response?: PaginationType;
+};
 
 // Accounts
 export type AccountType = {

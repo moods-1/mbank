@@ -5,7 +5,9 @@ import { Types } from 'mongoose';
 import { formatDate } from '@/lib/clientFunctions';
 import {
 	ClientNewTransactionType,
+	GetTransactionsType,
 	ServerNewTransactionType,
+	TransactionType,
 } from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
@@ -102,5 +104,33 @@ export async function moveTransctions() {
 		return {};
 	} catch (error) {
 		handleError(error);
+	}
+}
+
+export async function getTransactions(
+	token: string,
+	queryData: GetTransactionsType
+) {
+	const { page, size, startDate, endDate, min, max, transactions } = queryData;
+	try {
+		await verifyToken(token);
+		await connectToDatabase();
+		const transactionsResult: TransactionType[] = await Transaction.find({
+			_id: { $in: transactions },
+			transactionDate: { $gte: startDate, $lte: endDate },
+			amount: { $gte: min, $lte: max },
+		}).sort({ createdAt: -1 });
+
+		const result = parsedResponse(transactionsResult);
+		const totalDocs = result.length;
+		const totalPages = Math.ceil(totalDocs / size);
+		const endIndex = page * size;
+		const startIndex = endIndex - size;
+		const data = result.slice(startIndex, endIndex);
+		const hasMore = endIndex < totalDocs;
+		const response = { data, totalPages, hasMore };
+		return { status: 201, msg: 'Ok', response };
+	} catch (error) {
+		return handleError(error);
 	}
 }
