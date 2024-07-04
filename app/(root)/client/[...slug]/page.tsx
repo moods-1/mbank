@@ -107,6 +107,8 @@ export default function AccountDetails() {
 		setEndDate(end);
 		setMinAmount('');
 		setMaxAmount('');
+		setIsLoading(true);
+		setTransactions([]);
 		setRefetchData((prev) => !prev);
 	};
 
