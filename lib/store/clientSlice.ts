@@ -1,4 +1,4 @@
-import { AccountType, PublicClientType } from '@/lib/types';
+import { AccountType, ClientType, PublicClientType } from '@/lib/types';
 import { createSlice, PayloadAction, current } from '@reduxjs/toolkit';
 import { Types } from 'mongoose';
 
@@ -35,15 +35,22 @@ export const initialState: UserState = {
 	},
 };
 
+type LoadClient = {
+	accounts: AccountType[];
+	client: PublicClientType;
+};
+
 export const clientSlice = createSlice({
 	name: 'client',
 	initialState,
 	reducers: {
-		loadClient: (state, action: PayloadAction<PublicClientType>) => {
-			const { loggedIn, token } = action.payload;
-			state.client = { ...action.payload };
+		loadClient: (state, action: PayloadAction<LoadClient>) => {
+			const { accounts, client } = action.payload;
+			const { loggedIn, token } = client;
+			state.client = client;
 			state.loggedIn = loggedIn;
 			state.token = token;
+			state.accounts = accounts;
 		},
 		updateClient: (state, action: PayloadAction<PublicClientType>) => {
 			state.client = { ...state.client, ...action.payload };
@@ -54,11 +61,12 @@ export const clientSlice = createSlice({
 		},
 		loadAccounts: (state, action: PayloadAction<AccountType[]>) => {
 			state.accounts = [...action.payload];
-		}
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { loadClient, updateClient, logoutClient, loadAccounts } = clientSlice.actions;
+export const { loadClient, updateClient, logoutClient, loadAccounts } =
+	clientSlice.actions;
 
 export default clientSlice.reducer;

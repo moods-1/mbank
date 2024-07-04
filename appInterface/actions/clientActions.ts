@@ -1,4 +1,5 @@
 'use server';
+
 import { compare } from 'bcryptjs';
 
 import {
@@ -9,6 +10,7 @@ import {
 	parsedResponse,
 } from '@/lib/serverFunctions';
 import {
+	AccountType,
 	AddClientType,
 	ClientType,
 	LoginProps,
@@ -19,6 +21,7 @@ import {
 import { connectToDatabase } from '../db';
 import Client from '../models/Client';
 import ClientNumber from '../models/CurrentClientNumber';
+import Account from '../models/Account';
 
 export async function addClient(data: AddClientType) {
 	try {
@@ -76,15 +79,23 @@ export async function loginClient(data: LoginProps) {
 		if (clientExists) {
 			const goodPassword = await compare(password, clientExists?.password);
 			if (goodPassword) {
-				const { _id } = clientExists;
+				const { _id, accounts: clientAccounts } = clientExists;
 				clientExists.token = await generateToken(_id);
 				clientExists.loggedIn = true;
-				const client = await Client.findOneAndUpdate(
+				const client: PublicClientType | any = await Client.findOneAndUpdate(
 					{ _id },
 					{ $set: { ...clientExists } },
 					{ returnDocument: 'after' }
 				).select({ password: 0, createdAt: 0, updatedAt: 0 });
-				return parsedResponse(client);
+				// Fetch actual accounts
+				const accounts: AccountType[] | null = await Account.find({
+					_id: { $in: clientAccounts },
+				}).sort({ accountName: 1 });
+
+				return {
+					client: parsedResponse(client),
+					accounts: parsedResponse(accounts),
+				};
 			} else return 'The password is incorrect.';
 		} else {
 			return 'No client exists with these credentials.';

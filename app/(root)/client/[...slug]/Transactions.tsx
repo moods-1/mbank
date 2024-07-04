@@ -5,6 +5,7 @@ import { TRANSACTION_HEADERS } from '@/lib/constants';
 interface Props {
 	rows: any[];
 	isLoading: boolean;
+	loaderRows: number;
 	hasMore: boolean;
 	totalPages: number;
 	dataFilter: string;
@@ -15,6 +16,7 @@ interface Props {
 export default function Transactions({
 	rows,
 	isLoading,
+	loaderRows,
 	hasMore,
 	totalPages,
 	dataFilter,
@@ -40,7 +42,7 @@ export default function Transactions({
 					emptyMessage={emptyMessage()}
 					dataFilter={dataFilter}
 					filterable
-					loaderRows={5}
+					loaderRows={loaderRows || 5}
 				/>
 			</div>
 			{totalPages > 1 ? (

@@ -1,34 +1,28 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { FaUserEdit } from 'react-icons/fa';
 import CountUp from 'react-countup';
 
 import { balanceCalculator, partOfDayGreeting } from '@/lib/clientFunctions';
 import { useAppSelector } from '@/lib/store/store';
-import { AccountType } from '@/lib/types';
 import { SlideLoader } from '@/components/Loaders';
 import { Button } from '@/components/ui/button';
-import { getAccounts } from '@/appInterface/client/accounts';
-import { useAppDispatch } from '@/lib/store/store';
-import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import AddAccount from './ClientAddAccount';
 import Profile from '@/components/profile/page';
 import AccountCard from '@/components/AccountCard';
 import { Mixpanel } from '@/components/Mixpanel';
+import { AccountType } from '@/lib/types';
 
 export default function ClientHome() {
-	const [accounts, setAccounts] = useState<AccountType[]>([]);
+	const [clientAccounts, setClientAccounts] = useState<AccountType[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [firstName, setFirstName] = useState('');
 	const [showAddAccount, setShowAddAccount] = useState(false);
 	const [openProfile, setOpenProfile] = useState(false);
 	const [totalBalance, setTotalBalance] = useState(0);
-	const router = useRouter();
-	const dispatch = useAppDispatch();
-	const { client } = useAppSelector((state) => state.client);
+	const { client, accounts } = useAppSelector((state) => state.client);
 
 	const noAccounts = !accounts.length && !isLoading;
 
@@ -38,36 +32,11 @@ export default function ClientHome() {
 
 	useEffect(() => {
 		setFirstName(client.firstName);
-	}, [client]);
-
-	useEffect(() => {
-		const fetchAccounts = async () => {
-			setIsLoading(true);
-			try {
-				const { accounts } = client;
-				const result = await getAccounts(accounts);
-				if (result && 'response' in result) {
-					const { response } = result;
-					setTotalBalance(balanceCalculator(response, 'credit'));
-					setAccounts(response);
-					dispatch(loadAccounts(response));
-				} else if (result && 'msg' in result && 'status' in result) {
-					const { status, msg } = result;
-					if (status === 401) {
-						dispatch(logoutClient());
-						router.push('/');
-						if (typeof msg === 'string') {
-							//
-						}
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-			setIsLoading(false);
-		};
-		fetchAccounts();
-	}, [client, dispatch, router]);
+		setTotalBalance(balanceCalculator(accounts, 'credit'));
+		// Next line done for hydration errors
+		setClientAccounts(accounts);
+		setIsLoading(false);
+	}, [client, accounts]);
 
 	// Mixpanel.track('MBank financial app accessed.', {
 	// 	action: 'MBank financial app accessed.',
@@ -109,7 +78,7 @@ export default function ClientHome() {
 					) : (
 						<div className='flex flex-wrap justify-center xs:justify-normal gap-5 max-w-2xl'>
 							{isLoading ? <SlideLoader className='h-44' /> : null}
-							{accounts.map((account, idx) => (
+							{clientAccounts.map((account, idx) => (
 								<AccountCard
 									key={idx}
 									account={account}

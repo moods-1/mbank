@@ -443,7 +443,7 @@ section {
 	@apply hover:border-b hover:border-b-bank-green focus:border-b-bank-green focus-within:border-b-bank-green;
 }
 .static-date-range-btn {
-	@apply border border-gray-300 px-3 py-1 cursor-pointer text-xs min-w-28 text-center font-medium w-full xs:w-auto hover:bg-bank-green hover:text-white;
+	@apply border border-gray-300 px-3 py-1 cursor-pointer text-xs min-w-28 text-center font-medium w-full xs:w-auto hover:bg-bank-green hover:text-white select-none;
 }
 .add-payee-info {
 	@apply absolute top-0 left-5;

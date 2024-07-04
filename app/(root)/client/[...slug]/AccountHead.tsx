@@ -31,18 +31,18 @@ export default function AccountHead({ id }: Props) {
 	return (
 		<>
 			<p className='text-lg sm:text-xl font-semibold'>
-				{accountName || <SlideLoader className='h-6 max-w-96' />}
+				{accountName || <SlideLoader className='h-5 max-w-96' />}
 			</p>
 			<p className='text-sm'>
 				<span className='font-semibold'>Account number:</span>{' '}
 				<span className='font-medium'>{id}</span>
 			</p>
 			<p className='flex text-sm'>
-                <span className='font-semibold'>Balance:&nbsp;</span>
+				<span className='font-semibold'>Balance:&nbsp;</span>
 				{balance ? (
 					<span className='font-medium'>{`$${balance}`}</span>
 				) : (
-					<SlideLoader className='h-6 max-w-40' />
+					<SlideLoader className='h-4 max-w-40' />
 				)}
 			</p>
 		</>

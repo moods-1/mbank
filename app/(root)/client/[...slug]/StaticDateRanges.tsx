@@ -43,6 +43,7 @@ export default function StaticDateRanges({
 				return (
 					<div
 						key={label}
+						role='button'
 						className={`static-date-range-btn ${
 							active ? 'bg-bank-green text-white ' : ''
 						}`}

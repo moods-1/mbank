@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Types } from 'mongoose';
 
-import { AccountType, TransactionReturnType } from '@/lib/types';
+import { TransactionReturnType } from '@/lib/types';
 import TransactionItem from '../TransactionItem';
 import DoubleSlider from '@/components/DoubleSlider';
 import { Button } from '@/components/ui/button';
@@ -162,13 +162,7 @@ export default function AccountDetails() {
 
 	useEffect(() => {
 		const account = accounts.find((a) => a._id === id);
-		if (account) {
-			setTransactionIds(account.transactions);
-		}
-	}, [accounts, id]);
-
-	useEffect(() => {
-		const getTransactions = async () => {
+		const getTransactions = async (transIds: Types.ObjectId[]) => {
 			const startDate = start;
 			const endDate = end;
 			setIsLoading(true);
@@ -178,7 +172,7 @@ export default function AccountDetails() {
 					endDate,
 					min: 0,
 					max: Number.MAX_SAFE_INTEGER,
-					transactions: transactionIds,
+					transactions: transIds,
 					page,
 					size,
 				};
@@ -194,9 +188,10 @@ export default function AccountDetails() {
 				}
 			} catch (error) {}
 			setIsLoading(false);
+			setTransactionIds(transIds);
 		};
-		getTransactions();
-	}, [transactionIds, refetchData, logout]);
+		account && getTransactions(account.transactions);
+	}, [id, refetchData, logout, accounts]);
 
 	const formattedDates = () => {
 		const formattedStart = formatDate(startDate, 'MMM DD, YYYY');
@@ -330,6 +325,7 @@ export default function AccountDetails() {
 								<Transactions
 									rows={rows}
 									isLoading={isLoading}
+									loaderRows={7}
 									dataFilter={tableFilter}
 									hasMore={hasMore}
 									totalPages={totalPages}

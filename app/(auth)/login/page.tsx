@@ -59,12 +59,12 @@ export default function LogIn() {
 			const formObject = { ...form, clientNumber: Number(form.clientNumber) };
 			const result = await loginClient(formObject);
 			const resultType = typeof result;
-			if (resultType === 'object' && Object.keys(result).length) {
+			if (typeof result === 'object' && 'accounts' in result && 'client' in result) {
 				dispatch(loadClient(result));
 				router.push('/client');
-			} else if (resultType === 'string' && result.includes('password')) {
+			} else if (typeof result === 'string' && result.includes('password')) {
 				setFormError((prev) => ({ ...prev, password: result }));
-			} else if (resultType === 'string' && result.includes('client')) {
+			} else if (typeof result === 'string' && result.includes('client')) {
 				setFormError((prev) => ({ ...prev, clientNumber: result }));
 			}
 		} catch (error) {
