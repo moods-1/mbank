@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 
 import { formatDate } from '@/lib/clientFunctions';
 import {
+	AccountType,
 	ClientNewTransactionType,
 	GetTransactionsType,
 	ServerNewTransactionType,
@@ -32,11 +33,13 @@ export async function addTransaction(
 			amount,
 			sourceAccount,
 			sourceAccountName,
+			destinationName,
 			credit,
 			clientId,
 			transactionDate,
 		} = data;
 		const sourceAcc = await Account.findOne({ _id: sourceAccount });
+		const date = formatDate(transactionDate, 'DD-MMM-YYYY');
 		if (sourceAcc) {
 			let newBalance: number;
 			const { accountBalance } = sourceAcc;
@@ -46,30 +49,40 @@ export async function addTransaction(
 				newBalance = accountBalance - Number(amount);
 			}
 			if (newBalance >= 0) {
-				const newData: ServerNewTransactionType = {
-					...data,
-					amount: Number(data.amount),
-					accountBalance: newBalance,
-				};
-				const transaction = await Transaction.create(newData);
-				const { _id } = transaction;
-				await Account.updateOne(
-					{ _id: sourceAccount },
-					{ accountBalance: newBalance, $push: { transactions: _id } }
-				);
-				const result = await Client.findOne({ _id: clientId });
-				return parsedResponse(result);
+				const today = new Date().toLocaleDateString();
+				const payToday = today === transactionDate.toLocaleDateString();
+				if (payToday) {
+					const newData: ServerNewTransactionType = {
+						...data,
+						amount: Number(data.amount),
+						accountBalance: newBalance,
+					};
+					const transaction = await Transaction.create(newData);
+					const { _id } = transaction;
+					await Account.updateOne(
+						{ _id: sourceAccount },
+						{ accountBalance: newBalance, $push: { transactions: _id } }
+					);
+					const result = await Client.findOne({ _id: clientId });
+					if (result) {
+						const accountsArr = result.accounts;
+						const accounts: AccountType[] = await Account.find({
+							_id: { $in: accountsArr },
+						}).sort({ accountName: 1 });					
+						return parsedResponse(accounts);
+					}
+				}
+				return { status: 201, msg: `Your payment of $${amount} to ${destinationName} has been scheduled for ${date}.` };
 			} else {
-				const date = formatDate(transactionDate, 'DD-MMM-YYYY');
 				return {
-					status: 201,
+					status: 400,
 					msg: `Your ${sourceAccountName} has insufficient funds. Please make sure $${amount} is in the account on ${date}, or the payment will not be made.`,
 				};
 			}
 		}
 		return { status: 500, msg: `${sourceAccountName} could not be found.` };
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 
@@ -79,7 +92,7 @@ export async function getTransactionById(id: Types.ObjectId | string) {
 		const transaction = await Transaction.findOne({ _id: id });
 		return parsedResponse(transaction);
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 
@@ -103,7 +116,7 @@ export async function moveTransctions() {
 		);
 		return {};
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 

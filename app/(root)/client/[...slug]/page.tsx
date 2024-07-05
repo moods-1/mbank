@@ -119,7 +119,7 @@ export default function AccountDetails() {
 		setCustomSearch(false);
 		setTransactions([]);
 	};
-
+	
 	const handleFilter = async (paginationNumber?: number) => {
 		let min = Number(minAmount);
 		let max = Number(maxAmount) || Number.MAX_SAFE_INTEGER;

@@ -58,7 +58,6 @@ export default function LogIn() {
 			rememberMe ? storeClientNumber(form.clientNumber) : clearClientNumber();
 			const formObject = { ...form, clientNumber: Number(form.clientNumber) };
 			const result = await loginClient(formObject);
-			const resultType = typeof result;
 			if (
 				typeof result === 'object' &&
 				'accounts' in result &&

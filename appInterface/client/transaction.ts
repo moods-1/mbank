@@ -1,10 +1,10 @@
 import { getToken } from '@/lib/clientFunctions';
 import { addTransaction, getTransactions } from '../actions/transactionActions';
-import { ClientNewTransactionType, GetTransactionsType, PublicClientType, TransactionsReturnType } from '@/lib/types';
+import { AccountType, ClientNewTransactionType, GetTransactionsType, PublicClientType, TransactionsReturnType } from '@/lib/types';
 
 export const transactionAdd = async (
 	data: ClientNewTransactionType
-): Promise<PublicClientType | null | {}> => {
+): Promise<AccountType[] | null | {}> => {
 	const token: string = await getToken();
 	const result = await addTransaction(token, data);
 	if (result && Object.keys(result)) {

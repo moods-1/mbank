@@ -2,6 +2,8 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { MdWarningAmber } from 'react-icons/md';
+import { HiHandThumbUp } from 'react-icons/hi2';
+import { useRouter } from 'next/navigation';
 
 import {
 	AccountType,
@@ -28,7 +30,11 @@ import CustomDatePicker from '@/components/CustomDatePicker';
 import { Button } from '@/components/ui/button';
 import { transactionAdd } from '@/appInterface/client/transaction';
 import { useAppDispatch } from '@/lib/store/store';
-import { updateClient } from '@/lib/store/clientSlice';
+import {
+	loadAccounts,
+	logoutClient,
+	updateClient,
+} from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
@@ -59,23 +65,32 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 	const [paymentSource, setPaymentSource] = useState<AccountType>();
 	const [openNotification, setOpenNotification] = useState(false);
 	const [notificationBody, setNotificationBody] = useState('');
+	const [errorStatus, setErrorStatus] = useState(0);
 
 	const { payees, _id: clientId } = client;
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const reset = () => {
 		setForm(INITIAL_PAYMENT_FORM);
 		setFormError(initialFormError);
 		setSelectKey(randomString(3));
+		setErrorStatus(0);
 	};
 
 	const handleNotification = () => {
-		reset();
-		setOpenNotification((prev) => !prev);
+		if (errorStatus === 401) {
+			dispatch(logoutClient());
+			router.push('/');
+		} else {
+			reset();
+			setOpenNotification((prev) => !prev);
+		}
 	};
 
+	const responseError = errorStatus >= 400;
 	const notificationProps = {
-		title: 'Warning!',
+		title: responseError ? 'Warning!' : 'Success',
 		body: notificationBody,
 		buttonText: 'Close',
 		buttonFunction: handleNotification,
@@ -84,8 +99,16 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 		open: openNotification,
 		openChange: handleNotification,
 		icon: (
-			<div className='w-14 h-14 rounded-full bg-red-600 flex-center-row mx-auto text-white'>
-				<MdWarningAmber className='text-3xl' />
+			<div
+				className={`w-14 h-14 rounded-full ${
+					responseError ? 'bg-red-600' : 'bg-bank-green'
+				} flex-center-row mx-auto text-white`}
+			>
+				{responseError ? (
+					<MdWarningAmber className='text-3xl' />
+				) : (
+					<HiHandThumbUp className='text-4xl' />
+				)}
 			</div>
 		),
 	};
@@ -146,8 +169,8 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				const { amount, transactionDate } = form;
 				const insufficientFunds: boolean =
 					paymentSource.accountBalance - amount < 0;
-				const today = new Date().getDay();
-				const payToday = today === transactionDate.getDay();
+				const today = new Date().toLocaleDateString();
+				const payToday = today === transactionDate.toLocaleDateString();
 				if (payToday && insufficientFunds) {
 					timedError(
 						'Insufficient funds for this transaction.',
@@ -157,15 +180,16 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				}
 				const queryData = { ...form, credit: false };
 				const result = await transactionAdd(queryData);
-				if (result && 'firstName' in result) {
-					dispatch(updateClient(result));
-					reset();
-				} else if (result && 'msg' in result) {
-					const { msg } = result;
-					if (typeof msg === 'string') {
+				if (result && 'msg' in result && 'status' in result) {
+					const { msg, status } = result;
+					if (typeof msg === 'string' && typeof status === 'number') {
+						setErrorStatus(status);
 						setNotificationBody(msg);
 						setOpenNotification(true);
 					}
+				} else if (Array.isArray(result)) {
+					dispatch(loadAccounts(result));
+					reset();
 				}
 			}
 		}

@@ -34,7 +34,7 @@ export async function addAccount(data: AddAccountType) {
 		);
 		return JSON.parse(JSON.stringify(result));
 	} catch (error) {
-		handleError(error);
+		return handleError(error);
 	}
 }
 

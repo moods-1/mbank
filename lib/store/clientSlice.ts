@@ -54,7 +54,6 @@ export const clientSlice = createSlice({
 		},
 		updateClient: (state, action: PayloadAction<PublicClientType>) => {
 			state.client = { ...state.client, ...action.payload };
-			return;
 		},
 		logoutClient: (state) => {
 			return initialState;

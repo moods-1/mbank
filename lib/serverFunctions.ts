@@ -34,7 +34,7 @@ export const responseFormatter = async (
 
 export const handleError = (error: unknown) => {
 	if (error instanceof JsonWebTokenError) {
-		return { status: 401, msg: 'Invalid or expired token.' };
+		return { status: 401, msg: 'Your session has expired. Please login again.' };
 	}
 	return { status: 500, msg: 'Failed.' };
 };
