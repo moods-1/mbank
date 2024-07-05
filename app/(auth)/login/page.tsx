@@ -1,14 +1,15 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { CheckedState } from '@radix-ui/react-checkbox';
 
 import { loadClient } from '@/lib/store/clientSlice';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
 import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CheckedState } from '@radix-ui/react-checkbox';
 import { Label } from '@/components/ui/label';
 import { loginClient } from '@/appInterface/actions/clientActions';
 import {
@@ -17,7 +18,6 @@ import {
 	getClientNumber,
 	storeClientNumber,
 } from '@/lib/clientFunctions';
-import Link from 'next/link';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 
@@ -59,7 +59,11 @@ export default function LogIn() {
 			const formObject = { ...form, clientNumber: Number(form.clientNumber) };
 			const result = await loginClient(formObject);
 			const resultType = typeof result;
-			if (typeof result === 'object' && 'accounts' in result && 'client' in result) {
+			if (
+				typeof result === 'object' &&
+				'accounts' in result &&
+				'client' in result
+			) {
 				dispatch(loadClient(result));
 				router.push('/client');
 			} else if (typeof result === 'string' && result.includes('password')) {
@@ -90,13 +94,16 @@ export default function LogIn() {
 				<FormHeader className='!mb-8'>
 					<p className='form-title-lg text-center'>Login</p>
 				</FormHeader>
-				<p
-					role='button'
-					className='px-2 py-1 bg-black text-white w-fit text-sm rounded-sm -mt-3 mb-4'
-					onClick={testAutofill}
-				>
-					Test Credentials
-				</p>
+				{!form.password && (
+					<Button
+						type='button'
+						className='auth-form-button no-focus green-button -mt-14 mb-6 !text-base'
+						onClick={testAutofill}
+					>
+						Use Test Credentials
+					</Button>
+				)}
+
 				<CustomInput
 					className='input-effects'
 					name='clientNumber'

@@ -7,8 +7,19 @@ export const hashPassword = async (data: string) => {
 };
 
 export const generateToken = async (id: Types.ObjectId | string) => {
-	const secret = process.env.JWT_SECRET || '';
-	return sign({ id }, secret, { expiresIn: '30m' });
+	const secret = process.env.JWT_SECRET;
+	if (secret) {
+		return sign({ id }, secret, { expiresIn: '30m' });
+	}
+	return false;
+};
+
+export const verifyToken = async (token: string) => {
+	const secret = process.env.JWT_SECRET;
+	if (secret) {
+		const goodToken = verify(token, secret);
+		return goodToken;
+	}
 };
 
 export const responseFormatter = async (
@@ -20,12 +31,6 @@ export const responseFormatter = async (
 	message,
 	response,
 });
-
-export const verifyToken = async (token: string) => {
-	const secret = process.env.JWT_SECRET || '';
-	const goodToken = verify(token, secret);
-	return goodToken;
-};
 
 export const handleError = (error: unknown) => {
 	if (error instanceof JsonWebTokenError) {

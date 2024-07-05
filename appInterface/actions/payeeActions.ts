@@ -5,7 +5,6 @@ import { connectToDatabase } from '../db';
 import Payee from '../models/Payee';
 import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
 
-
 export async function adminAddPayee(data: PayeeType) {
 	try {
 		await connectToDatabase();

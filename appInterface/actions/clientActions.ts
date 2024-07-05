@@ -80,22 +80,25 @@ export async function loginClient(data: LoginProps) {
 			const goodPassword = await compare(password, clientExists?.password);
 			if (goodPassword) {
 				const { _id, accounts: clientAccounts } = clientExists;
-				clientExists.token = await generateToken(_id);
-				clientExists.loggedIn = true;
-				const client: PublicClientType | any = await Client.findOneAndUpdate(
-					{ _id },
-					{ $set: { ...clientExists } },
-					{ returnDocument: 'after' }
-				).select({ password: 0, createdAt: 0, updatedAt: 0 });
-				// Fetch actual accounts
-				const accounts: AccountType[] | null = await Account.find({
-					_id: { $in: clientAccounts },
-				}).sort({ accountName: 1 });
+				const token = await generateToken(_id);
+				if (token) {
+					clientExists.token = token;
+					clientExists.loggedIn = true;
+					const client: PublicClientType | any = await Client.findOneAndUpdate(
+						{ _id },
+						{ $set: { ...clientExists } },
+						{ returnDocument: 'after' }
+					).select({ password: 0, createdAt: 0, updatedAt: 0 });
+					// Fetch actual accounts
+					const accounts: AccountType[] | null = await Account.find({
+						_id: { $in: clientAccounts },
+					}).sort({ accountName: 1 });
 
-				return {
-					client: parsedResponse(client),
-					accounts: parsedResponse(accounts),
-				};
+					return {
+						client: parsedResponse(client),
+						accounts: parsedResponse(accounts),
+					};
+				}
 			} else return 'The password is incorrect.';
 		} else {
 			return 'No client exists with these credentials.';
