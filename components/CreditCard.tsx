@@ -10,7 +10,7 @@ export default function CreditCard({ background }: { background?: string }) {
 		>
 			<p className='flex justify-between mb-10 font-medium'>
 				<span className='text-xl'>MBank</span>
-				<SignalBars className='rotate-90 w-6' />
+				<SignalBars className='rotate-90 text-[22px]' />
 			</p>
 			<p className='flex justify-between card-numbers'>
 				<span>1234</span>

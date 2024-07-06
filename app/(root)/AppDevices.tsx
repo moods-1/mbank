@@ -40,14 +40,16 @@ export default function AppDevices() {
 						</div>
 					</div>
 				</div>
-				<div className='flex-1 min-w-56'>
-					<Image
-						src='/images/app-devices.png'
-						width={400}
-						height={500}
-						alt='devices'
-						className='mx-auto'
-					/>
+				<div className='flex-1 grid place-items-center min-w-56'>
+					<div className='max-w-sm'>
+						<Image
+							src='/images/app-devices.png'
+							width={1000}
+							height={1000}
+							alt='devices'
+							className='h-auto w-auto'
+						/>
+					</div>
 				</div>
 			</div>
 		</section>

@@ -72,6 +72,7 @@ export async function addTransaction(
 						return parsedResponse(accounts);
 					}
 				}
+				// For future payments 
 				return { status: 201, msg: `Your payment of $${amount} to ${destinationName} has been scheduled for ${date}.` };
 			} else {
 				return {

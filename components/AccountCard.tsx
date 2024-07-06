@@ -23,7 +23,7 @@ export default function CreditCard({ background, account }: Props) {
 			>
 				<p className='flex justify-between mb-8 font-medium'>
 					<span className='text-xl text-bank-green'>MBank</span>
-					<SignalBars className='rotate-90 w-6' />
+					<SignalBars className='rotate-90 text-[22px]' />
 				</p>
 				<div className='text-xs xs:text-sm'>
 					<p className='!text-lg card-numbers'>

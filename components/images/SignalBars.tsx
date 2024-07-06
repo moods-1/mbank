@@ -6,5 +6,5 @@ type Props = {
 	className?: string;
 };
 export default function SignalBars({ size, className }: Props) {
-	return <IoWifiSharp size={size || 'lg'} className={`${className}`} />;
+	return <IoWifiSharp className={className} />;
 }
