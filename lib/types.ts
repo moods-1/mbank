@@ -232,6 +232,7 @@ export type ServerNewTransactionType = {
 	sourceAccountName: string;
 	credit: boolean;
 	accountBalance: number;
+	referenceNumber?: number;
 };
 
 export type TransactionReturnType = {

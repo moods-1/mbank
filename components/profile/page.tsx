@@ -188,10 +188,7 @@ export default function Profile({ open, openChange }: Props) {
 						<SheetTitle className='form-title-md'>{clientName}</SheetTitle>
 					</FormHeader>
 					<SheetDescription>
-						<FormErrorText
-							text='* Updates take effect immediately.'
-							className='mb-3 !text-black'
-						/>
+						<span className='inline-block mb-3 text-black'>{`* Updates take effect immediately.`}</span>
 					</SheetDescription>
 
 					<div className='form-section !gap-y-0'>

@@ -14,6 +14,7 @@ import { connectToDatabase } from '../db';
 import Transaction from '../models/Transaction';
 import Account from '../models/Account';
 import Client from '../models/Client';
+import ReferenceNumber from '../models/ReferenceNumber';
 import {
 	handleError,
 	parsedResponse,
@@ -24,11 +25,10 @@ export async function addTransaction(
 	token: string,
 	data: ClientNewTransactionType
 ) {
-	Account.syncIndexes();
-	Transaction.syncIndexes();
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
+		ReferenceNumber.syncIndexes();
 		const {
 			amount,
 			sourceAccount,
@@ -41,6 +41,14 @@ export async function addTransaction(
 		const sourceAcc = await Account.findOne({ _id: sourceAccount });
 		const date = formatDate(transactionDate, 'DD-MMM-YYYY');
 		if (sourceAcc) {
+			const referenceNumberArray = await ReferenceNumber.find();
+			const { _id: numberId, referenceNumber } =
+				referenceNumberArray[0];
+			const newReferenceNumber = referenceNumber + 1;
+			await ReferenceNumber.updateOne(
+				{ _id: numberId },
+				{ referenceNumber: newReferenceNumber }
+			);
 			let newBalance: number;
 			const { accountBalance } = sourceAcc;
 			if (credit) {
@@ -56,6 +64,7 @@ export async function addTransaction(
 						...data,
 						amount: Number(data.amount),
 						accountBalance: newBalance,
+						referenceNumber: newReferenceNumber,
 					};
 					const transaction = await Transaction.create(newData);
 					const { _id } = transaction;
@@ -68,16 +77,19 @@ export async function addTransaction(
 						const accountsArr = result.accounts;
 						const accounts: AccountType[] = await Account.find({
 							_id: { $in: accountsArr },
-						}).sort({ accountName: 1 });					
+						}).sort({ accountName: 1 });
 						return parsedResponse(accounts);
 					}
 				}
-				// For future payments 
-				return { status: 201, msg: `Your payment of $${amount} to ${destinationName} has been scheduled for ${date}.` };
+				// For future payments
+				return {
+					status: 201,
+					msg: `Your payment of $${amount} to ${destinationName} has been scheduled for ${date}. The reference number is ${newReferenceNumber}.`,
+				};
 			} else {
 				return {
 					status: 400,
-					msg: `Your ${sourceAccountName} has insufficient funds. Please make sure $${amount} is in the account on ${date}, or the payment will not be made.`,
+					msg: `Your ${sourceAccountName} has insufficient funds. Please make sure $${amount} is in the account on ${date}, or the payment will not be made. The reference number is ${newReferenceNumber}.`,
 				};
 			}
 		}

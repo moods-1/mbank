@@ -34,6 +34,9 @@ const TransactionSchema = new Schema(
 		accountBalance: {
 			type: Number,
 			default: 0,
+		},
+		referenceNumber: {
+			type: Number,
 		}
 	},
 	{ timestamps: true, collection: 'Transaction' }

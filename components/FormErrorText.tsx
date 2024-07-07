@@ -4,6 +4,6 @@ type Props = {
 };
 export default function FormErrorText({ text, className }: Props) {
 	return text ? (
-		<span className={`text-red-700 text-sm inline-block ${className}`}>{text}</span>
+		<p className={`text-red-700 text-sm ${className}`}>{text}</p>
 	) : null;
 }

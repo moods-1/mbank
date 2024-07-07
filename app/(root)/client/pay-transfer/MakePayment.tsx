@@ -95,7 +95,7 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 		buttonText: 'Close',
 		buttonFunction: handleNotification,
 		buttonClass: '',
-		className: 'sm:max-w-lg',
+		className: 'sm:max-w-sm',
 		open: openNotification,
 		openChange: handleNotification,
 		icon: (
