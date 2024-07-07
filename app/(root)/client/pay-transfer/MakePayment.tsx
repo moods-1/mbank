@@ -33,7 +33,6 @@ import { useAppDispatch } from '@/lib/store/store';
 import {
 	loadAccounts,
 	logoutClient,
-	updateClient,
 } from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormHeader from '@/components/FormHeader';

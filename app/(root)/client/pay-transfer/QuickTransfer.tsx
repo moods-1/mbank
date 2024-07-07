@@ -2,11 +2,13 @@
 
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { MdWarningAmber } from 'react-icons/md';
+import { HiHandThumbUp } from 'react-icons/hi2';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
 import { AccountType, PaymentFormProps } from '@/lib/types';
-import { getAccounts, transferQuick } from '@/appInterface/client/accounts';
-import { logoutClient, updateClient } from '@/lib/store/clientSlice';
+import { transferQuick } from '@/appInterface/client/accounts';
+import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import {
 	Select,
 	SelectContent,
@@ -22,6 +24,7 @@ import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
 import NoDataSpan from '@/components/NoDataSpan';
+import NotificationModal from '@/components/modals/NotificationModal';
 
 type ErrorType = {
 	destinationName: string;
@@ -36,14 +39,61 @@ const initialError = {
 };
 
 export default function QuickTransfer() {
-	const [accounts, setAccounts] = useState<AccountType[]>([]);
+	const [localAccounts, setLocalAccounts] = useState<AccountType[]>([]);
 	const [form, setForm] = useState<PaymentFormProps>(INITIAL_PAYMENT_FORM);
 	const [formError, setFormError] = useState<ErrorType>(initialError);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectKeys, setSelectKeys] = useState({ from: 'from', to: 'to' });
-	const { client } = useAppSelector((state) => state.client);
+	const [openNotification, setOpenNotification] = useState(false);
+	const [notificationBody, setNotificationBody] = useState('');
+	const [errorStatus, setErrorStatus] = useState(0);
+	const { client, accounts } = useAppSelector((state) => state.client);
+
+	const { _id: clientId } = client;
 	const router = useRouter();
 	const dispatch = useAppDispatch();
+
+	const reset = () => {
+		setForm(INITIAL_PAYMENT_FORM);
+		setFormError(initialError);
+		setSelectKeys({ from: randomString(4), to: randomString(4) });
+		setErrorStatus(0);
+	};
+
+	const handleNotification = () => {
+		if (errorStatus === 401) {
+			dispatch(logoutClient());
+			router.push('/');
+		} else {
+			reset();
+			setOpenNotification((prev) => !prev);
+		}
+	};
+
+	const responseError = errorStatus >= 400;
+	const notificationProps = {
+		title: responseError ? 'Warning!' : 'Success',
+		body: notificationBody,
+		buttonText: 'Close',
+		buttonFunction: handleNotification,
+		buttonClass: '',
+		className: 'sm:max-w-sm',
+		open: openNotification,
+		openChange: handleNotification,
+		icon: (
+			<div
+				className={`w-14 h-14 rounded-full ${
+					responseError ? 'bg-red-600' : 'bg-bank-green'
+				} flex-center-row mx-auto text-white`}
+			>
+				{responseError ? (
+					<MdWarningAmber className='text-3xl' />
+				) : (
+					<HiHandThumbUp className='text-4xl' />
+				)}
+			</div>
+		),
+	};
 
 	const handleAccount = (e: string, field: string) => {
 		setFormError(initialError);
@@ -130,11 +180,16 @@ export default function QuickTransfer() {
 					credit: false,
 				};
 				const result = await transferQuick(queryData);
-				if (result && 'firstName' in result) {
-					dispatch(updateClient(result));
-					setForm(INITIAL_PAYMENT_FORM);
-					setFormError(initialError);
-					setSelectKeys({ from: randomString(4), to: randomString(4) });
+				if (result && 'msg' in result && 'status' in result) {
+					const { msg, status } = result;
+					if (typeof msg === 'string' && typeof status === 'number') {
+						setErrorStatus(status);
+						setNotificationBody(msg);
+						setOpenNotification(true);
+					}
+				} else if (Array.isArray(result)) {
+					dispatch(loadAccounts(result));
+					reset();
 				}
 			}
 		} else {
@@ -144,41 +199,19 @@ export default function QuickTransfer() {
 	};
 
 	useEffect(() => {
-		const fetchAccounts = async () => {
-			setIsLoading(true);
-			try {
-				const { accounts } = client;
-				const result = await getAccounts(accounts);
-				if (result && 'response' in result) {
-					const { response } = result;
-					setAccounts(response);
-				} else if (result && 'msg' in result && 'status' in result) {
-					const { status, msg } = result;
-					if (status === 401) {
-						dispatch(logoutClient());
-						router.push('/');
-						if (typeof msg === 'string') {
-							// return toast.error(msg);
-						}
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
-			setIsLoading(false);
-			setForm((prev) => ({ ...prev, clientId: client._id }));
-		};
-		fetchAccounts();
-	}, [client, dispatch, router]);
+		setIsLoading(true);
+		setLocalAccounts(accounts);
+		setForm((prev) => ({ ...prev, clientId }));
+		setIsLoading(false);
+	}, [accounts, clientId]);
+
+	const noData = !accounts.length && !isLoading;
 
 	return (
 		<div className=''>
 			<form className='pay-transfer-card max-w-72' onSubmit={handleSubmit}>
 				<FormHeader className='bg-black text-white p-3 sm:px-6'>
-					<p className='form-title-sm flex items-center'>
-						{/* <FaMoneyBillTransfer className='text-2xl text-bank-green mr-2' /> */}
-						Quick Transfer
-					</p>
+					<p className='form-title-sm flex items-center'>Quick Transfer</p>
 					<p className='text-sm'>Transfer between your accounts</p>
 				</FormHeader>
 				<div className='pay-transfer-card-content'>
@@ -233,7 +266,9 @@ export default function QuickTransfer() {
 								<SelectValue placeholder='Account' />
 							</SelectTrigger>
 							<SelectContent>
-								{accounts.length ? (
+								{noData ? (
+									<NoDataSpan text='No accounts.' />
+								) : (
 									accounts.map(({ _id, accountName, accountBalance }) => (
 										<SelectItem
 											key={accountName}
@@ -245,8 +280,6 @@ export default function QuickTransfer() {
 											<span> ${formatCurrency(accountBalance)}</span>
 										</SelectItem>
 									))
-								) : (
-									<NoDataSpan text='No accounts.' />
 								)}
 							</SelectContent>
 						</Select>
@@ -273,6 +306,7 @@ export default function QuickTransfer() {
 					<Button className='w-full mt-2 green-button'>Transfer</Button>
 				</div>
 			</form>
+			{openNotification ? <NotificationModal {...notificationProps} /> : null}
 		</div>
 	);
 }

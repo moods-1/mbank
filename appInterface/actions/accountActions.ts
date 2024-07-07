@@ -6,6 +6,7 @@ import {
 	AccountDetailsProps,
 	AccountType,
 	AddAccountType,
+	ClientNewTransactionType,
 	GetAccountDetailsProps,
 	GetAccountsReturn,
 	PaymentFormProps,
@@ -17,8 +18,13 @@ import { connectToDatabase } from '../db';
 import Account from '../models/Account';
 import Client from '../models/Client';
 import Transaction from '../models/Transaction';
-import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
+import {
+	handleError,
+	parsedResponse,
+	verifyToken,
+} from '@/lib/serverFunctions';
 import { DEBT_SET } from '@/lib/constants';
+import ReferenceNumber from '../models/ReferenceNumber';
 
 export async function addAccount(data: AddAccountType) {
 	try {
@@ -110,10 +116,17 @@ export async function getAccountDetails(
 	}
 }
 
-export async function quickTransaction(data: ServerNewTransactionType) {
+export async function quickTransaction(data: ClientNewTransactionType) {
 	const { amount, destinationId, sourceAccount, sourceAccountName, credit } =
 		data;
 	try {
+		const referenceNumberArray = await ReferenceNumber.find();
+		const { _id: numberId, referenceNumber } = referenceNumberArray[0];
+		const newReferenceNumber = referenceNumber + 1;
+		await ReferenceNumber.updateOne(
+			{ _id: numberId },
+			{ referenceNumber: newReferenceNumber }
+		);
 		//Update account being credited
 		if (credit) {
 			const targetAcc = await Account.findOne({ _id: destinationId });
@@ -126,6 +139,7 @@ export async function quickTransaction(data: ServerNewTransactionType) {
 					amount: Number(data.amount),
 					destinationName: sourceAccountName,
 					accountBalance: newBalance,
+					referenceNumber: newReferenceNumber,
 				};
 				const transaction = await Transaction.create(newData);
 				const { _id } = transaction;
@@ -147,6 +161,7 @@ export async function quickTransaction(data: ServerNewTransactionType) {
 						...data,
 						amount: Number(data.amount),
 						accountBalance: newBalance,
+						referenceNumber: newReferenceNumber,
 					};
 					const transaction = await Transaction.create(newData);
 					const { _id } = transaction;
@@ -163,19 +178,25 @@ export async function quickTransaction(data: ServerNewTransactionType) {
 	}
 }
 
-export async function quickTransfer(token: string, data: PaymentFormProps) {
+export async function quickTransfer(token: string, data: ClientNewTransactionType) {
 	const { clientId } = data;
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
-		// Update to destination account
+		// Update to source account
 		const debitData = { ...data, amount: Number(data.amount), credit: false };
 		await quickTransaction(debitData);
 		// Update to destination account
 		const creditData = { ...data, amount: Number(data.amount), credit: true };
 		await quickTransaction(creditData);
 		const result = await Client.findOne({ _id: clientId });
-		return parsedResponse(result);
+		if (result) {
+			const accountsArr = result.accounts;
+			const accounts: AccountType[] = await Account.find({
+				_id: { $in: accountsArr },
+			}).sort({ accountName: 1 });
+			return parsedResponse(accounts);
+		}
 	} catch (error) {
 		return handleError(error);
 	}

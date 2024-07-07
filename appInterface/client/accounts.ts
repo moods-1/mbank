@@ -13,6 +13,8 @@ import {
 	PaymentFormProps,
 	AddAccountFormType,
 	AddAccountType,
+	AccountType,
+	ClientNewTransactionType,
 } from '@/lib/types';
 import { Types } from 'mongoose';
 
@@ -36,8 +38,8 @@ export const getAccDetails = async (
 };
 
 export const transferQuick = async (
-	data: PaymentFormProps
-): Promise<PublicClientType | null | {}> => {
+	data: ClientNewTransactionType
+): Promise<AccountType[] | null | {}> => {
 	const token: string = await getToken();
 	const result = await quickTransfer(token, data);
 	if (result && Object.keys(result)) {
