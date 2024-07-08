@@ -39,7 +39,7 @@ export const getAccDetails = async (
 
 export const transferQuick = async (
 	data: ClientNewTransactionType
-): Promise<AccountType[] | null | {}> => {
+): Promise<GetAccountsReturn | null | {}> => {
 	const token: string = await getToken();
 	const result = await quickTransfer(token, data);
 	if (result && Object.keys(result)) {

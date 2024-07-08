@@ -39,7 +39,6 @@ const initialError = {
 };
 
 export default function QuickTransfer() {
-	const [localAccounts, setLocalAccounts] = useState<AccountType[]>([]);
 	const [form, setForm] = useState<PaymentFormProps>(INITIAL_PAYMENT_FORM);
 	const [formError, setFormError] = useState<ErrorType>(initialError);
 	const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +51,7 @@ export default function QuickTransfer() {
 	const { _id: clientId } = client;
 	const router = useRouter();
 	const dispatch = useAppDispatch();
-
+	
 	const reset = () => {
 		setForm(INITIAL_PAYMENT_FORM);
 		setFormError(initialError);
@@ -180,17 +179,23 @@ export default function QuickTransfer() {
 					credit: false,
 				};
 				const result = await transferQuick(queryData);
-				if (result && 'msg' in result && 'status' in result) {
-					const { msg, status } = result;
-					if (typeof msg === 'string' && typeof status === 'number') {
-						setErrorStatus(status);
-						setNotificationBody(msg);
-						setOpenNotification(true);
+				if (result) {
+					if ('response' in result) {
+						dispatch(loadAccounts(result.response));
 					}
-				} else if (Array.isArray(result)) {
-					dispatch(loadAccounts(result));
-					reset();
+					if ('msg' in result && 'status' in result) {
+						const { msg, status } = result;
+						if (typeof msg === 'string' && typeof status === 'number') {
+							setErrorStatus(status);
+							setNotificationBody(msg);
+						}
+					}
+				} else {
+					const msg = 'Sorry, we could not process the transaction.';
+					setErrorStatus(500);
+					setNotificationBody(msg);
 				}
+				setOpenNotification(true);
 			}
 		} else {
 			handleInsufficientFunds();
@@ -200,7 +205,6 @@ export default function QuickTransfer() {
 
 	useEffect(() => {
 		setIsLoading(true);
-		setLocalAccounts(accounts);
 		setForm((prev) => ({ ...prev, clientId }));
 		setIsLoading(false);
 	}, [accounts, clientId]);

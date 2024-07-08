@@ -82,7 +82,6 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 				if (status < 300) {
 					dispatch(updateClient(response));
 					await reset();
-					// return toast.success(msg);
 				}
 			}
 		} catch (error) {

@@ -11,6 +11,7 @@ import {
 	GetAccountsReturn,
 	PaymentFormProps,
 	ServerNewTransactionType,
+	StatusMsgReturn,
 	TransactionReturnType,
 	TransactionType,
 } from '@/lib/types';
@@ -117,8 +118,14 @@ export async function getAccountDetails(
 }
 
 export async function quickTransaction(data: ClientNewTransactionType) {
-	const { amount, destinationId, sourceAccount, sourceAccountName, credit } =
-		data;
+	const {
+		amount,
+		destinationId,
+		sourceAccount,
+		sourceAccountName,
+		destinationName,
+		credit,
+	} = data;
 	try {
 		const referenceNumberArray = await ReferenceNumber.find();
 		const { _id: numberId, referenceNumber } = referenceNumberArray[0];
@@ -172,13 +179,19 @@ export async function quickTransaction(data: ClientNewTransactionType) {
 				}
 			}
 		}
-		return { status: 201, msg: 'Transfer successful.' };
+		return {
+			status: 201,
+			msg: `Successful transfer of $${amount} to ${destinationName}. The reference number is ${newReferenceNumber}.`,
+		};
 	} catch (error) {
 		return handleError(error);
 	}
 }
 
-export async function quickTransfer(token: string, data: ClientNewTransactionType) {
+export async function quickTransfer(
+	token: string,
+	data: ClientNewTransactionType
+) {
 	const { clientId } = data;
 	try {
 		await verifyToken(token);
@@ -188,14 +201,15 @@ export async function quickTransfer(token: string, data: ClientNewTransactionTyp
 		await quickTransaction(debitData);
 		// Update to destination account
 		const creditData = { ...data, amount: Number(data.amount), credit: true };
-		await quickTransaction(creditData);
+		const transferData: StatusMsgReturn = await quickTransaction(creditData);
+		const { msg, status } = transferData;
 		const result = await Client.findOne({ _id: clientId });
 		if (result) {
 			const accountsArr = result.accounts;
 			const accounts: AccountType[] = await Account.find({
 				_id: { $in: accountsArr },
 			}).sort({ accountName: 1 });
-			return parsedResponse(accounts);
+			return { status, msg, response: parsedResponse(accounts) };
 		}
 	} catch (error) {
 		return handleError(error);
