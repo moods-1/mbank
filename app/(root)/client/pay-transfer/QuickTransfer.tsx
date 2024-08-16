@@ -6,7 +6,7 @@ import { MdWarningAmber } from 'react-icons/md';
 import { HiHandThumbUp } from 'react-icons/hi2';
 
 import { useAppSelector, useAppDispatch } from '@/lib/store/store';
-import { AccountType, PaymentFormProps } from '@/lib/types';
+import { PaymentFormProps } from '@/lib/types';
 import { transferQuick } from '@/appInterface/client/accounts';
 import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import {
@@ -17,7 +17,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { firstCap, formatCurrency, randomString } from '@/lib/clientFunctions';
-import { Button } from '@/components/ui/button';
+
 import { Label } from '@/components/ui/label';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
@@ -25,6 +25,7 @@ import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';
 import NoDataSpan from '@/components/NoDataSpan';
 import NotificationModal from '@/components/modals/NotificationModal';
+import HoverButton from '@/components/HoverButton';
 
 type ErrorType = {
 	destinationName: string;
@@ -51,7 +52,7 @@ export default function QuickTransfer() {
 	const { _id: clientId } = client;
 	const router = useRouter();
 	const dispatch = useAppDispatch();
-	
+
 	const reset = () => {
 		setForm(INITIAL_PAYMENT_FORM);
 		setFormError(initialError);
@@ -307,7 +308,7 @@ export default function QuickTransfer() {
 							className='-mt-4'
 						/>
 					</div>
-					<Button className='w-full mt-2 green-button'>Transfer</Button>
+					<HoverButton className='h-10 mt-2' title='Transfer' />
 				</div>
 			</form>
 			{openNotification ? <NotificationModal {...notificationProps} /> : null}

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useAppDispatch } from '@/lib/store/store';
 import { updateClient } from '@/lib/store/clientSlice';
 import CustomInput from '@/components/CustomInput';
-import { Button } from '@/components/ui/button';
 import {
 	formatPayeeOptions,
 	formValidator,
@@ -19,6 +18,7 @@ import { SearchableInput } from '@/components/SearchableInput';
 import { Types } from 'mongoose';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
+import HoverButton from '@/components/HoverButton';
 
 type AddPayeeType = {
 	payeeId: Types.ObjectId | string | any;
@@ -150,7 +150,7 @@ export default function AddPayee({ client }: { client: PublicClientType }) {
 						text={formError.nickname || ''}
 						className='-mt-3 mb-2'
 					/>
-					<Button className='w-full mt-2 green-button'>Add Payee</Button>
+					<HoverButton title='Add Payee' className='h-10 mt-2' />
 					<div className='add-payee-info'>
 						<span className='app-payee-info-icon'>i</span>
 						<span className='app-payee-info-box'>

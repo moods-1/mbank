@@ -196,7 +196,7 @@ section {
 }
 .my-hero {
 	background-color: #00c518;
-	background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 20c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 10 10 7zm-43-7c1' fill='%2324ea0d' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
+	background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http:www.w3.org/2000/svg'%3E%3Cpath d='M11 20c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 10 10 7zm-43-7c1' fill='%2324ea0d' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 .glass {
 	background: rgba(0, 0, 0, 0.3);
@@ -466,4 +466,36 @@ section {
 }
 .active-button {
 	@apply bg-bank-green text-white;
+}
+/* Hover button slide */
+.hover-btn {
+	/* @apply relative bg-black text-white h-14 min-w-52 border overflow-hidden; */
+	position: relative;
+	background-color: #000;
+	color: #fff;
+	width: 100%;
+	border: 1px solid #fff;
+	border-radius: 6px;
+	overflow: hidden;
+}
+.hover-btn:hover > span {
+	/* @apply relative z-10 text-black; */
+	position: relative;
+	z-index: 10;
+}
+.hover-btn::before {
+	content: '';
+	color: #000;
+	height: 100%;
+	width: 100%;
+	background: #000;
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	right: 100%;
+	transition: all 500ms;
+}
+.hover-btn:hover::before {
+	background: var(--bank-green);
+	right: 0;
 }

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { HiHandThumbUp } from 'react-icons/hi2';
 
-import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
 import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -18,6 +17,7 @@ import SingleValueSelect from '@/components/SingleValueSelect';
 import { PROVINCES_TERRITORIES } from '@/lib/constants';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
+import HoverButton from '@/components/HoverButton';
 
 const initialForm = {
 	firstName: '',
@@ -268,9 +268,7 @@ export default function SignUp() {
 					</span>
 				</div>
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus green-button'>
-						Sign Up
-					</Button>
+					<HoverButton title='Sign Up' className='h-10' />
 				</div>
 				<p className='mt-3'>
 					{'Already have an account?'}

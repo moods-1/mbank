@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { CheckedState } from '@radix-ui/react-checkbox';
 
 import { loadClient } from '@/lib/store/clientSlice';
-import { Button } from '@/components/ui/button';
 import { useAppDispatch } from '@/lib/store/store';
 import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,6 +19,7 @@ import {
 } from '@/lib/clientFunctions';
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
+import HoverButton from '@/components/HoverButton';
 
 const intialFormError = { clientNumber: '', password: '' };
 
@@ -94,13 +94,11 @@ export default function LogIn() {
 					<p className='form-title-lg text-center'>Login</p>
 				</FormHeader>
 				{!form.password && (
-					<Button
-						type='button'
-						className='auth-form-button no-focus green-button -mt-14 mb-6 !text-base'
-						onClick={testAutofill}
-					>
-						Use Test Credentials
-					</Button>
+					<HoverButton
+						title='Use Test Credentials'
+						className='h-10 -mt-14 mb-6 !text-base'
+						clickFunction={testAutofill}
+					/>
 				)}
 
 				<CustomInput
@@ -150,9 +148,7 @@ export default function LogIn() {
 				</div>
 
 				<div className='mt-6'>
-					<Button className='auth-form-button no-focus green-button'>
-						Login
-					</Button>
+					<HoverButton title='Login' className='h-10' />
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}
