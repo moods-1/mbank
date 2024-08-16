@@ -190,7 +190,6 @@ export default function Profile({ open, openChange }: Props) {
 					<SheetDescription>
 						<span className='inline-block mb-3 text-black'>{`* Updates take effect immediately.`}</span>
 					</SheetDescription>
-
 					<div className='form-section !gap-y-0'>
 						<div>
 							<CustomInput

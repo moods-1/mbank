@@ -7,7 +7,13 @@ import { MdOutlineMenu } from 'react-icons/md';
 import { FaChevronDown } from 'react-icons/fa6';
 
 import { HEADER_LINKS } from '@/lib/constants';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/sheet';
 import LoggedOutButtons from './LoggedOutButtons';
 import { useAppSelector } from '@/lib/store/store';
 import LoggedInButtons from './LoggedInButtons';
@@ -87,11 +93,19 @@ export default function Header() {
 					<SheetTrigger>
 						<MdOutlineMenu size={30} />
 					</SheetTrigger>
-					<SheetContent className='pt-8 min-w-60 max-w-sm flex flex-col justify-between'>
+					<SheetContent
+						aria-describedby='mobile-menu'
+						className='pt-8 min-w-60 max-w-sm flex flex-col justify-between'
+					>
 						<div>
-							<p className='text-2xl font-semibold mb-8 text-bank-green'>
-								Moods Bank
-							</p>
+							<SheetTitle>
+								<SheetDescription>
+									<span className='text-2xl font-semibold mb-8 text-bank-green'>
+										Moods Bank
+									</span>
+								</SheetDescription>
+							</SheetTitle>
+
 							{HEADER_LINKS.map(({ title, subsection, link }) => (
 								<div key={title} className='mb-8 text=[15px]'>
 									{link ? (
@@ -125,9 +139,12 @@ export default function Header() {
 						</div>
 						<div>
 							{userLoggedIn ? (
-								<LoggedInButtons changeFunction={toggleMobileMenu} height='h-10' />
+								<LoggedInButtons
+									changeFunction={toggleMobileMenu}
+									height='h-10'
+								/>
 							) : (
-								<LoggedOutButtons height='h-10'/>
+								<LoggedOutButtons height='h-10' />
 							)}
 						</div>
 					</SheetContent>

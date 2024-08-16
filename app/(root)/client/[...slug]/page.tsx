@@ -115,12 +115,16 @@ export default function AccountDetails() {
 	const handleStaticDates = (start: Date, end: Date) => {
 		setStartDate(start);
 		setEndDate(end);
-		setRefetchData((prev) => !prev);
 		setCustomSearch(false);
 		setTransactions([]);
+		handleFilter(1, start, end);
 	};
-	
-	const handleFilter = async (paginationNumber?: number) => {
+
+	const handleFilter = async (
+		paginationNumber?: number,
+		staticStartDate?: Date,
+		staticEndDate?: Date
+	) => {
 		let min = Number(minAmount);
 		let max = Number(maxAmount) || Number.MAX_SAFE_INTEGER;
 		const pageNumber = paginationNumber || page;
@@ -129,8 +133,8 @@ export default function AccountDetails() {
 				setIsLoading(true);
 				setTransactions([]);
 				const queryData = {
-					startDate,
-					endDate,
+					startDate: staticStartDate || startDate,
+					endDate: staticEndDate || endDate,
 					min,
 					max,
 					transactions: transactionIds,

@@ -42,8 +42,7 @@ export async function addTransaction(
 		const date = formatDate(transactionDate, 'DD-MMM-YYYY');
 		if (sourceAcc) {
 			const referenceNumberArray = await ReferenceNumber.find();
-			const { _id: numberId, referenceNumber } =
-				referenceNumberArray[0];
+			const { _id: numberId, referenceNumber } = referenceNumberArray[0];
 			const newReferenceNumber = referenceNumber + 1;
 			await ReferenceNumber.updateOne(
 				{ _id: numberId },
@@ -138,6 +137,7 @@ export async function getTransactions(
 	queryData: GetTransactionsType
 ) {
 	const { page, size, startDate, endDate, min, max, transactions } = queryData;
+	
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
@@ -146,7 +146,6 @@ export async function getTransactions(
 			transactionDate: { $gte: startDate, $lte: endDate },
 			amount: { $gte: min, $lte: max },
 		}).sort({ createdAt: -1 });
-
 		const result = parsedResponse(transactionsResult);
 		const totalDocs = result.length;
 		const totalPages = Math.ceil(totalDocs / size);
