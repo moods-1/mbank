@@ -38,9 +38,9 @@ export default function ClientHome() {
 		setIsLoading(false);
 	}, [client, accounts]);
 
-	// Mixpanel.track('MBank financial app accessed.', {
-	// 	action: 'MBank financial app accessed.',
-	// });
+	Mixpanel.track('MBank financial app accessed.', {
+		action: 'MBank financial app accessed.',
+	});
 
 	return (
 		<div>
