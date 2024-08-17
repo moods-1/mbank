@@ -1,9 +1,9 @@
 import React from 'react';
 
 type LoaderProps = {
-	borderSize: string;
-	size: string;
-	color: string;
+	borderSize?: string;
+	size?: string;
+	color?: string;
 };
 
 export const Loader = (props: LoaderProps) => {
@@ -18,6 +18,7 @@ export const Loader = (props: LoaderProps) => {
 		border: `${spinnerBorderSize} solid #ddd`,
 		borderRadius: '50%',
 		borderTop: `${spinnerBorderSize} solid ${spinnerColor}`,
+		margin: 'auto'
 	};
 
 	return <div className={`spinner`} style={style} />;

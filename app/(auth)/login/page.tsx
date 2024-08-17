@@ -20,6 +20,7 @@ import {
 import FormErrorText from '@/components/FormErrorText';
 import FormHeader from '@/components/FormHeader';
 import HoverButton from '@/components/HoverButton';
+import { Loader } from '@/components/Loaders';
 
 const intialFormError = { clientNumber: '', password: '' };
 
@@ -30,6 +31,7 @@ export default function LogIn() {
 	const [showPassword, setShowPassword] = useState<boolean | CheckedState>(
 		false
 	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 
@@ -57,6 +59,7 @@ export default function LogIn() {
 			// Store or clear the client number in local storage
 			rememberMe ? storeClientNumber(form.clientNumber) : clearClientNumber();
 			const formObject = { ...form, clientNumber: Number(form.clientNumber) };
+			setIsSubmitting(true);
 			const result = await loginClient(formObject);
 			if (
 				typeof result === 'object' &&
@@ -67,11 +70,14 @@ export default function LogIn() {
 				router.push('/client');
 			} else if (typeof result === 'string' && result.includes('password')) {
 				setFormError((prev) => ({ ...prev, password: result }));
+				setIsSubmitting(false);
 			} else if (typeof result === 'string' && result.includes('client')) {
 				setFormError((prev) => ({ ...prev, clientNumber: result }));
+				setIsSubmitting(false);
 			}
 		} catch (error) {
 			console.log(error);
+			setIsSubmitting(false);
 		}
 	};
 
@@ -148,7 +154,11 @@ export default function LogIn() {
 				</div>
 
 				<div className='mt-6'>
-					<HoverButton title='Login' className='h-10' />
+					<HoverButton
+						title='Login'
+						className='h-10'
+						element={isSubmitting ? <Loader color='#fff' size='30px' /> : null}
+					/>
 				</div>
 				<p className='mt-3'>
 					{"Don't have an account?"}

@@ -9,7 +9,7 @@ export const hashPassword = async (data: string) => {
 export const generateToken = async (id: Types.ObjectId | string) => {
 	const secret = process.env.JWT_SECRET;
 	if (secret) {
-		return sign({ id }, secret, { expiresIn: '30m' });
+		return sign({ id }, secret, { expiresIn: '1h' });
 	}
 	return false;
 };
@@ -34,7 +34,10 @@ export const responseFormatter = async (
 
 export const handleError = (error: unknown) => {
 	if (error instanceof JsonWebTokenError) {
-		return { status: 401, msg: 'Your session has expired. Please login again.' };
+		return {
+			status: 401,
+			msg: 'Your session has expired. Please login again.',
+		};
 	}
 	return { status: 500, msg: 'Failed.' };
 };

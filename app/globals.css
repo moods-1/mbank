@@ -262,6 +262,8 @@ section {
 }
 /* Loaders and Spinners */
 .spinner {
+	position: relative;
+	z-index: 1;
 	animation: Spin 1s linear infinite;
 }
 
@@ -483,6 +485,10 @@ section {
 	position: relative;
 	z-index: 10;
 }
+.html {
+	position: relative;
+}
+
 .hover-btn::before {
 	content: '';
 	color: #000;
