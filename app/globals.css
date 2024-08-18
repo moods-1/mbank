@@ -118,7 +118,7 @@ header {
 	@apply hover:text-bank-green hover:pl-1 transition-all inline-block duration-300 cursor-pointer w-full py-2;
 }
 .menu-button {
-	@apply flex-1 font-semibold;
+	@apply flex-1 font-semibold hover:!bg-black hover:text-white;
 }
 /* Mobile menu */
 .sidemenu-div {
@@ -439,8 +439,11 @@ section {
 	@apply p-3 sm:p-6 relative;
 }
 .green-button {
-	@apply hover:border-green-700 hover:text-bank-green hover:border;
+	@apply hover:border-green-700 hover:border hover:!bg-black;
 }
+/* .green-button {
+	@apply hover:border-green-700 hover:text-bank-green hover:border;
+} */
 .input-effects {
 	@apply hover:border-b hover:border-b-bank-green focus:border-b-bank-green focus-within:border-b-bank-green;
 }
@@ -477,7 +480,7 @@ section {
 	color: #fff;
 	width: 100%;
 	border: 1px solid #fff;
-	border-radius: 6px;
+	border-radius: 4px;
 	overflow: hidden;
 }
 .hover-btn:hover > span {

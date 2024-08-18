@@ -13,6 +13,7 @@ interface ButtonProps {
 	title: string;
 	className?: string;
 	element?: ReactNode;
+	disabled?: boolean;
 	clickFunction?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -20,10 +21,15 @@ const HoverButton = ({
 	title,
 	className,
 	element,
+	disabled,
 	clickFunction,
 }: ButtonProps) => {
 	return (
-		<button className={`hover-btn ${className || ''}`} onClick={clickFunction}>
+		<button
+			className={`hover-btn ${className || ''}`}
+			onClick={clickFunction}
+			disabled={disabled}
+		>
 			{element ? element : <span>{title}</span>}
 		</button>
 	);

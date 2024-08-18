@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { HiHandThumbUp } from 'react-icons/hi2';
 
-import { useAppDispatch } from '@/lib/store/store';
 import CustomInput from '@/components/CustomInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CheckedState } from '@radix-ui/react-checkbox';
@@ -42,7 +41,7 @@ export default function SignUp() {
 		false
 	);
 	const [selectKey, setSelectKey] = useState('province');
-	const dispatch = useAppDispatch();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const router = useRouter();
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,6 +98,7 @@ export default function SignUp() {
 		}
 		try {
 			// Store or clear the client number in local storage
+			setIsSubmitting(true);
 			const formObject = { ...form, phoneNumber: Number(form.phoneNumber) };
 			const result = await addClient(formObject);
 			const resultType = typeof result;
@@ -113,6 +113,7 @@ export default function SignUp() {
 			}
 		} catch (error) {
 			console.log(error);
+			setIsSubmitting(false);
 		}
 	};
 

@@ -1,6 +1,11 @@
 import { ReactElement } from 'react';
 
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '../ui/button';
 
 type Props = {
@@ -30,8 +35,12 @@ export default function NotificationModal({
 		<Dialog open={open} onOpenChange={openChange}>
 			<DialogContent className={`notification-dialog ${className}`}>
 				{icon}
-				<DialogTitle className='font-semibold text-lg sm:text-2xl'>{title}</DialogTitle>
-				<DialogDescription className='text-black text-[15px]'>{body}</DialogDescription>
+				<DialogTitle className='font-semibold text-lg sm:text-2xl'>
+					{title}
+				</DialogTitle>
+				<DialogDescription className='text-black text-[15px]'>
+					{body}
+				</DialogDescription>
 				<Button className={`no-focus ${buttonClass}`} onClick={buttonFunction}>
 					{buttonText}
 				</Button>

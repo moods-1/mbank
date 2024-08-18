@@ -9,7 +9,7 @@ export const hashPassword = async (data: string) => {
 export const generateToken = async (id: Types.ObjectId | string) => {
 	const secret = process.env.JWT_SECRET;
 	if (secret) {
-		return sign({ id }, secret, { expiresIn: '1h' });
+		return sign({ id }, secret, { expiresIn: '15m' });
 	}
 	return false;
 };
@@ -20,6 +20,7 @@ export const verifyToken = async (token: string) => {
 		const goodToken = verify(token, secret);
 		return goodToken;
 	}
+	new Error('Error verifying the token.');
 };
 
 export const responseFormatter = async (

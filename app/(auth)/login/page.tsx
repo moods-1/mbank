@@ -157,6 +157,7 @@ export default function LogIn() {
 					<HoverButton
 						title='Login'
 						className='h-10'
+						disabled={isSubmitting}
 						element={isSubmitting ? <Loader color='#fff' size='30px' /> : null}
 					/>
 				</div>

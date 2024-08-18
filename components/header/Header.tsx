@@ -15,14 +15,19 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import LoggedOutButtons from './LoggedOutButtons';
+import { logoutClient } from '@/lib/store/clientSlice';
 import { useAppSelector } from '@/lib/store/store';
+import { useAppDispatch } from '@/lib/store/store';
 import LoggedInButtons from './LoggedInButtons';
+import { getToken } from '@/lib/clientFunctions';
+import { tokenCheck } from '@/appInterface/actions/clientActions';
 
 export default function Header() {
 	const [openMobileMenu, setOpenMobileMenu] = useState(false);
 	const [userLoggedIn, setUserLoggedIn] = useState(false);
 	const { loggedIn } = useAppSelector((state) => state.client);
 	const router = useRouter();
+	const dispatch = useAppDispatch();
 
 	const toggleMobileMenu = () => {
 		setOpenMobileMenu((prev) => !prev);
@@ -36,8 +41,17 @@ export default function Header() {
 	};
 
 	useEffect(() => {
-		setUserLoggedIn(loggedIn);
-	}, [loggedIn]);
+		const verifyToken = async () => {
+			const token: string = await getToken();
+			const goodToken = await tokenCheck(token);
+			if (!goodToken) {
+				dispatch(logoutClient());
+				router.push('/');
+			}
+			setUserLoggedIn(goodToken && loggedIn);
+		}
+		verifyToken();
+	}, [dispatch,loggedIn, router]);
 
 	useEffect(() => {
 		window.addEventListener('resize', () => {

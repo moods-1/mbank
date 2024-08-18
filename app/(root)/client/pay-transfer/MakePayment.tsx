@@ -30,10 +30,7 @@ import CustomDatePicker from '@/components/CustomDatePicker';
 import { Button } from '@/components/ui/button';
 import { transactionAdd } from '@/appInterface/client/transaction';
 import { useAppDispatch } from '@/lib/store/store';
-import {
-	loadAccounts,
-	logoutClient,
-} from '@/lib/store/clientSlice';
+import { loadAccounts, logoutClient } from '@/lib/store/clientSlice';
 import { INITIAL_PAYMENT_FORM } from '@/lib/constants';
 import FormHeader from '@/components/FormHeader';
 import CurrencyInput from '@/components/CurrencyInput';

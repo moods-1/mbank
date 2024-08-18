@@ -1,6 +1,7 @@
 'use server';
 
 import { compare } from 'bcryptjs';
+import { cookies } from 'next/headers';
 
 import {
 	generateToken,
@@ -84,6 +85,7 @@ export async function loginClient(data: LoginProps) {
 				if (token) {
 					clientExists.token = token;
 					clientExists.loggedIn = true;
+					cookies().set('mbankToken', token);
 					const client: PublicClientType | any = await Client.findOneAndUpdate(
 						{ _id },
 						{ $set: { ...clientExists } },
@@ -154,3 +156,12 @@ export async function addPayee(token: string, data: PayeeProps) {
 		};
 	}
 }
+
+export const tokenCheck = async (token: string) => {
+	try {
+		await verifyToken(token);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};
