@@ -3,7 +3,11 @@
 import { PayeeReturnType, PayeeType } from '@/lib/types';
 import { connectToDatabase } from '../db';
 import Payee from '../models/Payee';
-import { handleError, parsedResponse, verifyToken } from '@/lib/serverFunctions';
+import {
+	handleError,
+	parsedResponse,
+	verifyToken,
+} from '@/lib/serverFunctions';
 
 export async function adminAddPayee(data: PayeeType) {
 	try {
@@ -19,7 +23,7 @@ export async function getAllPayees(token: string) {
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
-		const result = await Payee.find();
+		const result = await Payee.find().sort({ payeeName: 1 });
 		const response: PayeeReturnType = {
 			status: 201,
 			msg: 'Ok',
