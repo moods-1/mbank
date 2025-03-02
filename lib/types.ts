@@ -175,6 +175,12 @@ export type GetAccountsReturn = {
 	response: AccountType[];
 };
 
+export type AddTransactionReturn = {
+	status: number;
+	msg: string;
+	response?: AccountType[];
+};
+
 export type PayeeProps = {
 	_id?: Types.ObjectId | string | any;
 	payeeId: Types.ObjectId | string | any;

@@ -176,16 +176,23 @@ export default function MakePayment({ client, accounts }: PaymentProps) {
 				}
 				const queryData = { ...form, credit: false };
 				const result = await transactionAdd(queryData);
-				if (result && 'msg' in result && 'status' in result) {
-					const { msg, status } = result;
-					if (typeof msg === 'string' && typeof status === 'number') {
+				const { msg, status, response } = result;
+				if (result && 'response' in result && status < 400) {
+					if (
+						typeof msg === 'string' &&
+						typeof status === 'number' &&
+						typeof response === 'object'
+					) {
+						dispatch(loadAccounts(response));
 						setErrorStatus(status);
 						setNotificationBody(msg);
 						setOpenNotification(true);
+						reset();
 					}
-				} else if (Array.isArray(result)) {
-					dispatch(loadAccounts(result));
-					reset();
+				} else {
+					setErrorStatus(status);
+					setNotificationBody(msg);
+					setOpenNotification(true);
 				}
 			}
 		}

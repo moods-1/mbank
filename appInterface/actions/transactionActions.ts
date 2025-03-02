@@ -18,7 +18,9 @@ import ReferenceNumber from '../models/ReferenceNumber';
 import {
 	handleError,
 	parsedResponse,
+	setDateRange,
 	verifyToken,
+	handlePagination
 } from '@/lib/serverFunctions';
 
 export async function addTransaction(
@@ -77,7 +79,11 @@ export async function addTransaction(
 						const accounts: AccountType[] = await Account.find({
 							_id: { $in: accountsArr },
 						}).sort({ accountName: 1 });
-						return parsedResponse(accounts);
+						return {
+							response: parsedResponse(accounts),
+							status: 201,
+							msg: `Successful payment of $${amount} to ${destinationName}. The reference number is ${newReferenceNumber}.`,
+						};
 					}
 				}
 				// For future payments
@@ -141,18 +147,14 @@ export async function getTransactions(
 	try {
 		await verifyToken(token);
 		await connectToDatabase();
+		const { dateStart, dateEnd } = await setDateRange(startDate, endDate);
 		const transactionsResult: TransactionType[] = await Transaction.find({
 			_id: { $in: transactions },
-			transactionDate: { $gte: startDate, $lte: endDate },
+			transactionDate: { $gte: dateStart, $lte: dateEnd },
 			amount: { $gte: min, $lte: max },
 		}).sort({ createdAt: -1 });
 		const result = parsedResponse(transactionsResult);
-		const totalDocs = result.length;
-		const totalPages = Math.ceil(totalDocs / size);
-		const endIndex = page * size;
-		const startIndex = endIndex - size;
-		const data = result.slice(startIndex, endIndex);
-		const hasMore = endIndex < totalDocs;
+		const { data, totalPages, hasMore } = await handlePagination(result, page, size);
 		const response = { data, totalPages, hasMore };
 		return { status: 201, msg: 'Ok', response };
 	} catch (error) {

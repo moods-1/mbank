@@ -358,7 +358,6 @@ section {
 .payee-item {
 	@apply hover:bg-gray-100 hover:cursor-pointer flex gap-2 p-2 border-b text-sm;
 }
-
 .calendar-wrapper svg {
 	@apply fill-slate-500 mt-[2px];
 }
