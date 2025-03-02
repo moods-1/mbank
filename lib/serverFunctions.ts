@@ -1,7 +1,6 @@
 import { hashSync } from 'bcryptjs';
 import { JsonWebTokenError, sign, verify } from 'jsonwebtoken';
 import { Types } from 'mongoose';
-import moment from 'moment-timezone';
 
 export const hashPassword = async (data: string) => {
 	return hashSync(data, 8);

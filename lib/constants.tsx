@@ -246,6 +246,7 @@ export const PAYEE_BUSINESS_TYPES = {
 	TRAVEL_TRANSPORTATION: 'Travel and Transportation',
 	AUTOMOTIVE: 'Automotive',
 	UTILITIES: 'Utilities',
+	GOVERNMENT: 'Government'
 };
 
 export const PROVINCES_TERRITORIES = {
